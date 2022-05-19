@@ -9,7 +9,7 @@ Created on Sat April  5 23:36:17 2022
 import tkinter as tk
 from tkinter import messagebox, OptionMenu
 from PIL import Image, ImageTk
-import subprocess
+
 
 # creating window
 window = tk.Tk()
@@ -25,7 +25,7 @@ btnState = False
 min_w = 60  # Minimum width of the frame
 max_w = 120  # Maximum width of the frame
 cur_width = min_w  # Increasing width of the frame
-expanded = False  # Check if it is completely exanded
+expanded = False  # Check if it is completely expanded
 
 
 def expand():
@@ -71,20 +71,21 @@ def fill():
 
 #add info/help button function
 def infoButtonFunc():
-    subprocess.Popen(['python' , 'PlaSysCheckerInfo.py'])
-    
-    
+    from subprocess import Popen, PIPE
+    process = Popen(['python', 'PlaSysCheckerInfo.py'], stdout=PIPE)
+    process.stdout.close()
+    process.wait()
     
 
     
 
 # Define the icons to be shown and resize it
-navIcon = ImageTk.PhotoImage(Image.open('../resource/Menu.png').resize((20, 20), Image.ANTIALIAS))
-home = ImageTk.PhotoImage(Image.open('../resource/Home.png').resize((20, 20), Image.ANTIALIAS))
-folder = ImageTk.PhotoImage(Image.open('../resource/Folder.png').resize((20, 20), Image.ANTIALIAS))
-result = ImageTk.PhotoImage(Image.open('../resource/Result.png').resize((20, 20), Image.ANTIALIAS))
-download = ImageTk.PhotoImage(Image.open('../resource/Download.png').resize((20, 20), Image.ANTIALIAS))
-Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20), Image.ANTIALIAS))
+navIcon = ImageTk.PhotoImage(Image.open('../resource/Menu.png').resize((20, 20)))
+home = ImageTk.PhotoImage(Image.open('../resource/Home.png').resize((20, 20)))
+folder = ImageTk.PhotoImage(Image.open('../resource/Folder.png').resize((20, 20)))
+result = ImageTk.PhotoImage(Image.open('../resource/Result.png').resize((20, 20)))
+download = ImageTk.PhotoImage(Image.open('../resource/Download.png').resize((20, 20)))
+Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
 window.update()  # For the width to get updated
 sid_bar_frame = tk.Frame(window, bg='#184089', width=50, height=window.winfo_height())
@@ -104,13 +105,13 @@ def switch():
 
 
 # Make the buttons with the icons to be shown
-menu_b = tk.Button(sid_bar_frame, image=navIcon, bg='#184089', activebackground='#184089', relief='flat',
+menu_b = tk.Button(sid_bar_frame, image=navIcon, highlightbackground='#184089', activebackground='#184089', relief='flat',
                    command=switch)
-home_b = tk.Button(sid_bar_frame, image=home, bg='#184089', relief='flat')
-folder_b = tk.Button(sid_bar_frame, image=folder, bg='#184089', relief='flat')
-result_b = tk.Button(sid_bar_frame, image=result, bg='#184089', relief='flat')
-download_b = tk.Button(sid_bar_frame, image=download, bg='#184089', relief='flat')
-info_b = tk.Button(sid_bar_frame, image=Info, bg='#184089', relief='flat', command=infoButtonFunc)
+home_b = tk.Button(sid_bar_frame, image=home, highlightbackground='#184089', relief='flat')
+folder_b = tk.Button(sid_bar_frame, image=folder, highlightbackground='#184089', relief='flat')
+result_b = tk.Button(sid_bar_frame, image=result, highlightbackground='#184089', relief='flat')
+download_b = tk.Button(sid_bar_frame, image=download, highlightbackground='#184089', relief='flat')
+info_b = tk.Button(sid_bar_frame, image=Info, highlightbackground='#184089', relief='flat', command=infoButtonFunc)
 
 # make label
 menu_l = tk.Label(sid_bar_frame, text='', bg='#184089')
@@ -137,13 +138,13 @@ info_l.grid(row=5, column=1, padx=5, pady=30)
 # So that it does not depend on the widgets inside the frame
 sid_bar_frame.grid_propagate(False)
 
-mainFrame = tk.Frame(window, bg='black', width=window.winfo_width(), height=(window.winfo_height()))
+mainFrame = tk.Frame(window, bg='#f0a1a8', width=window.winfo_width(), height=(window.winfo_height()))
 mainFrame.pack(side = tk.RIGHT)
 
 #sideFrame
-topFrame = tk.Frame(mainFrame, bg='white', width=window.winfo_width(), height=(window.winfo_height()/5*4))
+topFrame = tk.Frame(mainFrame, bg='#c0c0c0', width=window.winfo_width(), height=(window.winfo_height()/5*4))
 topFrame.pack(side = tk.TOP)
-botFrame = tk.Frame(mainFrame, bg='red', width=window.winfo_width(), height=(window.winfo_height()/5*1))
+botFrame = tk.Frame(mainFrame, bg='#f0a1a8', width=window.winfo_width(), height=(window.winfo_height()/5*1))
 botFrame.pack(side = tk.BOTTOM)
 
 
@@ -151,12 +152,13 @@ botFrame.pack(side = tk.BOTTOM)
 variable = tk.StringVar(topFrame)
 variable.set("Python") # default value
 dropdownbox = OptionMenu(topFrame, variable, "Python", "C++", "Java")
+dropdownbox.configure(highlightbackground='black', background= '#c0c0c0', fg='black')
 dropdownbox.pack(side = tk.RIGHT, padx = 50)
 topFrame.pack_propagate(False)
 
 
-check_b = tk.Button(botFrame, text="Plagiarism Check")
-check_b.pack(side = tk.RIGHT, padx = 50)
+check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Check")
+check_b.pack(side=tk.RIGHT, padx = 50)
 botFrame.pack_propagate(False)
 
 
@@ -168,7 +170,7 @@ def on_closing():
         window.quit()
 
 #add function to button
-#window.protocol("WM_DELETE_WINDOW", on_closing)
+window.protocol("WM_DELETE_WINDOW", on_closing)
 
 window.resizable(False, False)
 window.mainloop()
