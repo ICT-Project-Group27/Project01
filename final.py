@@ -29,41 +29,46 @@ def walk_dir(start_directory):
 # 查重，返回每个程序的查重率和重复的位置
 def check(rep_path):
     names = walk_dir(rep_path)
-    names = [names[0][1:]]
-    print(names)
+    if(len(names) < 1 ):
+        from tkinter import messagebox
+        messagebox.showerror(title='Warning', message="Please select 2 or more files.")
+    else:
+        names = [names[0][1:]]
 
-    code_dict = openfile(rep_path, names)[0]
-    pos_dict = openfile(rep_path, names)[1]
+        print(names)
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+        code_dict = openfile(rep_path, names)[0]
+        pos_dict = openfile(rep_path, names)[1]
 
-    mark_dict = {}
+        mark, matches_list = greedy_tiling(code_dict, names)
 
-    for i in names[0]:
-        count = 0
-        name = i
-        result = mark[i]
-        for e in result:
-            if e != '0':
-                count = count + 1
+        mark_dict = {}
 
-        print(name + " " + str(count / len(result)))
-        mark_dict[i] = str(count / len(result))
+        for i in names[0]:
+            count = 0
+            name = i
+            result = mark[i]
+            for e in result:
+                if e != '0':
+                    count = count + 1
 
-    match_dict = {}
-    for i in matches_list:
-        try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]]))
-        except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]])]
+            print(name + " " + str(count / len(result)))
+            mark_dict[i] = str(count / len(result))
 
-        try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]]))
+        match_dict = {}
+        for i in matches_list:
+            try:
+                match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]]))
+            except:
+                match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]])]
 
-        except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
+            try:
+                match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]]))
 
-    return mark_dict, match_dict
+            except:
+                match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
+
+        return mark_dict, match_dict
     # return f_names
 
 
@@ -71,7 +76,6 @@ def check(rep_path):
 def openfile(filepath, f_names):
     code_dict = {}
     pos_dict = {}
-    print(len(f_names) - 1)
     for i in range(0, (len(f_names[0]))):
         with codecs.open(filepath + f_names[0][i], 'r', encoding='utf-8', errors='ignore') as f:
             token_list = []
@@ -277,5 +281,3 @@ def greedy_tiling(code_dict, f_names):
     print(mark)
     return mark, matches_list
 
-
-print(check('/Users/kiko/Documents/IT project1/c_test/'))

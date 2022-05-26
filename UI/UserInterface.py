@@ -9,6 +9,16 @@ Created on Sat April  5 23:36:17 2022
 import tkinter as tk
 from tkinter import messagebox, OptionMenu
 from PIL import Image, ImageTk
+import sys
+import os
+import inspect
+import parso
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+import final
 
 # creating window
 window = tk.Tk()
@@ -25,8 +35,7 @@ min_w = 60  # Minimum width of the frame
 max_w = 120  # Maximum width of the frame
 cur_width = min_w  # Increasing width of the frame
 expanded = False  # Check if it is completely expanded
-
-
+folderPath = ''
 def expand():
     global cur_width, expanded
     cur_width += 10  # Increase the width by 10
@@ -79,6 +88,18 @@ def infoButtonFunc():
 def changeFrame(windowFrame, toBeshownFrame):
     windowFrame.pack_forget()
     toBeshownFrame.pack()
+
+def openFile():
+    global folderPath
+    from tkinter import filedialog as fd
+    filetypes = (
+        ('text files', '*.txt'),
+        ('All files', '*.*')
+    )
+
+    folderPath = fd.askdirectory()+'/'
+
+
 
 # Define the icons to be shown and resize it
 navIcon = ImageTk.PhotoImage(Image.open('../resource/Menu.png').resize((20, 20)))
@@ -172,11 +193,11 @@ studentWork_l = tk.Label(listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='
 studentWork_l.grid(column=0, row=0, padx=10)
 listBox = tk.Listbox(listBoxFrame, bg='white', fg='white', width=30)
 listBox.grid(column=0, row=1, padx=10, columnspan=2)
-selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Select Files", width=12)
+selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Select Files", width=12, command=lambda: openFile())
 selection_b.grid(column=1, row=2)
 
 # button for start plagiarism check
-check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Check")
+check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Check", command=lambda: final.check(folderPath))
 check_b.pack(side=tk.RIGHT, padx=50)
 botFrame.pack_propagate(False)
 
