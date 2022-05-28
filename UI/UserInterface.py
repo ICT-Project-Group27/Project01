@@ -59,7 +59,7 @@ def contract():
 
 
 def fill():
-    if expanded:  # If the frame is exanded
+    if expanded:  # If the frame is expanded
         # Show a text
         menu_l.config(text="Menu", font=(0, 12))
         home_l.config(text='Home', font=(0, 12))
@@ -98,6 +98,15 @@ def openFile():
     )
 
     folderPath = fd.askdirectory()+'/'
+    updateListBox()
+
+def updateListBox():
+    names = final.walk_dir(folderPath)
+    names = [names[0][1:]]
+    for i in names:
+        for x in i:
+            listBox.insert(tk.END,x)
+
 
 
 
@@ -191,9 +200,9 @@ listBoxFrame = tk.Frame(topFrame, bg='#c0c0c0', width=(window.winfo_width() / 5 
 listBoxFrame.pack(side=tk.LEFT)
 studentWork_l = tk.Label(listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='black', font=(0, 20))
 studentWork_l.grid(column=0, row=0, padx=10)
-listBox = tk.Listbox(listBoxFrame, bg='white', fg='white', width=30)
+listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=30)
 listBox.grid(column=0, row=1, padx=10, columnspan=2)
-selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Select Files", width=12, command=lambda: openFile())
+selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Select Folder", width=12, command=lambda: openFile())
 selection_b.grid(column=1, row=2)
 
 # button for start plagiarism check
@@ -203,21 +212,23 @@ botFrame.pack_propagate(False)
 
 
 #resultFrame
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
+
 
 resultFrame = tk.Frame(window, bg='#c0c0c0', width=window.winfo_width(), height=window.winfo_height())
 
+def showResult():
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+    from matplotlib.figure import Figure
+    resultList = ["Below\n10%", "Between\n10%~15%", "Between\n15%~25%", "Over\n25%"]
+    resultListCount = final.resultListCount
 
-resultList = ["Below\n10%", "Between\n10%~15%", "Between\n15%~25%", "Over\n25%"]
-resultListCount = [10,25,16,4]
-
-fig = Figure(facecolor='white', figsize=(3.5,3.5)) # create a figure object
-ax = fig.add_subplot(111) # add an Axes to the figure
-ax.pie(resultListCount, radius=1, labels=resultList,autopct='%0.2f%%', shadow=True, textprops={'fontsize': 10})
-ax.set_title("Plagiarism Result")
-resultChart = FigureCanvasTkAgg(fig,resultFrame)
-resultChart.get_tk_widget().pack(side=tk.RIGHT,padx=15)
+    if (len(resultListCount) > 1):
+        fig = Figure(facecolor='white', figsize=(3.5, 3.5))  # create a figure object
+        ax = fig.add_subplot(111)  # add an Axes to the figure
+        ax.pie(resultListCount, radius=1, labels=resultList, autopct='%0.2f%%', shadow=True, textprops={'fontsize': 10})
+        ax.set_title("Plagiarism Result")
+        resultChart = FigureCanvasTkAgg(fig, resultFrame)
+        resultChart.get_tk_widget().pack(side=tk.RIGHT, padx=15)
 
 
 resultFrame.pack_propagate(False)

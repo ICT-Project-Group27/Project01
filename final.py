@@ -18,6 +18,8 @@ from numpy.dual import norm
 # a list contain all the file names in that directory
 # f_names = []
 
+resultListCount = []
+
 # 遍历输入路径里的内容并将他们的路径返回
 def walk_dir(start_directory):
     f_names = []
@@ -29,19 +31,17 @@ def walk_dir(start_directory):
 # 查重，返回每个程序的查重率和重复的位置
 def check(rep_path):
     names = walk_dir(rep_path)
+    global resultListCount
+    resultListCount = [0, 0, 0, 0]
     if(len(names) < 1 ):
         from tkinter import messagebox
         messagebox.showerror(title='Warning', message="Please select 2 or more files.")
     else:
         names = [names[0][1:]]
-
-        print(names)
-
+        #print(names)
         code_dict = openfile(rep_path, names)[0]
         pos_dict = openfile(rep_path, names)[1]
-
         mark, matches_list = greedy_tiling(code_dict, names)
-
         mark_dict = {}
 
         for i in names[0]:
@@ -52,9 +52,21 @@ def check(rep_path):
                 if e != '0':
                     count = count + 1
 
-            print(name + " " + str(count / len(result)))
+            #print(name + " " + str(count / len(result)))
             mark_dict[i] = str(count / len(result))
 
+            if((count / len(result)) < 0.1):
+                resultListCount[0] += 1
+                print("add1")
+            elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
+                resultListCount[1] += 1
+                print("add2")
+            elif ((count / len(result))  >= 0.15 and (count / len(result))  < 0.25):
+                resultListCount[2] += 1
+                print("add3")
+            elif ((count / len(result)) >= 0.25):
+                resultListCount[3] += 1
+                print("add4")
         match_dict = {}
         for i in matches_list:
             try:
@@ -67,7 +79,6 @@ def check(rep_path):
 
             except:
                 match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
-
         return mark_dict, match_dict
     # return f_names
 
@@ -98,7 +109,7 @@ def openfile(filepath, f_names):
                     except:
                         temp.append(e)
                 token_list = temp
-            print(token_list)
+            #print(token_list)
             pos_list = []
             final_list = []
             for a in token_list:
@@ -124,8 +135,8 @@ def openfile(filepath, f_names):
                 elif re.match('<Name: readlines@', str(a)) is not None:
                     final_list.append('in')
                     pos_list.append(a.start_pos)
-            print(final_list)
-            print(pos_list)
+            #print(final_list)
+            #print(pos_list)
 
             code_dict[f_names[0][i]] = final_list
             pos_dict[f_names[0][i]] = pos_list
@@ -277,7 +288,7 @@ def greedy_tiling(code_dict, f_names):
                                 mark[i][m[0] + c] = a
                                 mark[a][m[1] + c] = i
 
-    print(matches_list)
-    print(mark)
+    #print(matches_list)
+    #print(mark)
     return mark, matches_list
 
