@@ -57,16 +57,12 @@ def check(rep_path):
 
             if((count / len(result)) < 0.1):
                 resultListCount[0] += 1
-                print("add1")
             elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
                 resultListCount[1] += 1
-                print("add2")
             elif ((count / len(result))  >= 0.15 and (count / len(result))  < 0.25):
                 resultListCount[2] += 1
-                print("add3")
             elif ((count / len(result)) >= 0.25):
                 resultListCount[3] += 1
-                print("add4")
         match_dict = {}
         for i in matches_list:
             try:

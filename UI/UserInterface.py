@@ -85,9 +85,7 @@ def infoButtonFunc():
     process.wait()
 
 
-def changeFrame(windowFrame, toBeshownFrame):
-    windowFrame.pack_forget()
-    toBeshownFrame.pack()
+
 
 def openFile():
     global folderPath
@@ -210,13 +208,17 @@ check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Ch
 check_b.pack(side=tk.RIGHT, padx=50)
 botFrame.pack_propagate(False)
 
+def changeFrame(windowFrame, toBeshownFrame):
+    if(id(windowFrame) == id(resultFrame)):
+        showResult()
+    windowFrame.pack_forget()
+    toBeshownFrame.pack()
 
 #resultFrame
-
-
 resultFrame = tk.Frame(window, bg='#c0c0c0', width=window.winfo_width(), height=window.winfo_height())
 
 def showResult():
+    global resultFrame
     from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
     from matplotlib.figure import Figure
     resultList = ["Below\n10%", "Between\n10%~15%", "Between\n15%~25%", "Over\n25%"]
