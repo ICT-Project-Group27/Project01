@@ -10,12 +10,12 @@ import io
 #    return os.listdir(path)
 #def issTrue(outFile,s):
 #    findStr1 = "LINE_COUNT_UPDATE INTEGER := 0;"
-#    writeStr1 = "LINE_COUNT_ERROR INTEGER := 0; --错误数据XX条"
-#    findStr2 = "DBMS_OUTPUT.PUT_LINE('处理完毕")"
-#    writeStr2 = "DBMS_OUTPUT.PUT_LINE('错误数据['||LINE_COUNT_ERROR||']条.');"
-#    findStr3 = "DBMS_OUTPUT.PUT_LINE('插入数据['||CUR_RESULT.INT_ID||']时发生异常...');"
+#    writeStr1 = "LINE_COUNT_ERROR INTEGER := 0; --????????XX??"
+#    findStr2 = "DBMS_OUTPUT.PUT_LINE('????????")"
+#    writeStr2 = "DBMS_OUTPUT.PUT_LINE('????????['||LINE_COUNT_ERROR||']??.');"
+#    findStr3 = "DBMS_OUTPUT.PUT_LINE('????????['||CUR_RESULT.INT_ID||']??????????...');"
 #    writeStr3 = "LINE_COUNT_ERROR := LINE_COUNT_ERROR+1;"
-#    findStr4 = "DBMS_OUTPUT.PUT_LINE('更新数据['||CUR_RESULT.INT_ID||']时发生异常...');"
+#    findStr4 = "DBMS_OUTPUT.PUT_LINE('????????['||CUR_RESULT.INT_ID||']??????????...');"
 #    if s.find(findStr1) != -1:
 #        outFile.write(s)
 #        outFile.write(writeStr1+"\n")
@@ -56,9 +56,9 @@ import io
 
 
 #class test:
-#    def modifyip(tfile, deviceAddress):  # tfile为目标文件，deviceAddress为要查找的条件
-#        desktop_path = 'E:\learning\itp1.1'  # 新创建的txt文件的存放路径
-#        full_path = desktop_path + deviceAddress + '.txt'  # 以deviceAddress为文件名
+#    def modifyip(tfile, deviceAddress):  # tfile????????????deviceAddress??????????????
+#        desktop_path = 'E:\learning\itp1.1'  # ????????txt??????????????
+#        full_path = desktop_path + deviceAddress + '.txt'  # ??deviceAddress????????
 #        try:
 #            lines = open(tfile, 'r', encoding='utf-8').readlines()
 #            flen = len(lines) - 1
@@ -70,39 +70,39 @@ import io
 #                    except Exception as e:
 #                        print(e)
 #    if __name__=="__main__":
-#         modifyip('E:\learning\itp1.1\test.txt','test0')  # 在'C:/Users/JiajunHu/Desktop/log_4.txt'中查找'8akDIW5BSG0U'
+#         modifyip('E:\learning\itp1.1\test.txt','test0')  # ??'C:/Users/JiajunHu/Desktop/log_4.txt'??????'8akDIW5BSG0U'
 #         print("have done")
 
 #class Ddocx:
 #    from docx import Document
-#    doc = Document()                #以默认模板建立文档对象
-#    doc = Document('a.docx')     # 读取a.docx文档，建立文档对象
+#    doc = Document()                #??????????????????????
+#    doc = Document('a.docx')     # ????a.docx??????????????????
 #    from docx.shared import Inches,Pt
-#    def chg_font(obj,fontname='微软雅黑',size=None):## 设置字体函数
+#    def chg_font(obj,fontname='????????',size=None):## ????????????
 #        obj.font.name = fontname
 #        obj._element.rPr.rFonts.set(qn('w:eastAsia'),fontname)
 #        if size and isinstance(size,Pt):
 #            obj.font.size = size
 #            distance = Inches(0.3)
-#            sec = doc.sections[0]             # sections对应文档中的“节”
-#            sec.left_margin = distance     # 以下依次设置左、右、上、下页面边距
+#            sec = doc.sections[0]             # sections??????????????????
+#            sec.left_margin = distance     # ??????????????????????????????????
 #            sec.right_margin = distance
 #            sec.top_margin = distance
 #            sec.bottom_margin = distance
-#            sec.page_width =Inches(12)        #设置页面宽度
-#            sec.page_height = Inches(20)       #设置页面高度
-#            ##设置默认字体
-#            chg_font(doc.styles['Normal'],fontname='宋体')
-#            ##添加段落文本
+#            sec.page_width =Inches(12)        #????????????
+#            sec.page_height = Inches(20)       #????????????
+#            ##????????????
+#            chg_font(doc.styles['Normal'],fontname='????')
+#            ##????????????
 #            paragraph =doc.add_paragraph('text....')
 #            ph_format =paragraph.paragraph_format
-#            ph_format.space_before =Pt(10)     #设置段前间距
-#            ph_format.space_after =Pt(12)       #设置段后间距
-#            ph_format.line_spacing=Pt(19)       #设置行间距
-#            ##如果希望同一段落中的文本格式不同，就需要使用Run对象(可以理解为可以单独设置格式的段落内对象)。
+#            ph_format.space_before =Pt(10)     #????????????
+#            ph_format.space_after =Pt(12)       #????????????
+#            ph_format.line_spacing=Pt(19)       #??????????
+#            ##????????????????????????????????????????????Run????(??????????????????????????????????????)??
 #            run = paragraph.add_run('text...')
-#            run.bold = True #设置字体为粗体
-#            chg_font(run,fontname='微软雅黑', size=Pt(12))  #设置字体和字号
+#            run.bold = True #??????????????
+#            chg_font(run,fontname='????????', size=Pt(12))  #??????????????
 
 
 #from pdfminer.converter import PDFPageAggregator
@@ -115,7 +115,7 @@ import io
 
 #import logging
 
-## 不显示warning
+## ??????warning
 #logging.propagate = False
 #logging.getLogger().setLevel(logging.ERROR)
 
@@ -132,7 +132,7 @@ import io
 ## doc.set_parser(parser)
 ## doc.initialize()
 
-## 检测文档是否提供txt转换，不提供就忽略
+## ????????????????txt??????????????????
 #if not doc.is_extractable:
 #    raise PDFTextExtractionNotAllowed
 #else:
@@ -141,52 +141,114 @@ import io
 #        print("num page:{}".format(len(list(PDFPage.create_pages(doc)))))
 #        for i, page in enumerate(PDFPage.create_pages(doc)):
 #            interpreter.process_page(page)
-#            # 接受该页面的LTPage对象
+#            # ????????????LTPage????
 #            layout = device.get_result()
-#            # 这里layout是一个LTPage对象 里面存放着 这个page解析出的各种对象
-#            # 一般包括LTTextBox, LTFigure, LTImage, LTTextBoxHorizontal 等等
-#            # 想要获取文本就获得对象的text属性，
+#            # ????layout??????LTPage???? ?????????? ????page????????????????
+#            # ????????LTTextBox, LTFigure, LTImage, LTTextBoxHorizontal ????
+#            # ????????????????????????text??????
 #            for x in layout:
 #                if isinstance(x, LTTextBoxHorizontal):
 #                    results = x.get_text()
 #                    fw.write(results)
-
-
+import colorama
 from fpdf import FPDF
 import os
 import re
-class test:
-    def txtToPdf():
-        i = 1
-        #以列表的方式打开所有txt文件的路径
-        for filename in os.listdir("E:\learning\itp1.1\txt"):
-            print("第%d开始" % i)
-            pdf = FPDF()
-            #读取字体文件
-            pdf.add_font('fangzhengzhunyuan', '', 'fangzhengzhunyuan.TTF', True)
-            pdf.add_page()
-            #设置pdf字体大小
-            pdf.set_font("fangzhengzhunyuan", size=12)
-            #打开txt文本
-            with open("E:\learning\itp1.1\txt" + filename, encoding='utf-8') as f:
-                ms = re.sub(r'.txt', '.pdf', filename)
-                try:
-                    #按行读取txt文本内容
-                    for line in f.readlines():
-                        str=line
-                        num=len(str)
-                        temp=45#判断标志，实现pdf文件每行最多村45个字符
-                        for j in range(0,num,temp):
-                            if(j+temp<num):
-                                data=str[j:j+temp]
-                            else:
-                                data=str[j:num]
-                            pdf.cell(0, 5, data, ln=1)
-                        f.close()
-                except Exception as e:
-                    print(e)
-                print(ms)
-                pdf.output("E:\learning\itp1.1\txt" + ms)
-            print("第%d完成" % i)
-            i = i + 1
-    txtToPdf()
+import numpy as np
+import linecache
+class download:
+
+    # def txtToPdf():
+    #     i = 1
+    #     #????????????????????txt??????????
+    #     for filename in os.listdir("E:\learning\itp1.1\txt"):
+    #         print("??%d????" % i)
+    #         pdf = FPDF()
+    #         #????????????
+    #         pdf.add_font('fangzhengzhunyuan', '', 'fangzhengzhunyuan.TTF', True)
+    #         pdf.add_page()
+    #         #????pdf????????
+    #         pdf.set_font("fangzhengzhunyuan", size=12)
+    #         #????txt????
+    #         with open("E:\learning\itp1.1\txt" + filename, encoding='utf-8') as f:
+    #             ms = re.sub(r'.txt', '.pdf', filename)
+    #             try:
+    #                 #????????txt????????
+    #                 for line in f.readlines():
+    #                     str=line
+    #                     num=len(str)
+    #                     temp=45#??????????????pdf??????????????45??????
+    #                     for j in range(0,num,temp):
+    #                         if(j+temp<num):
+    #                             data=str[j:j+temp]
+    #                         else:
+    #                             data=str[j:num]
+    #                         pdf.cell(0, 5, data, ln=1)
+    #                     f.close()
+    #             except Exception as e:
+    #                 print(e)
+    #             print(ms)
+    #             pdf.output("E:\learning\itp1.1\txt" + ms)
+    #         print("??%d????" % i)
+    #         i = i + 1
+    # txtToPdf()
+
+    from colorama import Fore, Back, Style
+    # ????txt??
+    def text_create(name):
+        # ????????
+        desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
+        full_path = desktop_path + name + '.txt'
+        return full_path
+
+
+
+    def data_matrix(filename):
+        file = open(filename,"r")
+        row = file.readlines()
+        print(row)
+        l = []
+        for line in row:
+            str = list(line.rstrip())
+            l.append(str)
+        print(l)
+        return l
+
+    def text_write(filename, matrixname, searchmatri):
+        row = np.array(matrixname).shape[0] #???
+        col = np.array(matrixname).shape[1] #???
+
+        rows = np.array(searchmatri).shape[0] #???
+        cols = np.array(searchmatri).shape[1] #???
+
+        with open(filename,'w') as f:
+            for i in range(0,row): #?????
+                n = 0 #Mark
+                Frame = matrixname[i]
+
+
+                for j in range(0,col): #????????
+                    Num = str(Frame[j])
+                    f.write(Num)
+
+                for si in range(0,rows): #?????
+                    sFrame = searchmatri[si]
+
+                    for sj in range(0,cols-1): #????????
+                        sNum = int(sFrame[sj])
+                        if i == sNum:
+                            if n == 0: #??????
+                                f.write("   # The duplicate code is: ")
+                                n += 1
+                            sj = sj+1
+                            dNum = int(sFrame[sj]) #get?????
+                            endNum = str(Frame[dNum]) #get???
+                            f.write(endNum)
+                f.write("\n")
+            f.close
+
+
+    a = text_create("new")
+    b = data_matrix(input("road"))
+    text_write(a,b,[[0,1],[0,4],[1,3],[1,4],[2,0],[2,4]])
+
