@@ -19,6 +19,8 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 import final
+import downloadFinal
+
 
 # creating window
 window = tk.Tk()
@@ -104,6 +106,21 @@ def updateListBox():
     for i in names:
         for x in i:
             listBox.insert(tk.END,x)
+
+# def downFile():
+#     s = final.check(folderPath)
+#     s1k = list(dw.dictGet_Key(s[0]))
+#     s1v = list(dw.dictGet_Key(s[0]))
+#     s2k = list(dw.dictGet_Key(s[1]))
+#     s2v = list(dw.dictGet_Key(s[1]))
+#     for i in range(0,len(s1k)):
+#         a = dw.text_create("Document",i+1)
+#         m = str(s1k[i])
+#         b = dw.data_matrix(folderPath,m)
+#         c0 = s[0][s1k[i]]
+#         c1 = s[1][s1k[i]]
+#         a1 = dw.mChange(c1)
+#         dw.text_write(a,b,a1,c0,m)
 
 
 
@@ -200,13 +217,19 @@ studentWork_l = tk.Label(listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='
 studentWork_l.grid(column=0, row=0, padx=10)
 listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=30)
 listBox.grid(column=0, row=1, padx=10, columnspan=2)
-selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Select Folder", width=12, command=lambda: openFile())
+selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Folder", width=8, command=lambda: openFile())
 selection_b.grid(column=1, row=2)
 
 # button for start plagiarism check
 check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Check", command=lambda: final.check(folderPath))
 check_b.pack(side=tk.RIGHT, padx=50)
 botFrame.pack_propagate(False)
+
+#Generate report
+download_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Download File", command=lambda: downloadFinal.download.use(folderPath))
+download_b.pack(side=tk.RIGHT, padx=50)
+botFrame.pack_propagate(False)
+
 
 def changeFrame(windowFrame, toBeshownFrame):
     if(id(windowFrame) == id(resultFrame)):
