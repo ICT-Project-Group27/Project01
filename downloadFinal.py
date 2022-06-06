@@ -307,6 +307,7 @@ import numpy as np
 import linecache
 import final
 
+
 class download:
 
     # def txtToPdf():
@@ -346,11 +347,10 @@ class download:
 
     from colorama import Fore, Back, Style
     # ????txt??
-    def text_create(name,i):
+    def text_create(name):
         # Create final document
         desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
-        i = str(i)
-        full_path = desktop_path + name + i + '.txt'
+        full_path = desktop_path + name + '.txt'
         return full_path
 
 
@@ -371,7 +371,6 @@ class download:
         newRatio0 = float(ratio) #Keep two decimal places
         newRatio1 = newRatio0 * 100
         newRatio = float('%.2f'%newRatio1)
-
 
 
         # row = np.array(matrixname).shape[0] #???
@@ -488,7 +487,7 @@ class download:
         return exm1.values()
 
 
-    def use(floader):
+    def use(floader , names):
         x = final.check(floader)
         # x = ({'test.txt': '0.25', 'test_02.txt': '0.3007518796992481'}, {'test.txt': [((325, 12), (377, 10)), ((325, 12), (377, 10))], 'test_02.txt': [((22, 0), (75, 10)), ((350, 0), (403, 10))]})
         x1k = list(download.dictGet_key(x[0]))
@@ -496,7 +495,7 @@ class download:
         x2k = list(download.dictGet_key(x[1]))
         x2v = list(download.dictGet_value(x[1]))
         for i in range(0,len(x1k)):
-            a = download.text_create("Document",i)
+            a = download.text_create(names[0][i])
             m = str(x1k[i])
             b = download.data_matrix(floader,m)
             c0 = x[0][x1k[i]]

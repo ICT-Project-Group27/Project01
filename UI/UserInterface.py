@@ -65,7 +65,6 @@ def fill():
         # Show a text
         menu_l.config(text="Menu", font=(0, 12))
         home_l.config(text='Home', font=(0, 12))
-        folder_l.config(text='Folder', font=(0, 12))
         result_l.config(text='Result', font=(0, 12))
         download_l.config(text='Download\n Result', font=(0, 10))
         info_l.config(text='Info', font=(0, 12))
@@ -73,7 +72,6 @@ def fill():
         # Bring the image back
         menu_l.config(text="")
         home_l.config(text="")
-        folder_l.config(text="")
         result_l.config(text="")
         download_l.config(text="")
         info_l.config(text='')
@@ -87,8 +85,6 @@ def infoButtonFunc():
     process.wait()
 
 
-
-
 def openFile():
     global folderPath
     from tkinter import filedialog as fd
@@ -99,36 +95,21 @@ def openFile():
 
     folderPath = fd.askdirectory()+'/'
     updateListBox()
-
+names = []
 def updateListBox():
+    global names
     names = final.walk_dir(folderPath)
     names = [names[0][1:]]
+    print(names)
     for i in names:
         for x in i:
             listBox.insert(tk.END,x)
-
-# def downFile():
-#     s = final.check(folderPath)
-#     s1k = list(dw.dictGet_Key(s[0]))
-#     s1v = list(dw.dictGet_Key(s[0]))
-#     s2k = list(dw.dictGet_Key(s[1]))
-#     s2v = list(dw.dictGet_Key(s[1]))
-#     for i in range(0,len(s1k)):
-#         a = dw.text_create("Document",i+1)
-#         m = str(s1k[i])
-#         b = dw.data_matrix(folderPath,m)
-#         c0 = s[0][s1k[i]]
-#         c1 = s[1][s1k[i]]
-#         a1 = dw.mChange(c1)
-#         dw.text_write(a,b,a1,c0,m)
-
 
 
 
 # Define the icons to be shown and resize it
 navIcon = ImageTk.PhotoImage(Image.open('../resource/Menu.png').resize((20, 20)))
 home = ImageTk.PhotoImage(Image.open('../resource/Home.png').resize((20, 20)))
-folder = ImageTk.PhotoImage(Image.open('../resource/Folder.png').resize((20, 20)))
 result = ImageTk.PhotoImage(Image.open('../resource/Result.png').resize((20, 20)))
 download = ImageTk.PhotoImage(Image.open('../resource/Download.png').resize((20, 20)))
 Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
@@ -156,16 +137,15 @@ menu_b = tk.Button(sid_bar_frame, image=navIcon, highlightbackground='#184089', 
                    command=switch)
 home_b = tk.Button(sid_bar_frame, image=home, highlightbackground='#184089', relief='flat',
                    command=lambda: changeFrame(resultFrame, mainFrame))
-folder_b = tk.Button(sid_bar_frame, image=folder, highlightbackground='#184089', relief='flat')
 result_b = tk.Button(sid_bar_frame, image=result, highlightbackground='#184089', relief='flat',
                      command=lambda: changeFrame(mainFrame, resultFrame))
-download_b = tk.Button(sid_bar_frame, image=download, highlightbackground='#184089', relief='flat')
+download_b = tk.Button(sid_bar_frame, image=download, highlightbackground='#184089', relief='flat',
+                       command=lambda: downloadFinal.download.use(folderPath,names))
 info_b = tk.Button(sid_bar_frame, image=Info, highlightbackground='#184089', relief='flat', command=infoButtonFunc)
 
 # make label
 menu_l = tk.Label(sid_bar_frame, text='', bg='#184089')
 home_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-folder_l = tk.Label(sid_bar_frame, text='', bg='#184089')
 result_l = tk.Label(sid_bar_frame, text='', bg='#184089')
 download_l = tk.Label(sid_bar_frame, text='', bg='#184089')
 info_l = tk.Label(sid_bar_frame, text='', bg='#184089')
@@ -175,14 +155,12 @@ menu_b.grid(row=0, column=0, padx=1, pady=10)
 menu_l.grid(row=0, column=1)
 home_b.grid(row=1, column=0, padx=5, pady=30)
 home_l.grid(row=1, column=1, padx=5, pady=30)
-folder_b.grid(row=2, column=0, padx=5, pady=30)
-folder_l.grid(row=2, column=1, padx=5, pady=30)
-result_b.grid(row=3, column=0, padx=5, pady=30)
-result_l.grid(row=3, column=1, padx=5, pady=30)
-download_b.grid(row=4, column=0, padx=5, pady=30)
-download_l.grid(row=4, column=1, padx=5, pady=30)
-info_b.grid(row=5, column=0, padx=5, pady=30)
-info_l.grid(row=5, column=1, padx=5, pady=30)
+result_b.grid(row=2, column=0, padx=5, pady=30)
+result_l.grid(row=2, column=1, padx=5, pady=30)
+download_b.grid(row=3, column=0, padx=5, pady=30)
+download_l.grid(row=3, column=1, padx=5, pady=30)
+info_b.grid(row=4, column=0, padx=5, pady=30)
+info_l.grid(row=4, column=1, padx=5, pady=30)
 
 # So that it does not depend on the widgets inside the frame
 sid_bar_frame.grid_propagate(False)
@@ -225,10 +203,6 @@ check_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Plagiarism Ch
 check_b.pack(side=tk.RIGHT, padx=50)
 botFrame.pack_propagate(False)
 
-#Generate report
-download_b = tk.Button(botFrame, highlightbackground='#f0a1a8', text="Download File", command=lambda: downloadFinal.download.use(folderPath))
-download_b.pack(side=tk.RIGHT, padx=50)
-botFrame.pack_propagate(False)
 
 
 def changeFrame(windowFrame, toBeshownFrame):
