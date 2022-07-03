@@ -33,8 +33,8 @@ def check(rep_path):
     names = walk_dir(rep_path)
     global resultListCount
     resultListCount = [0, 0, 0, 0]
+    from tkinter import messagebox
     if(len(names) < 1 ):
-        from tkinter import messagebox
         messagebox.showerror(title='Warning', message="Please select 2 or more files.")
     else:
         names = [names[0][1:]]
@@ -75,7 +75,10 @@ def check(rep_path):
 
             except:
                 match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
         return mark_dict, match_dict
+
+
     # return f_names
 
 
