@@ -32,35 +32,56 @@ def walk_dir(start_directory):
 def check(rep_path):
     # get all filenames in path
     names = walk_dir(rep_path)
-    # remove the first useless filename （DS_store）
+    global resultListCount
+    resultListCount = [0, 0, 0, 0]
+    from tkinter import messagebox
+    if(len(names) < 1 ):
+        messagebox.showerror(title='Warning', message="Please select 2 or more files.")
+    else:
+        names = [names[0][1:]]
+        #print(names)
+        # the dictionary of token and the dictionary of the position of token in the original text
+        code_dict = openfile(rep_path, names)[0]
+        pos_dict = openfile(rep_path, names)[1]
+        # invoke the repetition rate and location dictionary
+        mark, matches_list = greedy_tiling(code_dict, names)
 
-    names = [names[0][1:]]
-    print(names)
-    # the dictionary of token and the dictionary of the position of token in the original text
-    code_dict = openfile(rep_path, names)[0]
-    pos_dict = openfile(rep_path, names)[1]
+        # loaction of the repeat
+        mark_dict = {}
 
-    # invoke the repetition rate and location dictionary
-    mark, matches_list = greedy_tiling(code_dict, names)
+        for i in names[0]:
+            count = 0
+            name = i
+            result = mark[i]
+            for e in result:
+                if e != '0':
+                    count = count + 1
 
-    mark_dict = mark
+            #print(name + " " + str(count / len(result)))
+            mark_dict[i] = str(count / len(result))
 
-    # loaction of the repeat
-    match_dict = {}
-    for i in matches_list:
-        try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
-        except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            if((count / len(result)) < 0.1):
+                resultListCount[0] += 1
+            elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
+                resultListCount[1] += 1
+            elif ((count / len(result))  >= 0.15 and (count / len(result))  < 0.25):
+                resultListCount[2] += 1
+            elif ((count / len(result)) >= 0.25):
+                resultListCount[3] += 1
+        match_dict = {}
+        for i in matches_list:
+            try:
+                match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]]))
+            except:
+                match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]])]
 
-        try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            try:
+                match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]]))
 
-        except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
-
-    return mark_dict, match_dict
-    # return f_names
+            except:
+                match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        return mark_dict, match_dict
 
 
 # read the program, tokenize the program, and return a list of each program token and their location
@@ -229,14 +250,10 @@ def greedy_tiling(code_dict, f_names):
         for n in mark[i]:
             if n != '0':
                 count = count + 1
-        print(count, len(mark[i]), mark[i])
         score = count / len(mark[i])
-        print(score)
+
         duplicate[i] = str(score)
 
-    print(matches_list)
-    print(mark)
     return duplicate, matches_list
 
 
-print(check('/Users/kiko/Documents/IT project1/c_test/'))

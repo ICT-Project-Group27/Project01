@@ -51,9 +51,6 @@ class UserInterface(tk.Tk):
 
     def show_frame(self, page_name):
         # Show a frame for the given page name
-        if page_name == "ResultPage":
-            global resultListCount
-            ResultPage.update(self)
         frame = self.frames[page_name]
         frame.tkraise()
 
