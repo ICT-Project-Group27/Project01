@@ -12,12 +12,17 @@ import parso
 import re
 import parser
 
-
 # read the content of this directory
 # start_directory = ''/Users/kiko/Documents/IT project1/c_test/''
 # a list contain all the file names in that directory
 
 resultListCount = []
+
+
+def getResultListCount():
+    return resultListCount
+
+
 # Traverse the contents of the input paths and return their paths
 def walk_dir(start_directory):
     # create list
@@ -35,11 +40,10 @@ def check(rep_path):
     global resultListCount
     resultListCount = [0, 0, 0, 0]
     from tkinter import messagebox
-    if(len(names) < 1 ):
+    if (len(names) < 1):
         messagebox.showerror(title='Warning', message="Please select 2 or more files.")
     else:
         names = [names[0][1:]]
-        #print(names)
         # the dictionary of token and the dictionary of the position of token in the original text
         code_dict = openfile(rep_path, names)[0]
         pos_dict = openfile(rep_path, names)[1]
@@ -57,14 +61,13 @@ def check(rep_path):
                 if e != '0':
                     count = count + 1
 
-            #print(name + " " + str(count / len(result)))
             mark_dict[i] = str(count / len(result))
 
-            if((count / len(result)) < 0.1):
+            if ((count / len(result)) < 0.1):
                 resultListCount[0] += 1
             elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
                 resultListCount[1] += 1
-            elif ((count / len(result))  >= 0.15 and (count / len(result))  < 0.25):
+            elif ((count / len(result)) >= 0.15 and (count / len(result)) < 0.25):
                 resultListCount[2] += 1
             elif ((count / len(result)) >= 0.25):
                 resultListCount[3] += 1
@@ -125,7 +128,6 @@ def openfile(filepath, f_names):
             final_list = []
             # add keywords
             for a in token_list:
-                # print(a.start_pos)
                 if a.type == 'keyword':
                     final_list.append(a)
                     pos_list.append(a.start_pos)
@@ -255,5 +257,3 @@ def greedy_tiling(code_dict, f_names):
         duplicate[i] = str(score)
 
     return duplicate, matches_list
-
-

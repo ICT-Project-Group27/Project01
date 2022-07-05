@@ -14,10 +14,9 @@ import os
 import inspect
 import similarity_algorithm
 import downloadFinal
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
-from matplotlib.backend_bases import key_press_handler
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+
 
 class UserInterface(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -29,15 +28,17 @@ class UserInterface(tk.Tk):
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
-        container = tk.Frame(self)
-        container.pack(side="right", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.sideBarContainer = tk.Frame(self)
+        self.sideBarContainer.pack(side="left", fill="both", expand=0)
+        self.mainContainer = tk.Frame(self)
+        self.mainContainer.pack(side="right", fill="both", expand=1)
+        self.mainContainer.grid_rowconfigure(0, weight=1)
+        self.mainContainer.grid_columnconfigure(0, weight=1)
         self.sideBar()
         self.frames = {}
         for F in (MainPage, ResultPage):
             page_name = F.__name__
-            frame = F(parent=container)
+            frame = F(parent=self.mainContainer)
             self.frames[page_name] = frame
 
             # put all of the pages in the same location;
@@ -47,11 +48,14 @@ class UserInterface(tk.Tk):
 
         self.show_frame("MainPage")
 
-
-
     def show_frame(self, page_name):
         # Show a frame for the given page name
         frame = self.frames[page_name]
+        if page_name == 'ResultPage':
+            resultListCount = similarity_algorithm.getResultListCount()
+            if len(resultListCount) > 1:
+                ResultPage.refresh(self.mainContainer)
+                ResultPage.update()
         frame.tkraise()
 
     def on_closing(self):
@@ -128,7 +132,7 @@ class UserInterface(tk.Tk):
         Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
         self.update()  # For the width to get updated
-        sid_bar_frame = tk.Frame(self, bg='#184089', width=45, height=self.winfo_height())
+        sid_bar_frame = tk.Frame(self.sideBarContainer, bg='#184089', width=45, height=self.winfo_height())
         sid_bar_frame.pack(side=tk.LEFT)
 
         # Make the buttons with the icons to be shown
@@ -171,13 +175,6 @@ class UserInterface(tk.Tk):
         sid_bar_frame.grid_propagate(False)
 
     def infoButtonFunc(self):
-        """
-        from subprocess import Popen, PIPE
-
-        process = Popen(["python", "PlaSysCheckerInfo.py"], stdout=PIPE)
-        process.stdout.close()
-        process.wait()
-        """
         from tkinter import Text as txt
         from tkinter import Scrollbar as scroll
 
@@ -333,41 +330,41 @@ class MainPage(tk.Frame):
         container = tk.Frame(self, bg="#c0c0c0")
         container.pack(side="right", fill="both", expand=True)
 
-        self.topFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
+        topFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 4))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+        # dropdown box
+        dropDownFrame = tk.Frame(topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 1),
                                  height=(container.winfo_height() / 5 * 4))
-        self.topFrame.pack(side=tk.TOP, fill="both", expand=1)
-        self.botFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
-                                 height=(container.winfo_height() / 5 * 1))
-        self.botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
-        # dropdownbox
-        self.dropDownFrame = tk.Frame(self.topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 1),
-                                      height=(container.winfo_height() / 5 * 4))
-        self.dropDownFrame.pack(side=tk.RIGHT)
-        self.selection_l = tk.Label(self.dropDownFrame, text='Language Selection:', bg='#c0c0c0', fg='black',
-                                    font=(0, 18))
-        self.selection_l.pack(side=tk.TOP, pady=15, padx=15)
-        self.variable = tk.StringVar(self.dropDownFrame)
-        self.variable.set("Python")  # default value
-        self.selectionBox = OptionMenu(self.dropDownFrame, self.variable, "Python", "C++", "Java", "R", "C#")
-        self.selectionBox.configure(highlightbackground='black', background='#c0c0c0', fg='black', width=12)
-        self.selectionBox.pack(side=tk.BOTTOM, pady=15, padx=25)
+        dropDownFrame.pack(side=tk.RIGHT)
+        selection_l = tk.Label(dropDownFrame, text='Language Selection:', bg='#c0c0c0', fg='black',
+                               font=(0, 18))
+        selection_l.pack(side=tk.TOP, pady=15, padx=15)
+        variable = tk.StringVar(dropDownFrame)
+        variable.set("Python")  # default value
+        selectionBox = OptionMenu(dropDownFrame, variable, "Python", "C++", "Java", "R", "C#")
+        selectionBox.configure(highlightbackground='black', background='#c0c0c0', fg='black', width=12)
+        selectionBox.pack(side=tk.BOTTOM, pady=15, padx=25)
 
         # listBox
-        self.listBoxFrame = tk.Frame(self.topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 4),
-                                     height=(container.winfo_height() / 5 * 4))
-        self.listBoxFrame.pack(side=tk.LEFT)
-        self.studentWork_l = tk.Label(self.listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='black', font=(0, 20))
-        self.studentWork_l.grid(column=0, row=0, padx=10)
-        self.listBox = tk.Listbox(self.listBoxFrame, bg='white', fg='black', width=30)
+        listBoxFrame = tk.Frame(topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 4),
+                                height=(container.winfo_height() / 5 * 4))
+        listBoxFrame.pack(side=tk.LEFT)
+        studentWork_l = tk.Label(listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='black', font=(0, 20))
+        studentWork_l.grid(column=0, row=0, padx=10)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=30)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2)
-        self.selection_b = tk.Button(self.listBoxFrame, highlightbackground='#c0c0c0', text="Folder", width=8,
-                                     command=lambda: self.openFile())
-        self.selection_b.grid(column=1, row=2)
+        selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Folder", width=8,
+                                command=lambda: self.openFile())
+        selection_b.grid(column=1, row=2)
 
         # button for start plagiarism check
-        self.check_b = tk.Button(self.botFrame, highlightbackground='#c0c0c0', text="Plagiarism Check",
-                                 command=lambda: self.checkFile())
-        self.check_b.pack(side=tk.RIGHT, padx=50)
+        check_b = tk.Button(botFrame, highlightbackground='#c0c0c0', text="Plagiarism Check",
+                            command=lambda: self.checkFile())
+        check_b.pack(side=tk.RIGHT, padx=50)
 
     def checkFile(self):
         global folderPath
@@ -397,37 +394,29 @@ class MainPage(tk.Frame):
 
 
 class ResultPage(tk.Frame):
+    fig = Figure(figsize=(4, 4), dpi=100)
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
-        self.resultChart = None
-        self.fig = None
-        self.ax = None
-        container = tk.Frame(self, bg="#c0c0c0")
-        container.pack(side="right", fill="both", expand=True)
-        self.resultListCount = similarity_algorithm.resultListCount
-        # resultFrame
-        self.resultFrame = tk.Frame(container, bg='#c0c0c0', width=self.winfo_width(), height=self.winfo_height())
-        self.resultFrame.pack(side=tk.BOTTOM, fill="both", expand=1)
-        self.drawFigure()
 
-    def drawFigure(self):
+        resultListCount = similarity_algorithm.getResultListCount()
+        ax = ResultPage.fig.add_subplot(111)
+        if len(resultListCount) <= 0:
+            ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'], ['0'], color='lightsteelblue')
+            canvas = FigureCanvasTkAgg(ResultPage.fig, self)
+            canvas.get_tk_widget().pack(side=tk.TOP, fill="both", expand=1)
 
-        self.resultChart = FigureCanvasTkAgg()
-        resultList = ["Below\n10%", "Between\n10%~15%", "Between\n15%~25%", "Over\n25%"]
-        if len(self.resultListCount) > 1:
-            self.fig = Figure(facecolor='white', figsize=(3.5, 3.5))  # create a figure object
-            self.ax = self.fig.add_subplot(111)  # add an Axes to the figure
-            self.ax.set_title("Plagiarism Result")
-            self.ax.pie(self.resultListCount, radius=1, labels=resultList, autopct='%0.2f%%', shadow=True,
-                        textprops={'fontsize': 10})
-            self.resultChart = FigureCanvasTkAgg(self.fig, self.resultFrame)
-            self.resultChart.draw()
-            self.resultChart.get_tk_widget().pack(side=tk.RIGHT, padx=15)
+    def refresh(self):
+        resultListCount = similarity_algorithm.getResultListCount()
+        ResultPage.fig.clear()
+        ax = ResultPage.fig.add_subplot(111)
+        ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'],
+               resultListCount, color='lightsteelblue')
+        canvas = FigureCanvasTkAgg(ResultPage.fig, self)
+        canvas.get_tk_widget().grid(row=0, column=0)
 
 
-
-
+# main loop
 if __name__ == "__main__":
     app = UserInterface()
     app.mainloop()
