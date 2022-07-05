@@ -114,6 +114,7 @@ class download:
 
 
     def mChange(exm1):
+        #Modify the result format to facilitate marking
         i = 0
         NewList = []
         while i<len(exm1):
@@ -130,6 +131,7 @@ class download:
 
 
     def use(floader , names):
+        #Call method
         x = final.check(floader)
         allFlie = list(download.dictGet_key(x[0]))
         allRate = list(download.dictGet_value(x[0]))
