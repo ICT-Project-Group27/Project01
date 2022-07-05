@@ -144,7 +144,8 @@ class UserInterface(tk.Tk):
         download_b = tk.Button(sid_bar_frame, image=download, highlightbackground='#184089', relief='flat',
                                command=lambda: downloadFinal.download.use(folderPath, names))
         download_b.image = download
-        info_b = tk.Button(sid_bar_frame, image=Info, highlightbackground='#184089', relief='flat')
+        info_b = tk.Button(sid_bar_frame, image=Info, highlightbackground='#184089', relief='flat',
+                           command=lambda: self.infoButtonFunc())
         info_b.image = Info
 
         # make label
@@ -168,6 +169,152 @@ class UserInterface(tk.Tk):
 
         # So that it does not depend on the widgets inside the frame
         sid_bar_frame.grid_propagate(False)
+
+    def infoButtonFunc(self):
+        """
+        from subprocess import Popen, PIPE
+
+        process = Popen(["python", "PlaSysCheckerInfo.py"], stdout=PIPE)
+        process.stdout.close()
+        process.wait()
+        """
+        from tkinter import Text as txt
+        from tkinter import Scrollbar as scroll
+
+        top = tk.Toplevel(
+            master=self,
+            # bg,
+            # fg,
+            # bd,
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+            # font,
+        )
+        top.title("help")
+
+        top_side_frame = tk.Frame(
+            top,
+            bg="#191970",
+            width=200,
+            height=self.winfo_height(),
+        )
+
+        # So that it does not depend on the widgets inside the frame
+        top_side_frame.grid_propagate(False)
+
+        # button
+        Description_and_introduction_b = tk.Button(
+            top_side_frame,
+            text="Description and introduction",
+            # highlightbackground="#184089",
+            # activebackground="#184089",
+            bg="#D7E4F0",
+            fg="black",
+            width=25,
+            relief="flat",
+            command=lambda: switch_text("description.txt"),
+        )
+
+        Function_is_introduced_b = tk.Button(
+            top_side_frame,
+            text="Function and introduced",
+            # highlightbackground="#184089",
+            # activebackground="#184089",
+            bg="#D7E4F0",
+            fg="black",
+            width=25,
+            relief="flat",
+            command=lambda: switch_text("func.txt"),
+        )
+        Support_b = tk.Button(
+            top_side_frame,
+            text="Support",
+            # highlightbackground="#184089",
+            # activebackground="#184089",
+            bg="#D7E4F0",
+            fg="black",
+            width=25,
+            relief="flat",
+            command=lambda: switch_text("support.txt"),
+        )
+        Other_b = tk.Button(
+            top_side_frame,
+            text="Other",
+            # highlightbackground="#184089",
+            # activebackground="#184089",
+            bg="#D7E4F0",
+            fg="black",
+            width=25,
+            relief="flat",
+            command=lambda: switch_text("other.txt"),
+        )
+
+        Description_and_introduction_b.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=10,
+        )
+        Function_is_introduced_b.grid(
+            row=1,
+            column=0,
+            padx=5,
+            pady=30,
+        )
+        Support_b.grid(
+            row=2,
+            column=0,
+            padx=5,
+            pady=10,
+        )
+        Other_b.grid(
+            row=3,
+            column=0,
+            padx=5,
+            pady=30,
+        )
+
+        top_main = tk.Frame(
+            top,
+            bg="#F5F5F5",
+            width=self.winfo_width() - 200,
+            height=(self.winfo_height()),
+        )
+
+        def switch_text(file):
+            show_data_area.delete(1.0, "end")
+            with open(file, "r", encoding="utf-8") as read_p:
+                line = read_p.readline()
+                while line:
+                    update_text(line.strip("\n"), show_data_area)
+                    line = read_p.readline()
+
+        def update_text(result, txt):
+            txt.insert(tk.END, result + "\n")
+            txt.update()
+
+        s1 = scroll(top_main)
+
+        show_data_area = txt(
+            master=top_main,
+            height=30,
+            font=("Helvetica", 12),
+            yscrollcommand=s1.set,
+        )
+
+        s1.config(command=show_data_area.yview)
+        s1.pack(side=tk.RIGHT, fill=tk.Y, pady=(15, 15))
+        show_data_area.pack(fill=tk.BOTH, padx=(1, 0), pady=(15, 15))
+
+        top_main.grid_propagate(False)
+
+        top_side_frame.pack(side=tk.LEFT)
+        top_main.pack(side=tk.RIGHT)
+
+        switch_text("description.txt")
+
+        # Display until closed manually.
+        top.mainloop()
 
 
 class MainPage(tk.Frame):
