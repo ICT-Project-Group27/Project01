@@ -12,7 +12,7 @@ from PIL import Image, ImageTk
 import sys
 import os
 import inspect
-import final
+import similarity_algorithm
 import downloadFinal
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -230,7 +230,7 @@ class MainPage(tk.Frame):
         if folderPath is None:
             messagebox.showerror(title='Warning', message="Please a folder / files.")
         else:
-            final.check(folderPath)
+            similarity_algorithm.check(folderPath)
 
     def openFile(self):
         global folderPath
@@ -245,7 +245,7 @@ class MainPage(tk.Frame):
 
     def updateListBox(self):
         global names
-        names = final.walk_dir(folderPath)
+        names = similarity_algorithm.walk_dir(folderPath)
         names = [names[0][1:]]
         for i in names:
             for x in i:
@@ -261,7 +261,7 @@ class ResultPage(tk.Frame):
         self.ax = None
         container = tk.Frame(self, bg="#c0c0c0")
         container.pack(side="right", fill="both", expand=True)
-        self.resultListCount = final.resultListCount
+        self.resultListCount = similarity_algorithm.resultListCount
         # resultFrame
         self.resultFrame = tk.Frame(container, bg='#c0c0c0', width=self.winfo_width(), height=self.winfo_height())
         self.resultFrame.pack(side=tk.BOTTOM, fill="both", expand=1)

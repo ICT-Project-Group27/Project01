@@ -1,93 +1,105 @@
 import numpy as np
-# open file
 import codecs
 import tokenize
 import token
-# Traverse all paths in a folder
 from os import walk
 from collections import Counter
-# interpreter
 import parso
-# regular expression
 import re
-import parser
+
+# import num2words
+# import parser
+
+from numpy.dual import norm
 
 
 # read the content of this directory
-# start_directory = ''/Users/kiko/Documents/IT project1/c_test/''
+# start_directory = '/Users/kiko/Documents/IT project1/c_test/'
 # a list contain all the file names in that directory
+# f_names = []
 
+resultListCount = []
 
-# Traverse the contents of the input paths and return their paths
+# 遍历输入路径里的内容并将他们的路径返回
 def walk_dir(start_directory):
-    # create list
     f_names = []
-    # returns all file names in a folder
     for (dirpath, dirnames, filenames) in walk(start_directory):
         f_names.append(filenames)
+    # print(f_names)
     return f_names
 
-
-# plagiarism check, returns the duplication rate and repeat position for each procedure
+# 查重，返回每个程序的查重率和重复的位置
 def check(rep_path):
-    # get all filenames in path
     names = walk_dir(rep_path)
-    # remove the first useless filename （DS_store）
+    global resultListCount
+    resultListCount = [0, 0, 0, 0]
+    from tkinter import messagebox
+    if(len(names) < 1 ):
+        messagebox.showerror(title='Warning', message="Please select 2 or more files.")
+    else:
+        names = [names[0][1:]]
+        #print(names)
+        code_dict = openfile(rep_path, names)[0]
+        pos_dict = openfile(rep_path, names)[1]
+        mark, matches_list = greedy_tiling(code_dict, names)
+        mark_dict = {}
 
-    names = [names[0][1:]]
-    print(names)
-    # the dictionary of token and the dictionary of the position of token in the original text
-    code_dict = openfile(rep_path, names)[0]
-    pos_dict = openfile(rep_path, names)[1]
+        for i in names[0]:
+            count = 0
+            name = i
+            result = mark[i]
+            for e in result:
+                if e != '0':
+                    count = count + 1
 
-    # invoke the repetition rate and location dictionary
-    mark, matches_list = greedy_tiling(code_dict, names)
+            #print(name + " " + str(count / len(result)))
+            mark_dict[i] = str(count / len(result))
 
-    mark_dict = mark
+            if((count / len(result)) < 0.1):
+                resultListCount[0] += 1
+            elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
+                resultListCount[1] += 1
+            elif ((count / len(result))  >= 0.15 and (count / len(result))  < 0.25):
+                resultListCount[2] += 1
+            elif ((count / len(result)) >= 0.25):
+                resultListCount[3] += 1
+        match_dict = {}
+        for i in matches_list:
+            try:
+                match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]]))
+            except:
+                match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]])]
 
-    # loaction of the repeat
-    match_dict = {}
-    for i in matches_list:
-        try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
-        except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            try:
+                match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]]))
 
-        try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            except:
+                match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        return mark_dict, match_dict
 
-        except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
 
-    return mark_dict, match_dict
     # return f_names
 
 
-# read the program, tokenize the program, and return a list of each program token and their location
-
+# 读取程序，并将程序tokenize,并且返回每个程序token的列表和他们的位置
 def openfile(filepath, f_names):
     code_dict = {}
     pos_dict = {}
-
-    # iterate over all filenames
     for i in range(0, (len(f_names[0]))):
-        # open file
         with codecs.open(filepath + f_names[0][i], 'r', encoding='utf-8', errors='ignore') as f:
             token_list = []
             lines = f.readlines()
             text = ''
             for line in lines:
                 text = text + line
-            # Compile the python file and traverse the compilation tree to find all the leaf nodes
             for e in parso.parse(text, version="3.9").children:
                 token_list.append(e)
             counter = 0
             check = 1
-            # Clear all non-leaf nodes
             while counter != check:
                 check = counter
                 temp = []
-                # Find the children of each nodes, if there is try, if not, except
                 for e in token_list:
                     try:
                         temp = temp + e.children
@@ -96,13 +108,9 @@ def openfile(filepath, f_names):
                     except:
                         temp.append(e)
                 token_list = temp
-            # leaf nodes
-            print(token_list)
-            # location of all tokens
+            #print(token_list)
             pos_list = []
-            # final token list
             final_list = []
-            # add keywords
             for a in token_list:
                 # print(a.start_pos)
                 if a.type == 'keyword':
@@ -126,117 +134,160 @@ def openfile(filepath, f_names):
                 elif re.match('<Name: readlines@', str(a)) is not None:
                     final_list.append('in')
                     pos_list.append(a.start_pos)
-            print(final_list)
-            print(pos_list)
-            # The dictionary stores the location of all file tokens and the token itself, 0 is a list, i is a list in
-            # a list
+            #print(final_list)
+            #print(pos_list)
+
             code_dict[f_names[0][i]] = final_list
             pos_dict[f_names[0][i]] = pos_list
 
     return code_dict, pos_dict
+    # <Operator: =>
 
 
-# greedy_tiling algorithm find all repeat part
+# code_dict = openfile('/Users/kiko/Documents/IT project1/c_test/')[0]
+# pos_dict = openfile('/Users/kiko/Documents/IT project1/c_test/')[1]
+# print(len(code_dict['test.txt']) == len(pos_dict['test.txt']))
+
+# print(temp)
+
+# token_list = temp
+
+
+# print(token_list)
+
+# final_list = []
+#
+# for e in token_list:
+#
+#     if str(e.type) == 'name':
+#         final_list.append(str(e))
+#     else:
+#         final_list.append(str(e))
+
+# print(final_list)
+# return final_list
+
+# for i in final_list:
+#     yield i.type
+# try:
+#     for e in i.children:
+#         # print(e)
+#         try:
+#             t_list = list(e.children)
+#             print(t_list)
+#             for t in t_list:
+#                 print(t)
+#                 # value = value + t.tpye
+#         except:
+#             # print(1)
+#             value = e.type
+#         # print(value)
+#
+# except:
+#     value = e.type
+# print(value)
+
+# print(1)
+# print(i.type)
+# for line in lines:
+#     print(line)
+#     print(parso.parse(line, version="3.9").children[0])
+# print(code_dict)
+
+# f_names = [['test_02.txt', 'test.txt']]
+
+# greedy_tiling算法 找到所有重复的部分
 def greedy_tiling(code_dict, f_names):
-    # store mark
     mark = {}
-    # store score
-    duplicate = {}
-    # store location
     matches_list = []
-
-    # loop filename
     for i in range(0, (len(f_names[0]))):
         temp = []
-        # initialize mark list for each file
         for e in code_dict[f_names[0][i]]:
             temp.append('0')
         mark[f_names[0][i]] = temp
 
-    # loop file name
     for i in f_names[0]:
+        # mark = {}
+        # for i in range(0, (len(f_names[0]))):
+        #     temp = []
+        #     for e in code_dict[f_names[0][i]]:
+        #         temp.append('0')
+        #     mark[f_names[0][i]] = temp
 
-        # clean mark
-        mark[i] = ['0'] * len(mark[i])
-
-        # loop file name for compare two files
         for a in f_names[0]:
-            # choose different file
             if a != i:
-                # clean mark other file
-                mark[a] = ['0'] * len(mark[a])
-                # set minimal repeat value
-                maxMatch = 12
-                while maxMatch >= 12:
-
-                    # longest repeated
+                maxMatch = 6
+                while maxMatch >= 6:
+                    # print(matches)
                     matches = []
-                    # Max_Repeat count
                     count = 0
+                    # print(maxMatch)
 
-                    # check repeat pair
                     for t in range(0, len(code_dict[i])):
-
-                        # without been marked
+                        # print(t)
                         if mark[i][t] == '0':
-                            # find repeat pair in other file
                             for b in range(0, len(code_dict[a])):
-
-                                # determine repeat
+                                #
+                                # print(code_dict[a][b])
+                                # print(code_dict[i][t])
+                                # print(str(code_dict[i][t]) == str(code_dict[a][b]))
                                 if mark[a][b] == '0' and str(code_dict[i][t]) == str(code_dict[a][b]):
+                                # if str(code_dict[i][t]) == str(code_dict[a][b]):
 
+                                    # print(5)
                                     j = 0
                                     flag = True
+                                    # print(t)
+                                    # print(code_dict[i][t])
 
-                                    # determine repeat
                                     while str(code_dict[a][b + j]) == str(code_dict[i][t + j]) and flag:
-
-                                        # don't exceed limited length
+                                        # print(code_dict[a][b + j + 1])
+                                        # print(code_dict[i][t + j + 1])
+                                        # print(b + j)
+                                        # print(t + j)
+                                        # print(flag)
                                         if ((b + j + 1) < len(code_dict[a])) and ((t + j + 1) < len(code_dict[i])):
                                             if mark[a][b + j] == '0' and mark[i][t + j] == '0':
-
+                                                # print("yes")
                                                 j = j + 1
-
+                                                # print(j)
                                             else:
                                                 flag = False
                                         else:
-
+                                            # print(1)
                                             flag = False
-
-                                    # save largest repeat count
+                                    # print(j)
+                                    # print(j > count)
+                                    # print(j)
+                                    # print(count)
                                     if j > count:
                                         count = j
                                         matches = [(t, b, j, i, a)]
-
+                                        # print(matches)
                                     elif j == count:
-
+                                        # print(3)
                                         matches.append((t, b, j, i, a))
 
-                    # update
+
+
                     maxMatch = count
+                    # print(maxMatch)
+                    # print(matches)
+                    # print(count)
 
-                    # record pair
-                    if maxMatch > 12:
-
+                    if maxMatch > 5:
+                        # print(matches)
+                        # print(len(mark[i]))
                         for f in matches:
                             matches_list.append(f)
                         for m in matches:
                             for c in range(0, m[2]):
+                                # print(t)
+                                # print(c)
                                 mark[i][m[0] + c] = a
                                 mark[a][m[1] + c] = i
-        # calculate mark count calculate plagiarism check rate
-        count = 0
-        for n in mark[i]:
-            if n != '0':
-                count = count + 1
-        print(count, len(mark[i]), mark[i])
-        score = count / len(mark[i])
-        print(score)
-        duplicate[i] = str(score)
 
-    print(matches_list)
-    print(mark)
-    return duplicate, matches_list
+    #print(matches_list)
+    #print(mark)
+    return mark, matches_list
 
-
-print(check('/Users/kiko/Documents/IT project1/c_test/'))

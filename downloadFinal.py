@@ -4,7 +4,7 @@ import os
 
 import numpy as np
 
-import final
+import similarity_algorithm
 
 
 class download:
@@ -132,7 +132,7 @@ class download:
 
     def use(floader , names):
         #Call method
-        x = final.check(floader)
+        x = similarity_algorithm.check(floader)
         allFlie = list(download.dictGet_key(x[0]))
         allRate = list(download.dictGet_value(x[0]))
         finalFile = list(download.dictGet_key(x[1]))
