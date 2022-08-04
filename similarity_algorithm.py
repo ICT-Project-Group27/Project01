@@ -62,14 +62,14 @@ def check(rep_path):
                     count = count + 1
 
             mark_dict[i] = str(count / len(result))
-
-            if ((count / len(result)) < 0.1):
+            print(mark_dict)
+            if float(mark_dict[i]) < 0.1:
                 resultListCount[0] += 1
-            elif ((count / len(result)) >= 0.1 and (count / len(result)) < 0.15):
+            elif 0.1 <= float(mark_dict[i]) < 0.2:
                 resultListCount[1] += 1
-            elif ((count / len(result)) >= 0.15 and (count / len(result)) < 0.25):
+            elif 0.2 <= float(mark_dict[i]) < 0.4:
                 resultListCount[2] += 1
-            elif ((count / len(result)) >= 0.25):
+            elif float(mark_dict[i]) >= 0.40:
                 resultListCount[3] += 1
         match_dict = {}
         for i in matches_list:

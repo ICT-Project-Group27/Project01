@@ -180,12 +180,8 @@ class UserInterface(tk.Tk):
 
         top = tk.Toplevel(
             master=self,
-            # bg,
-            # fg,
-            # bd,
             width=self.winfo_width(),
             height=self.winfo_height(),
-            # font,
         )
         top.title("help")
 
@@ -203,8 +199,6 @@ class UserInterface(tk.Tk):
         Description_and_introduction_b = tk.Button(
             top_side_frame,
             text="Description and introduction",
-            # highlightbackground="#184089",
-            # activebackground="#184089",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -215,8 +209,6 @@ class UserInterface(tk.Tk):
         Function_is_introduced_b = tk.Button(
             top_side_frame,
             text="Function and introduced",
-            # highlightbackground="#184089",
-            # activebackground="#184089",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -226,8 +218,6 @@ class UserInterface(tk.Tk):
         Support_b = tk.Button(
             top_side_frame,
             text="Support",
-            # highlightbackground="#184089",
-            # activebackground="#184089",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -237,8 +227,6 @@ class UserInterface(tk.Tk):
         Other_b = tk.Button(
             top_side_frame,
             text="Other",
-            # highlightbackground="#184089",
-            # activebackground="#184089",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -410,6 +398,7 @@ class ResultPage(tk.Frame):
         resultListCount = similarity_algorithm.getResultListCount()
         ResultPage.fig.clear()
         ax = ResultPage.fig.add_subplot(111)
+        ax.set_ylim(ymin=0, ymax=(sum(resultListCount)))
         ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'],
                resultListCount, color='lightsteelblue')
         canvas = FigureCanvasTkAgg(ResultPage.fig, self)
