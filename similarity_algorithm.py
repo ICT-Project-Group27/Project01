@@ -10,7 +10,7 @@ from collections import Counter
 import parso
 # regular expression
 import re
-import parser
+
 
 # read the content of this directory
 # start_directory = ''/Users/kiko/Documents/IT project1/c_test/''
