@@ -374,11 +374,14 @@ class MainPage(tk.Frame):
 
     def updateListBox(self):
         global names
+        self.listBox.delete(0, tk.END)
         names = similarity_algorithm.walk_dir(folderPath)
-        names = [names[0][1:]]
+        print(names)
+        names = [names[0][0:]]
         for i in names:
             for x in i:
-                self.listBox.insert(tk.END, x)
+                if not x.startswith("."):
+                    self.listBox.insert(tk.END, x)
 
 
 class ResultPage(tk.Frame):
