@@ -36,7 +36,7 @@ class UserInterface(tk.Tk):
         self.mainContainer.grid_columnconfigure(0, weight=1)
         self.sideBar()
         self.frames = {}
-        for F in (MainPage, ResultPage):
+        for F in (MainPage, ResultGraphPage, ReportPage, ResultPage):
             page_name = F.__name__
             frame = F(parent=self.mainContainer)
             self.frames[page_name] = frame
@@ -51,11 +51,11 @@ class UserInterface(tk.Tk):
     def show_frame(self, page_name):
         # Show a frame for the given page name
         frame = self.frames[page_name]
-        if page_name == 'ResultPage':
+        if page_name == 'ResultGraphPage':
             resultListCount = similarity_algorithm.getResultListCount()
             if len(resultListCount) > 1:
-                ResultPage.refresh(self.mainContainer)
-                ResultPage.update()
+                ResultGraphPage.refresh(self.mainContainer)
+                ResultGraphPage.update()
         frame.tkraise()
 
     def on_closing(self):
@@ -103,6 +103,7 @@ class UserInterface(tk.Tk):
                 result_l.config(text='Result', font=(0, 12))
                 download_l.config(text='Download\n Result', font=(0, 10))
                 info_l.config(text='Info', font=(0, 12))
+                result_l2.config(text="Result", font=(0,12))
             else:
                 # Bring the image back
                 menu_l.config(text="")
@@ -132,25 +133,59 @@ class UserInterface(tk.Tk):
         Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
         self.update()  # For the width to get updated
-        sid_bar_frame = tk.Frame(self.sideBarContainer, bg='#184089', width=45, height=self.winfo_height())
+        sid_bar_frame = tk.Frame(self.sideBarContainer, bg="#191970", width=100, height=self.winfo_height())
         sid_bar_frame.pack(side=tk.LEFT)
 
         # Make the buttons with the icons to be shown
-        menu_b = tk.Button(sid_bar_frame, image=navIcon, highlightbackground='#184089', activebackground='#184089',
-                           relief='flat', command=lambda: switch())
-        menu_b.image = navIcon
-        home_b = tk.Button(sid_bar_frame, image=home, highlightbackground='#184089', relief='flat',
-                           command=lambda: self.show_frame("MainPage"))
-        home_b.image = home
-        result_b = tk.Button(sid_bar_frame, image=result, highlightbackground='#184089', relief='flat',
+        menu_b = tk.Button(sid_bar_frame,
+            text="Welcome",
+            bg="#191970",
+            fg="white",
+            width=12,
+            relief="flat",
+                )
+
+        home_b = tk.Button(sid_bar_frame,
+            text="Upload",
+            bg="#191970",
+            fg="white",
+            width=12,
+            relief="flat",
+            command=lambda: self.show_frame("MainPage"))
+
+        result_b = tk.Button(sid_bar_frame,
+            text="Result\ngraph",
+            bg="#191970",
+            fg="white",
+            width=12,
+            relief="flat",
+            command=lambda: self.show_frame("ResultGraphPage"))
+
+        download_b = tk.Button(sid_bar_frame,
+            text="Reprot",
+            bg="#191970",
+            fg="white",
+            width=12,
+            relief="flat",
+            command=lambda: self.show_frame("ReportPage"))
+        #downloadFinal.download.use(folderPath, names)
+
+        info_b = tk.Button(sid_bar_frame,
+            text="Help",
+            bg="#191970",
+            fg="white",
+            width=12,
+            relief="flat",
+            command=lambda: self.infoButtonFunc())
+
+        result_c = tk.Button(sid_bar_frame,
+                             text="Result",
+                             bg="#191970",
+                             fg="white",
+                             width=12,
+                             relief="flat",
                              command=lambda: self.show_frame("ResultPage"))
-        result_b.image = result
-        download_b = tk.Button(sid_bar_frame, image=download, highlightbackground='#184089', relief='flat',
-                               command=lambda: downloadFinal.download.use(folderPath, names))
-        download_b.image = download
-        info_b = tk.Button(sid_bar_frame, image=Info, highlightbackground='#184089', relief='flat',
-                           command=lambda: self.infoButtonFunc())
-        info_b.image = Info
+
 
         # make label
         menu_l = tk.Label(sid_bar_frame, text='', bg='#184089')
@@ -158,18 +193,21 @@ class UserInterface(tk.Tk):
         result_l = tk.Label(sid_bar_frame, text='', bg='#184089')
         download_l = tk.Label(sid_bar_frame, text='', bg='#184089')
         info_l = tk.Label(sid_bar_frame, text='', bg='#184089')
+        result_l2 = tk.Label(sid_bar_frame, text='', bg='#184089')
 
         # Put them on the frame
         menu_b.grid(row=0, column=0, padx=1, pady=10)
         menu_l.grid(row=0, column=1)
         home_b.grid(row=1, column=0, padx=5, pady=30)
         home_l.grid(row=1, column=1, padx=5, pady=30)
-        result_b.grid(row=2, column=0, padx=5, pady=30)
-        result_l.grid(row=2, column=1, padx=5, pady=30)
-        download_b.grid(row=3, column=0, padx=5, pady=30)
-        download_l.grid(row=3, column=1, padx=5, pady=30)
-        info_b.grid(row=4, column=0, padx=5, pady=30)
-        info_l.grid(row=4, column=1, padx=5, pady=30)
+        result_b.grid(row=3, column=0, padx=5, pady=30)
+        result_l.grid(row=3, column=1, padx=5, pady=30)
+        download_b.grid(row=4, column=0, padx=5, pady=30)
+        download_l.grid(row=4, column=1, padx=5, pady=30)
+        info_b.grid(row=5, column=0, padx=5, pady=30)
+        info_l.grid(row=5, column=1, padx=5, pady=30)
+        result_c.grid(row=2, column=0, padx=5, pady=30)
+        result_l2.grid(row=2, column=1, padx=5, pady=30)
 
         # So that it does not depend on the widgets inside the frame
         sid_bar_frame.grid_propagate(False)
@@ -302,6 +340,7 @@ class UserInterface(tk.Tk):
         top.mainloop()
 
 
+
 class MainPage(tk.Frame):
     global names
     names = []
@@ -315,44 +354,71 @@ class MainPage(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
 
-        container = tk.Frame(self, bg="#c0c0c0")
+        container = tk.Frame(self, bg="#F5F5F5")
         container.pack(side="right", fill="both", expand=True)
 
-        topFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
                             height=(container.winfo_height() / 5 * 4))
         topFrame.pack(side=tk.TOP, fill="both", expand=1)
-        botFrame = tk.Frame(container, bg='#c0c0c0', width=container.winfo_width(),
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
                             height=(container.winfo_height() / 5 * 1))
         botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
         # dropdown box
-        dropDownFrame = tk.Frame(topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 1),
-                                 height=(container.winfo_height() / 5 * 4))
-        dropDownFrame.pack(side=tk.RIGHT)
-        selection_l = tk.Label(dropDownFrame, text='Language Selection:', bg='#c0c0c0', fg='black',
-                               font=(0, 18))
-        selection_l.pack(side=tk.TOP, pady=15, padx=15)
-        variable = tk.StringVar(dropDownFrame)
-        variable.set("Python")  # default value
-        selectionBox = OptionMenu(dropDownFrame, variable, "Python", "C++", "Java", "R", "C#")
-        selectionBox.configure(highlightbackground='black', background='#c0c0c0', fg='black', width=12)
-        selectionBox.pack(side=tk.BOTTOM, pady=15, padx=25)
+        stater = tk.IntVar()
+        stater.set(0)
+
+        def changeCode():
+            num = stater.get()
+            if num == 1:
+                messagebox.askyesno(title='Attention', message="Python")
+            elif num == 2:
+                messagebox.askyesno(title='Attention', message="Java")
+            elif num == 3:
+                messagebox.askyesno(title='Attention', message="C++")
+
+        dropDownFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                 height=5)
+        dropDownFrame.pack(side=tk.BOTTOM)
+        pyButton1 = tk.Radiobutton(dropDownFrame, text='Python', variable=stater, value=1,
+                                   command=changeCode)
+        pyButton1.grid(column=0, row=0)
+        pyButton2 = tk.Radiobutton(dropDownFrame, text='Java', variable=stater, value=2,
+                                   command=changeCode)
+        pyButton2.grid(column=1, row=0)
+        pyButton3 = tk.Radiobutton(dropDownFrame, text='C++', variable=stater, value=3,
+                                   command=changeCode)
+        pyButton3.grid(column=2, row=0)
+
+
+
 
         # listBox
-        listBoxFrame = tk.Frame(topFrame, bg='#c0c0c0', width=(container.winfo_width() / 5 * 4),
-                                height=(container.winfo_height() / 5 * 4))
-        listBoxFrame.pack(side=tk.LEFT)
-        studentWork_l = tk.Label(listBoxFrame, text='Student Files:', bg='#c0c0c0', fg='black', font=(0, 20))
-        studentWork_l.grid(column=0, row=0, padx=10)
-        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=30)
+
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=60)
+        listBoxFrame.pack(side=tk.RIGHT)
+        studentWork_l = tk.Label(listBoxFrame, text='        Student Files:', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork_l.grid(column=0, row=0, padx=20)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=68)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2)
-        selection_b = tk.Button(listBoxFrame, highlightbackground='#c0c0c0', text="Folder", width=8,
+        selection_b = tk.Button(listBoxFrame, highlightbackground='#F5F5F5', text="Folder", width=8, bg='white',
                                 command=lambda: self.openFile())
-        selection_b.grid(column=1, row=2)
+        selection_b.grid(column=1, row=1)
+
+
+
 
         # button for start plagiarism check
-        check_b = tk.Button(botFrame, highlightbackground='#c0c0c0', text="Plagiarism Check",
+        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
                             command=lambda: self.checkFile())
         check_b.pack(side=tk.RIGHT, padx=50)
+
+        cancel_b = tk.Button(botFrame, bg="#191970", text="Cancel", fg="white", width=15,
+                             command=lambda: self.cancelFile())
+        cancel_b.pack(side=tk.LEFT, padx=50,)
+
+
 
     def checkFile(self):
         global folderPath
@@ -372,6 +438,13 @@ class MainPage(tk.Frame):
         folderPath = fd.askdirectory() + '/'
         self.updateListBox()
 
+    def cancelFile(self):
+        global  folderPath
+        similarity_algorithm.deletFile()
+        folderPath = None
+        self.listBox.delete(0, tk.END)
+
+
     def updateListBox(self):
         global names
         self.listBox.delete(0, tk.END)
@@ -384,27 +457,145 @@ class MainPage(tk.Frame):
                     self.listBox.insert(tk.END, x)
 
 
+
+class ReportPage(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
+
+        container = tk.Frame(self, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
+
+
+        # listBox
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=30)
+        tittleFrame.pack(side=tk.TOP)
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=100)
+        listBoxFrame.pack(side=tk.BOTTOM)
+        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
+        studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
+        studentReport.grid(column=0, row=1, padx=20)
+        #scrollBary = tk.Scrollbar(listBoxFrame)
+        #scrollBarx = Scrollbar(listBoxFrame, orient = HORIZONTAL)
+        #scrollBary.pack(side=RIGHT, fill=Y)
+        #scrollBarx.pack(side=BOTTOM, fill=X)
+        self.listBox = tk.Text(listBoxFrame, bg='white', fg='black', width=68, height=30)
+        self.listBox.grid(column=0, row=4, padx=10, columnspan=2)
+
+        #scrollBary.config(command=listBox.yview)
+        #scrollBarx.config(command=listBox.xview)
+        #self.listBox.bind('<KeyPress>',lambda e:'break')     ,
+                             # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
+        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
+                            command=lambda: downloadFinal.download.use(folderPath, names))
+        check_b.grid(column=1, row=2, padx=20)
+        check_be = tk.Button(botFrame, bg='#191970', text="dwadsa", fg="white", width=15,
+                            command=lambda: self.test())
+        check_be.grid(column=9, row=2, padx=20)
+
+        def data_matrix(fileroad, filename):
+            # Open test file
+            file = open(fileroad + '/' + filename, "r")
+            row = file.readlines()
+            print(row)
+            l = []
+            for line in row:
+                str = list(line.rstrip())
+                l.append(str)
+            print(l)
+            self.listBox.insert(row)
+            return l
+    def test(self):
+        l=["1234\n","5678\n","9\n"]
+        for i in range (0,3):
+            a = float(i+1)
+            self.listBox.insert(a,l[i])
+
+
+
+
+
+
+
+
 class ResultPage(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
+
+        container = tk.Frame(self, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
+
+
+        # listBox
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=30)
+        tittleFrame.pack(side=tk.TOP)
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=100)
+        listBoxFrame.pack(side=tk.BOTTOM)
+        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
+        studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
+        studentReport.grid(column=0, row=1, padx=20)
+        #scrollBary = tk.Scrollbar(listBoxFrame)
+        #scrollBarx = Scrollbar(listBoxFrame, orient = HORIZONTAL)
+        #scrollBary.pack(side=RIGHT, fill=Y)
+        #scrollBarx.pack(side=BOTTOM, fill=X)
+        self.listBox = tk.Text(listBoxFrame, bg='white', fg='black', width=68, height=30)
+        self.listBox.grid(column=0, row=0, padx=10, columnspan=2)
+        #scrollBary.config(command=listBox.yview)
+        #scrollBarx.config(command=listBox.xview)
+        #self.listBox.bind('<KeyPress>',lambda e:'break')     ,
+                             # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
+        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
+                            command=lambda: self.checkFile())
+        check_b.grid(column=1, row=2, padx=20)
+
+
+
+
+
+
+
+class ResultGraphPage(tk.Frame):
     fig = Figure(figsize=(4, 4), dpi=100)
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
 
         resultListCount = similarity_algorithm.getResultListCount()
-        ax = ResultPage.fig.add_subplot(111)
+        ax = ResultGraphPage.fig.add_subplot(111)
         if len(resultListCount) <= 0:
             ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'], ['0'], color='lightsteelblue')
-            canvas = FigureCanvasTkAgg(ResultPage.fig, self)
+            canvas = FigureCanvasTkAgg(ResultGraphPage.fig, self)
             canvas.get_tk_widget().pack(side=tk.TOP, fill="both", expand=1)
 
     def refresh(self):
         resultListCount = similarity_algorithm.getResultListCount()
-        ResultPage.fig.clear()
-        ax = ResultPage.fig.add_subplot(111)
+        ResultGraphPage.fig.clear()
+        ax = ResultGraphPage.fig.add_subplot(111)
         ax.set_ylim(ymin=0, ymax=(sum(resultListCount)))
         ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'],
                resultListCount, color='lightsteelblue')
-        canvas = FigureCanvasTkAgg(ResultPage.fig, self)
+        canvas = FigureCanvasTkAgg(ResultGraphPage.fig, self)
         canvas.get_tk_widget().grid(row=0, column=0)
 
 

@@ -11,7 +11,6 @@ import parso
 # regular expression
 import re
 
-
 # read the content of this directory
 # start_directory = ''/Users/kiko/Documents/IT project1/c_test/''
 # a list contain all the file names in that directory
@@ -93,70 +92,79 @@ def openfile(filepath, f_names):
     code_dict = {}
     pos_dict = {}
 
-    # iterate over all filenames
-    for i in range(0, (len(f_names[0]))):
-        # open file
-        with codecs.open(filepath + f_names[0][i], 'r', encoding='utf-8', errors='ignore') as f:
-            token_list = []
-            lines = f.readlines()
-            text = ''
-            for line in lines:
-                text = text + line
-            # Compile the python file and traverse the compilation tree to find all the leaf nodes
-            for e in parso.parse(text, version="3.9").children:
-                token_list.append(e)
-            counter = 0
-            check = 1
-            # Clear all non-leaf nodes
-            while counter != check:
-                check = counter
-                temp = []
-                # Find the children of each nodes, if there is try, if not, except
-                for e in token_list:
-                    try:
-                        temp = temp + e.children
-                        counter = counter + 1
+    if len(f_names) > 0 and len(filepath) > 0:
+        # iterate over all filenames
+        for i in range(0, (len(f_names[0]))):
+            # open file
+            with codecs.open(filepath + f_names[0][i], 'r', encoding='utf-8', errors='ignore') as f:
+                token_list = []
+                lines = f.readlines()
+                text = ''
+                for line in lines:
+                    text = text + line
+                # Compile the python file and traverse the compilation tree to find all the leaf nodes
+                for e in parso.parse(text, version="3.9").children:
+                    token_list.append(e)
+                counter = 0
+                check = 1
+                # Clear all non-leaf nodes
+                while counter != check:
+                    check = counter
+                    temp = []
+                    # Find the children of each nodes, if there is try, if not, except
+                    for e in token_list:
+                        try:
+                            temp = temp + e.children
+                            counter = counter + 1
 
-                    except:
-                        temp.append(e)
-                token_list = temp
-            # leaf nodes
-            print(token_list)
-            # location of all tokens
-            pos_list = []
-            # final token list
-            final_list = []
-            # add keywords
-            for a in token_list:
-                if a.type == 'keyword':
-                    final_list.append(a)
-                    pos_list.append(a.start_pos)
-                elif str(a) == '<Operator: =>':
-                    final_list.append('assign')
-                    pos_list.append(a.start_pos)
-                elif re.match('<Name: print@', str(a)) is not None:
-                    final_list.append('out')
-                    pos_list.append(a.start_pos)
-                elif re.match('<Name: write@', str(a)) is not None:
-                    final_list.append('out')
-                    pos_list.append(a.start_pos)
-                elif re.match('<Name: read@', str(a)) is not None:
-                    final_list.append('in')
-                    pos_list.append(a.start_pos)
-                elif re.match('<Name: readline@', str(a)) is not None:
-                    final_list.append('in')
-                    pos_list.append(a.start_pos)
-                elif re.match('<Name: readlines@', str(a)) is not None:
-                    final_list.append('in')
-                    pos_list.append(a.start_pos)
-            print(final_list)
-            print(pos_list)
-            # The dictionary stores the location of all file tokens and the token itself, 0 is a list, i is a list in
-            # a list
-            code_dict[f_names[0][i]] = final_list
-            pos_dict[f_names[0][i]] = pos_list
+                        except:
+                            temp.append(e)
+                    token_list = temp
+                # leaf nodes
+                print(token_list)
+                # location of all tokens
+                pos_list = []
+                # final token list
+                final_list = []
+                # add keywords
+                for a in token_list:
+                    if a.type == 'keyword':
+                        final_list.append(a)
+                        pos_list.append(a.start_pos)
+                    elif str(a) == '<Operator: =>':
+                        final_list.append('assign')
+                        pos_list.append(a.start_pos)
+                    elif re.match('<Name: print@', str(a)) is not None:
+                        final_list.append('out')
+                        pos_list.append(a.start_pos)
+                    elif re.match('<Name: write@', str(a)) is not None:
+                        final_list.append('out')
+                        pos_list.append(a.start_pos)
+                    elif re.match('<Name: read@', str(a)) is not None:
+                        final_list.append('in')
+                        pos_list.append(a.start_pos)
+                    elif re.match('<Name: readline@', str(a)) is not None:
+                        final_list.append('in')
+                        pos_list.append(a.start_pos)
+                    elif re.match('<Name: readlines@', str(a)) is not None:
+                        final_list.append('in')
+                        pos_list.append(a.start_pos)
+                print(final_list)
+                print(pos_list)
+                # The dictionary stores the location of all file tokens and the token itself, 0 is a list, i is a list in
+                # a list
+                code_dict[f_names[0][i]] = final_list
+                pos_dict[f_names[0][i]] = pos_list
+    else:
+        return code_dict, pos_dict
 
     return code_dict, pos_dict
+
+
+def deletFile():
+    code_dict = []
+    pos_dict = []
+    openfile(code_dict, pos_dict)
 
 
 # greedy_tiling algorithm find all repeat part
