@@ -42,7 +42,11 @@ def check(rep_path):
     if (len(names) < 1):
         messagebox.showerror(title='Warning', message="Please select 2 or more files.")
     else:
-        names = [names[0][1:]]
+        names = [names[0][0:]]
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
         # the dictionary of token and the dictionary of the position of token in the original text
         code_dict = openfile(rep_path, names)[0]
         pos_dict = openfile(rep_path, names)[1]

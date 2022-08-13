@@ -11,8 +11,9 @@ class download:
 
     def text_create(name):
         # Create final document
+        rename = os.path.splitext(name)[0]
         desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
-        full_path = desktop_path + name + '.txt'
+        full_path = desktop_path + rename + '_Report.txt'
         return full_path
 
 
@@ -130,7 +131,7 @@ class download:
         return exm1.values()
 
 
-    def use(floader , names):
+    def use(floader , names, needName):
         #Call method
         try:
             x = similarity_algorithm.check(floader)
@@ -139,13 +140,16 @@ class download:
             finalFile = list(download.dictGet_key(x[1]))
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
-                ReportFile = download.text_create(names[0][i])
-                fileName = str(allFlie[i])
-                originalFile = download.data_matrix(floader,fileName)
-                repetitionRate = x[0][allFlie[i]]
-                c1 = x[1][allFlie[i]]
-                repetitionLine = download.mChange(c1)
-                download.text_write(ReportFile,originalFile,repetitionLine,repetitionRate,fileName)
+                if allFlie[i]==needName:
+                    ReportFile = download.text_create(names[0][i])
+                    fileName = str(allFlie[i])
+                    originalFile = download.data_matrix(floader, fileName)
+                    repetitionRate = x[0][allFlie[i]]
+                    c1 = x[1][allFlie[i]]
+                    repetitionLine = download.mChange(c1)
+                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+
+
         except Exception as e:
             print(e)
 

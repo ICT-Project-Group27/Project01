@@ -497,7 +497,7 @@ class ReportPage(tk.Frame):
         #self.listBox.bind('<KeyPress>',lambda e:'break')     ,
                              # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
         check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
-                            command=lambda: downloadFinal.download.use(folderPath, names))
+                            command=lambda: downloadFinal.download.use(folderPath, names, "2.txt"))
         check_b.grid(column=1, row=2, padx=20)
         check_be = tk.Button(botFrame, bg='#191970', text="dwadsa", fg="white", width=15,
                             command=lambda: self.test())
@@ -529,6 +529,15 @@ class ReportPage(tk.Frame):
 
 
 class ResultPage(tk.Frame):
+    global names
+    names = []
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    global parentdir
+    parentdir = os.path.dirname(currentdir)
+    sys.path.insert(0, parentdir)
+    global folderPath
+    folderPath = None
+
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
 
@@ -536,38 +545,73 @@ class ResultPage(tk.Frame):
         container.pack(side="right", fill="both", expand=True)
 
         topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                            height=(container.winfo_height() / 5 * 1))
+                            height=(container.winfo_height() / 5 * 4))
         topFrame.pack(side=tk.TOP, fill="both", expand=1)
         botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
                             height=(container.winfo_height() / 5 * 1))
         botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
 
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                               height=30)
+        tittleFrame.pack(side=tk.TOP)
+        studentWork_l = tk.Label(tittleFrame, text='\nResult:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
 
 
         # listBox
-        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
-                                height=30)
-        tittleFrame.pack(side=tk.TOP)
+
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
-                                height=100)
-        listBoxFrame.pack(side=tk.BOTTOM)
-        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
-        studentWork_l.grid(column=0, row=0, padx=30)
-        studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
-        studentReport.grid(column=0, row=1, padx=20)
-        #scrollBary = tk.Scrollbar(listBoxFrame)
-        #scrollBarx = Scrollbar(listBoxFrame, orient = HORIZONTAL)
-        #scrollBary.pack(side=RIGHT, fill=Y)
-        #scrollBarx.pack(side=BOTTOM, fill=X)
-        self.listBox = tk.Text(listBoxFrame, bg='white', fg='black', width=68, height=30)
-        self.listBox.grid(column=0, row=0, padx=10, columnspan=2)
-        #scrollBary.config(command=listBox.yview)
-        #scrollBarx.config(command=listBox.xview)
-        #self.listBox.bind('<KeyPress>',lambda e:'break')     ,
-                             # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
+                                height=60)
+        listBoxFrame.pack(side=tk.RIGHT)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=68)
+        self.listBox.grid(column=0, row=1, padx=10, columnspan=2)
+
+
+
+
+
+        # button for start plagiarism check
         check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
                             command=lambda: self.checkFile())
-        check_b.grid(column=1, row=2, padx=20)
+        check_b.pack(side=tk.RIGHT, padx=50)
+
+
+
+    def checkFile(self):
+        global folderPath
+        if folderPath is None:
+            messagebox.showerror(title='Warning', message="Please a folder / files.")
+        else:
+            similarity_algorithm.check(folderPath)
+
+    def openFile(self):
+        global folderPath
+        from tkinter import filedialog as fd
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+
+        folderPath = fd.askdirectory() + '/'
+        self.updateListBox()
+
+    def cancelFile(self):
+        global  folderPath
+        similarity_algorithm.deletFile()
+        folderPath = None
+        self.listBox.delete(0, tk.END)
+
+
+    def updateListBox(self):
+        global names
+        self.listBox.delete(0, tk.END)
+        names = similarity_algorithm.walk_dir(folderPath)
+        print(names)
+        names = [names[0][0:]]
+        for i in names:
+            for x in i:
+                if not x.startswith("."):
+                    self.listBox.insert(tk.END, x)
 
 
 
