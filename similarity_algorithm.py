@@ -86,7 +86,6 @@ def check(rep_path):
 
             except:
                 match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]])]
-        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
         return mark_dict, match_dict
 
 

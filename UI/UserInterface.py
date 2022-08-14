@@ -7,6 +7,7 @@ Created on Sat April  5 23:36:17 2022
 """
 # importing tkinter gui
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox, OptionMenu
 from PIL import Image, ImageTk
 import sys
@@ -350,6 +351,8 @@ class MainPage(tk.Frame):
     sys.path.insert(0, parentdir)
     global folderPath
     folderPath = None
+    global transferDicList
+    transferDicList = None
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
@@ -422,10 +425,21 @@ class MainPage(tk.Frame):
 
     def checkFile(self):
         global folderPath
+        global transferDicList
         if folderPath is None:
             messagebox.showerror(title='Warning', message="Please a folder / files.")
         else:
-            similarity_algorithm.check(folderPath)
+            messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+            transferDicList=similarity_algorithm.check(folderPath)
+            #ResultPage.updataResult(self=ResultPage)
+
+
+    def transferList(self):
+        global transferDicList
+        return transferDicList
+
+
+
 
     def openFile(self):
         global folderPath
@@ -459,7 +473,9 @@ class MainPage(tk.Frame):
 
 
 class ReportPage(tk.Frame):
+
     def __init__(self, parent):
+
         tk.Frame.__init__(self, parent)
 
         container = tk.Frame(self, bg="#F5F5F5")
@@ -480,48 +496,64 @@ class ReportPage(tk.Frame):
         tittleFrame.pack(side=tk.TOP)
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=100)
-        listBoxFrame.pack(side=tk.BOTTOM)
+        listBoxFrame.pack(side=tk.LEFT)
+
+
         studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
         studentWork_l.grid(column=0, row=0, padx=30)
-        studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
-        studentReport.grid(column=0, row=1, padx=20)
+        show_b = tk.Button(tittleFrame, bg='#191970', text="Preview", fg="white", width=10,
+                            command=lambda: self.test())
+        show_b.grid(column=0, row=1,padx=30)
+        #studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
+        #studentReport.grid(column=0, row=1, padx=20)
         #scrollBary = tk.Scrollbar(listBoxFrame)
         #scrollBarx = Scrollbar(listBoxFrame, orient = HORIZONTAL)
         #scrollBary.pack(side=RIGHT, fill=Y)
         #scrollBarx.pack(side=BOTTOM, fill=X)
-        self.listBox = tk.Text(listBoxFrame, bg='white', fg='black', width=68, height=30)
-        self.listBox.grid(column=0, row=4, padx=10, columnspan=2)
+        scrolly = tk.Scrollbar(listBoxFrame)
+        scrolly.pack(side=tk.RIGHT, fill=tk.Y)
+
+        scrollx = tk.Scrollbar(listBoxFrame, orient=tk.HORIZONTAL)
+        scrollx.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.listBox = tk.Text(listBoxFrame, wrap='none')
+        self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
+        self.listBox.config(yscrollcommand=scrolly.set)
+        self.listBox.config(xscrollcommand=scrollx.set)
+        scrolly.config(command=self.listBox.yview)
+        scrollx.config(command=self.listBox.xview)
+
+
+        check_b = tk.Button(botFrame, bg='#191970', text="Download this report", fg="white", width=18,
+                            command=lambda: self.downSinFile())
+        check_b.pack(side=tk.RIGHT, padx=50)
+
+        cancel_b = tk.Button(botFrame, bg="#191970", text="Download all report", fg="white", width=18,
+                             command=lambda: self.downMuiFIle())
+        cancel_b.pack(side=tk.LEFT, padx=50)
 
         #scrollBary.config(command=listBox.yview)
         #scrollBarx.config(command=listBox.xview)
-        #self.listBox.bind('<KeyPress>',lambda e:'break')     ,
-                             # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
-        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
-                            command=lambda: downloadFinal.download.use(folderPath, names, "2.txt"))
-        check_b.grid(column=1, row=2, padx=20)
-        check_be = tk.Button(botFrame, bg='#191970', text="dwadsa", fg="white", width=15,
-                            command=lambda: self.test())
-        check_be.grid(column=9, row=2, padx=20)
+        self.listBox.bind('<KeyPress>',lambda e:'break')
+        # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
 
-        def data_matrix(fileroad, filename):
-            # Open test file
-            file = open(fileroad + '/' + filename, "r")
-            row = file.readlines()
-            print(row)
-            l = []
-            for line in row:
-                str = list(line.rstrip())
-                l.append(str)
-            print(l)
-            self.listBox.insert(row)
-            return l
+
+
+
+
     def test(self):
-        l=["1234\n","5678\n","9\n"]
-        for i in range (0,3):
+
+        l=downloadFinal.download.trans(folderPath, names, ResultPage.wantFile(self=ResultPage))
+        for i in range (0,len(l)):
             a = float(i+1)
             self.listBox.insert(a,l[i])
 
-
+    def downSinFile(self):
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage))
+    def downMuiFIle(self):
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        downloadFinal.download.alluse(folderPath, names)
 
 
 
@@ -529,14 +561,8 @@ class ReportPage(tk.Frame):
 
 
 class ResultPage(tk.Frame):
-    global names
-    names = []
-    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    global parentdir
-    parentdir = os.path.dirname(currentdir)
-    sys.path.insert(0, parentdir)
-    global folderPath
-    folderPath = None
+    global filename
+    filename = None
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
@@ -554,64 +580,75 @@ class ResultPage(tk.Frame):
         tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                height=30)
         tittleFrame.pack(side=tk.TOP)
-        studentWork_l = tk.Label(tittleFrame, text='\nResult:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l = tk.Label(tittleFrame, text='\nResult:\n\n', bg='#F5F5F5', fg='black', font=(0, 30))
         studentWork_l.grid(column=0, row=0, padx=30)
 
 
         # listBox
 
-        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=80,
                                 height=60)
-        listBoxFrame.pack(side=tk.RIGHT)
-        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=68)
-        self.listBox.grid(column=0, row=1, padx=10, columnspan=2)
-
-
-
-
+        listBoxFrame.pack(side=tk.TOP)
+        colums = ['File Name', 'Rate']
+        self.resultListBox = ttk.Treeview(listBoxFrame, columns=colums, show='headings', heigh=10)
+        self.resultListBox.grid(column=1, row=1, padx=20, columnspan=2)
+        self.resultListBox.heading('File Name', text='File Name', )
+        self.resultListBox.heading('Rate', text='Rate', )
+        self.resultListBox.column('File Name', width=250)
+        self.resultListBox.column('Rate', width=140)
 
         # button for start plagiarism check
         check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
-                            command=lambda: self.checkFile())
+                            command=lambda: self.show_selected())
         check_b.pack(side=tk.RIGHT, padx=50)
+        result_b = tk.Button(botFrame, bg='#191970', text="Show result", fg="white", width=15,
+                             command=lambda: self.updataResult())
+        result_b.pack(side=tk.LEFT, padx=50)
 
 
 
-    def checkFile(self):
-        global folderPath
-        if folderPath is None:
+    def updataResult(self):
+        thisDict = MainPage.transferList(self=MainPage)
+        if thisDict is None:
             messagebox.showerror(title='Warning', message="Please a folder / files.")
         else:
-            similarity_algorithm.check(folderPath)
-
-    def openFile(self):
-        global folderPath
-        from tkinter import filedialog as fd
-        filetypes = (
-            ('text files', '*.txt'),
-            ('All files', '*.*')
-        )
-
-        folderPath = fd.askdirectory() + '/'
-        self.updateListBox()
-
-    def cancelFile(self):
-        global  folderPath
-        similarity_algorithm.deletFile()
-        folderPath = None
-        self.listBox.delete(0, tk.END)
+            messagebox.showinfo(title="Result Information", message="All information loaded")
+            resultList = thisDict[0]
+            i = 0
+            my_list=[]
+            for row in self.resultListBox.get_children():
+                self.resultListBox.delete(row)
+            for key,val in resultList.items():
+                newCalue1=float(resultList[key])
+                newCalue2=newCalue1*100
+                newCalue3=float('%.2f'%newCalue2)
+                newvalue=str(newCalue3)+"%"
+                my_list.append((key, newvalue))
+            for value in my_list:
+                self.resultListBox.insert(parent='', index=i, iid=i, values=value)
+                i+=1
 
 
-    def updateListBox(self):
-        global names
-        self.listBox.delete(0, tk.END)
-        names = similarity_algorithm.walk_dir(folderPath)
-        print(names)
-        names = [names[0][0:]]
-        for i in names:
-            for x in i:
-                if not x.startswith("."):
-                    self.listBox.insert(tk.END, x)
+    def show_selected(self):
+        global filename
+        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        for item in self.resultListBox.selection():
+            item_text = self.resultListBox.item(item, "values")
+            filename=item_text[0]
+
+
+    def wantFile(self):
+        global filename
+        return filename
+
+
+
+
+
+
+
+
+
 
 
 

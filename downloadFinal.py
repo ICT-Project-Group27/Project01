@@ -153,5 +153,58 @@ class download:
         except Exception as e:
             print(e)
 
+    def alluse(floader , names):
+        #Call method
+        try:
+            x = similarity_algorithm.check(floader)
+            allFlie = list(download.dictGet_key(x[0]))
+            allRate = list(download.dictGet_value(x[0]))
+            finalFile = list(download.dictGet_key(x[1]))
+            lines = list(download.dictGet_value(x[1]))
+            for i in range(0,len(allFlie)):
+                    ReportFile = download.text_create(names[0][i])
+                    fileName = str(allFlie[i])
+                    originalFile = download.data_matrix(floader, fileName)
+                    repetitionRate = x[0][allFlie[i]]
+                    c1 = x[1][allFlie[i]]
+                    repetitionLine = download.mChange(c1)
+                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+
+
+        except Exception as e:
+            print(e)
+
+    def trans (floader , names, needName):
+        global transList
+        transList=[]
+        try:
+            x = similarity_algorithm.check(floader)
+            allFlie = list(download.dictGet_key(x[0]))
+            allRate = list(download.dictGet_value(x[0]))
+            finalFile = list(download.dictGet_key(x[1]))
+            lines = list(download.dictGet_value(x[1]))
+            for i in range(0,len(allFlie)):
+                if allFlie[i]==needName:
+                    ReportFile = download.text_create(names[0][i])
+                    fileName = str(allFlie[i])
+                    originalFile = download.data_matrix(floader, fileName)
+                    repetitionRate = x[0][allFlie[i]]
+                    c1 = x[1][allFlie[i]]
+                    repetitionLine = download.mChange(c1)
+                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+            with open(ReportFile, 'r') as f:
+                for line in f:
+                    line = line.strip('\n')
+                    transList.append(line+'\n')
+            f.close
+            os.remove(ReportFile)
+            return transList
+
+
+
+        except Exception as e:
+            print(e)
+
+
 
 
