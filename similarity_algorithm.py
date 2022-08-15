@@ -10,6 +10,7 @@ from collections import Counter
 import parso
 # regular expression
 import re
+import javac_parser
 
 # read the content of this directory
 # start_directory = ''/Users/kiko/Documents/IT project1/c_test/''
@@ -268,3 +269,115 @@ def greedy_tiling(code_dict, f_names):
         duplicate[i] = str(score)
 
     return duplicate, matches_list
+
+
+def openfile_java(filepath, f_names):
+    java = javac_parser.Java()
+    print(java)
+    code_dict = {}
+    pos_dict = {}
+    for i in range(0, (len(f_names[0]))):
+        with codecs.open(filepath + f_names[0][i], 'r', encoding='utf-8', errors='ignore') as f:
+            print(f_names[0][i])
+            token_list = []
+            lines = f.readlines()
+            text = ''
+            for line in lines:
+                text = text + line
+            for e in java.lex(text):
+                token_list.append(e)
+
+            pos_list = []
+            final_list = []
+            for a in token_list:
+                # print(a.start_pos)
+                if a[0] == 'CLASS':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'PACKAGE':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'IMPORT':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'WHILE':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'FOR':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'SWITCH':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'CASE':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'TRY':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'CATCH':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'FINALLY':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'IF':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'ELSE':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'BREAK':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'RETURN':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'CONTINUE':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+                elif a[0] == 'VOID':
+                    final_list.append(a[0])
+                    pos_list.append((a[2][0], a[2][1]))
+
+            print(final_list)
+            print(pos_list)
+
+            code_dict[f_names[0][i]] = final_list
+            pos_dict[f_names[0][i]] = pos_list
+
+    print(code_dict)
+    print(pos_dict)
+    return code_dict, pos_dict
+
+
+def check_java(rep_path):
+    names = walk_dir(rep_path)
+    names = [names[0][0:]]
+    for i in names:
+        for x in i:
+            if x.startswith('.'):
+                i.remove(x)
+
+    code_dict = openfile_java(rep_path, names)[0]
+    pos_dict = openfile_java(rep_path, names)[1]
+    print(pos_dict)
+    print(code_dict)
+    mark, matches_list = greedy_tiling(code_dict, names)
+
+    mark_dict = mark
+
+    match_dict = {}
+    for i in matches_list:
+        try:
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+        except:
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+
+        try:
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+
+        except:
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+
+    return mark_dict, match_dict

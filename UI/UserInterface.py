@@ -643,19 +643,6 @@ class ResultPage(tk.Frame):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ResultGraphPage(tk.Frame):
     fig = Figure(figsize=(4, 4), dpi=100)
 
