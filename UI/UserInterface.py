@@ -412,9 +412,10 @@ class MainPage(tk.Frame):
 
 
 
+
         # button for start plagiarism check
         check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
-                            command=lambda: self.checkFile())
+                            command=lambda: self.checkFile(stater.get()))
         check_b.pack(side=tk.RIGHT, padx=50)
 
         cancel_b = tk.Button(botFrame, bg="#191970", text="Cancel", fg="white", width=15,
@@ -422,16 +423,18 @@ class MainPage(tk.Frame):
         cancel_b.pack(side=tk.LEFT, padx=50,)
 
 
-
-    def checkFile(self):
+    def checkFile(self, stater):
         global folderPath
         global transferDicList
         if folderPath is None:
             messagebox.showerror(title='Warning', message="Please a folder / files.")
         else:
             messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
-            transferDicList=similarity_algorithm.check(folderPath)
-            #ResultPage.updataResult(self=ResultPage)
+            if (stater == 1):
+                transferDicList = similarity_algorithm.check(folderPath)
+            elif (stater == 2):
+                transferDicList = similarity_algorithm.check_java(folderPath)
+
 
 
     def transferList(self):
