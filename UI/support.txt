@@ -1,18 +1,18 @@
 Support
 
-Operation System: Windows, MacOS
-Input 
-Input format: Only files in txt format are supported
+Operation System: Windows
+Input
+Input format: Text files and code files are supported
 Input media: mouse, keyboard
 Quality Management: The minimum number of uploaded files is 2, and the system will not be detectable when the number of files uploaded by the user is less than 2.
 
 Data background
-Data Source: Locally stored code files 
+Data Source: Locally stored code files
 
 Data structures
 Number：>=2
-Format：.txt file
-Content：Code text in the selected language (currently the system only supports python language) 
+Format：files (Text files and code files)
+Content：Code text in the selected language (Python, Java...)
 
 Output
 Output Format: Only files in txt format are supported

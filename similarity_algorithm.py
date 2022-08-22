@@ -358,7 +358,7 @@ def check_java(rep_path):
         for x in i:
             if x.startswith('.'):
                 i.remove(x)
-
+    print(names)
     code_dict = openfile_java(rep_path, names)[0]
     pos_dict = openfile_java(rep_path, names)[1]
     print(pos_dict)

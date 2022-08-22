@@ -3,7 +3,7 @@
 """
 Created on Sat April  5 23:36:17 2022
 
-@author: Ghee
+@author: Ghee, Zexi
 """
 # importing tkinter gui
 import tkinter as tk
@@ -15,6 +15,7 @@ import os
 import inspect
 import similarity_algorithm
 import downloadFinal
+import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
@@ -24,7 +25,7 @@ class UserInterface(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("Plagiarism Checker")
         self.geometry('600x600')
-        self.resizable(False, False)
+        #self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", lambda: UserInterface.on_closing(self))
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -374,11 +375,11 @@ class MainPage(tk.Frame):
         def changeCode():
             num = stater.get()
             if num == 1:
-                messagebox.askyesno(title='Attention', message="Python")
+                messagebox.askyesno(title='Attention', message="Please upload Python files")
             elif num == 2:
-                messagebox.askyesno(title='Attention', message="Java")
+                messagebox.askyesno(title='Attention', message="Please upload Java files")
             elif num == 3:
-                messagebox.askyesno(title='Attention', message="C++")
+                messagebox.askyesno(title='Attention', message="Pleas upload C++ files")
 
         dropDownFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                  height=5)
@@ -414,11 +415,11 @@ class MainPage(tk.Frame):
 
 
         # button for start plagiarism check
-        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
+        check_b = tk.Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=15,
                             command=lambda: self.checkFile(stater.get()))
         check_b.pack(side=tk.RIGHT, padx=50)
 
-        cancel_b = tk.Button(botFrame, bg="#191970", text="Cancel", fg="white", width=15,
+        cancel_b = tk.Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=15,
                              command=lambda: self.cancelFile())
         cancel_b.pack(side=tk.LEFT, padx=50,)
 
@@ -507,12 +508,7 @@ class ReportPage(tk.Frame):
         show_b = tk.Button(tittleFrame, bg='#191970', text="Preview", fg="white", width=10,
                             command=lambda: self.test())
         show_b.grid(column=0, row=1,padx=30)
-        #studentReport = tk.Label(tittleFrame, text='The file rate:', bg='#F5F5F5', fg='black', font=(0, 10))
-        #studentReport.grid(column=0, row=1, padx=20)
-        #scrollBary = tk.Scrollbar(listBoxFrame)
-        #scrollBarx = Scrollbar(listBoxFrame, orient = HORIZONTAL)
-        #scrollBary.pack(side=RIGHT, fill=Y)
-        #scrollBarx.pack(side=BOTTOM, fill=X)
+
         scrolly = tk.Scrollbar(listBoxFrame)
         scrolly.pack(side=tk.RIGHT, fill=tk.Y)
 
@@ -525,6 +521,7 @@ class ReportPage(tk.Frame):
         self.listBox.config(xscrollcommand=scrollx.set)
         scrolly.config(command=self.listBox.yview)
         scrollx.config(command=self.listBox.xview)
+
 
 
         check_b = tk.Button(botFrame, bg='#191970', text="Download this report", fg="white", width=18,
@@ -542,21 +539,31 @@ class ReportPage(tk.Frame):
 
 
 
-
-
     def test(self):
+        reportResult=MainPage.transferList(self=MainPage)
+        l=downloadFinal.download.trans(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)[0]
 
-        l=downloadFinal.download.trans(folderPath, names, ResultPage.wantFile(self=ResultPage))
         for i in range (0,len(l)):
             a = float(i+1)
-            self.listBox.insert(a,l[i])
+            self.listBox.tag_add('warning', a)
+            self.listBox.tag_configure('warning',
+                                       foreground='red')
+            self.listBox.tag_add('normal', a)
+            self.listBox.tag_configure('normal',
+                                       foreground='black')
+            if "#####" in l[i]:
+                self.listBox.insert(a, l[i], 'warning')
+            else:
+                self.listBox.insert(a, l[i], 'normal')
 
     def downSinFile(self):
-        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
-        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage))
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
+        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)
     def downMuiFIle(self):
-        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
-        downloadFinal.download.alluse(folderPath, names)
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
+        downloadFinal.download.alluse(folderPath, names, reportResult)
 
 
 
@@ -599,9 +606,16 @@ class ResultPage(tk.Frame):
         self.resultListBox.heading('Rate', text='Rate', )
         self.resultListBox.column('File Name', width=250)
         self.resultListBox.column('Rate', width=140)
+        self.resultListBox.tag_configure('tag_green',
+                           foreground='green')
+        self.resultListBox.tag_configure('tag_origin',
+                           foreground='orange')
+        self.resultListBox.tag_configure('tag_red',
+                           foreground='red')
+
 
         # button for start plagiarism check
-        check_b = tk.Button(botFrame, bg='#191970', text="Confirm", fg="white", width=15,
+        check_b = tk.Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=15,
                             command=lambda: self.show_selected())
         check_b.pack(side=tk.RIGHT, padx=50)
         result_b = tk.Button(botFrame, bg='#191970', text="Show result", fg="white", width=15,
@@ -628,13 +642,22 @@ class ResultPage(tk.Frame):
                 newvalue=str(newCalue3)+"%"
                 my_list.append((key, newvalue))
             for value in my_list:
-                self.resultListBox.insert(parent='', index=i, iid=i, values=value)
+                new = value
+                new1 = new[1].strip("%")
+                new2 = float(new1)
+                if new2 <= 20:
+                    tag='tag_green'
+                elif new2 > 50:
+                    tag = 'tag_red'
+                else:
+                    tag ='tag_origin'
+                self.resultListBox.insert(parent='', index=i, iid=i, values=value, tags=tag)
                 i+=1
 
 
     def show_selected(self):
         global filename
-        messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
+        messagebox.showinfo(title="Report Generation", message="Please click Preview on the Report page to view the report")
         for item in self.resultListBox.selection():
             item_text = self.resultListBox.item(item, "values")
             filename=item_text[0]

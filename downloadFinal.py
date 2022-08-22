@@ -6,8 +6,12 @@ import numpy as np
 
 import similarity_algorithm
 
+import UI.UserInterface
+
 
 class download:
+    global transre
+    transre = None
 
     def text_create(name):
         # Create final document
@@ -90,7 +94,7 @@ class download:
                     colCR = newList[1][1]
                     space = " "
                     if rowsCL-1 == i and isWrite == 0: #Repeat first line
-                        x = 30
+                        x = 40
                         f.write(x*space)
                         f.write("##### The duplicate code is: ")
                         for sj in range(colCL,col):
@@ -98,12 +102,12 @@ class download:
                             f.write(endNum)
                         isWrite = 1 #This row has been marked
                     if (rowsCL-1 < i and i < rowsCR-1) and isWrite == 0 : #Repeat middle line
-                        x = 30
+                        x = 40
                         f.write(x * space)
                         f.write("##### Duplicate all lines ")
                         isWrite = 1
                     if i == rowsCR-1 and isWrite == 0: #Repeat last line
-                        x = 30
+                        x = 40
                         f.write(x * space)
                         f.write("##### The duplicate code is: ")
                         for sj in range(0,colCR):
@@ -131,10 +135,10 @@ class download:
         return exm1.values()
 
 
-    def use(floader , names, needName):
+    def use(floader , names, needName, reportResult):
         #Call method
         try:
-            x = similarity_algorithm.check(floader)
+            x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
             allRate = list(download.dictGet_value(x[0]))
             finalFile = list(download.dictGet_key(x[1]))
@@ -153,10 +157,10 @@ class download:
         except Exception as e:
             print(e)
 
-    def alluse(floader , names):
+    def alluse(floader , names, reportResult):
         #Call method
         try:
-            x = similarity_algorithm.check(floader)
+            x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
             allRate = list(download.dictGet_value(x[0]))
             finalFile = list(download.dictGet_key(x[1]))
@@ -174,11 +178,12 @@ class download:
         except Exception as e:
             print(e)
 
-    def trans (floader , names, needName):
+    def trans (floader , names, needName, reportResult):
         global transList
         transList=[]
+        global transre
         try:
-            x = similarity_algorithm.check(floader)
+            x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
             allRate = list(download.dictGet_value(x[0]))
             finalFile = list(download.dictGet_key(x[1]))
@@ -189,8 +194,8 @@ class download:
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
-                    c1 = x[1][allFlie[i]]
-                    repetitionLine = download.mChange(c1)
+                    transre = x[1][allFlie[i]]
+                    repetitionLine = download.mChange(transre)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
             with open(ReportFile, 'r') as f:
                 for line in f:
@@ -198,7 +203,7 @@ class download:
                     transList.append(line+'\n')
             f.close
             os.remove(ReportFile)
-            return transList
+            return transList, transre
 
 
 
