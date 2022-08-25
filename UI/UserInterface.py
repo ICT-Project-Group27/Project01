@@ -103,7 +103,6 @@ class UserInterface(tk.Tk):
                 menu_l.config(text="Menu", font=(0, 12))
                 home_l.config(text='Home', font=(0, 12))
                 result_l.config(text='Result', font=(0, 12))
-                download_l.config(text='Download\n Result', font=(0, 10))
                 info_l.config(text='Info', font=(0, 12))
                 result_l2.config(text="Result", font=(0,12))
             else:
@@ -111,7 +110,6 @@ class UserInterface(tk.Tk):
                 menu_l.config(text="")
                 home_l.config(text="")
                 result_l.config(text="")
-                download_l.config(text="")
                 info_l.config(text='')
 
         def switch():
@@ -163,13 +161,13 @@ class UserInterface(tk.Tk):
             relief="flat",
             command=lambda: self.show_frame("ResultGraphPage"))
 
-        download_b = tk.Button(sid_bar_frame,
-            text="Reprot",
-            bg="#191970",
-            fg="white",
-            width=12,
-            relief="flat",
-            command=lambda: self.show_frame("ReportPage"))
+        # download_b = tk.Button(sid_bar_frame,
+        #     text="Reprot",
+        #     bg="#191970",
+        #     fg="white",
+        #     width=12,
+        #     relief="flat",
+        #     command=lambda: self.show_frame("ReportPage"))
         #downloadFinal.download.use(folderPath, names)
 
         info_b = tk.Button(sid_bar_frame,
@@ -204,10 +202,8 @@ class UserInterface(tk.Tk):
         home_l.grid(row=1, column=1, padx=5, pady=30)
         result_b.grid(row=3, column=0, padx=5, pady=30)
         result_l.grid(row=3, column=1, padx=5, pady=30)
-        download_b.grid(row=4, column=0, padx=5, pady=30)
-        download_l.grid(row=4, column=1, padx=5, pady=30)
-        info_b.grid(row=5, column=0, padx=5, pady=30)
-        info_l.grid(row=5, column=1, padx=5, pady=30)
+        info_b.grid(row=4, column=0, padx=5, pady=30)
+        info_l.grid(row=4, column=1, padx=5, pady=30)
         result_c.grid(row=2, column=0, padx=5, pady=30)
         result_l2.grid(row=2, column=1, padx=5, pady=30)
 
@@ -616,7 +612,7 @@ class ResultPage(tk.Frame):
 
         # button for start plagiarism check
         check_b = tk.Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=15,
-                            command=lambda: self.show_selected())
+                            command=lambda: self.report())
         check_b.pack(side=tk.RIGHT, padx=50)
         result_b = tk.Button(botFrame, bg='#191970', text="Show result", fg="white", width=15,
                              command=lambda: self.updataResult())
@@ -657,15 +653,96 @@ class ResultPage(tk.Frame):
 
     def show_selected(self):
         global filename
-        messagebox.showinfo(title="Report Generation", message="Please click Preview on the Report page to view the report")
+        #messagebox.showinfo(title="Report Generation", message="Please click Preview on the Report page to view the report")
         for item in self.resultListBox.selection():
             item_text = self.resultListBox.item(item, "values")
             filename=item_text[0]
-
-
-    def wantFile(self):
-        global filename
         return filename
+
+
+
+
+    def report(self):
+        Top = tk.Toplevel(self)
+        Top.resizable(False, False)
+        Top.geometry('700x600')
+
+        container = tk.Frame(Top, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
+        # listBox
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                               height=30)
+        tittleFrame.pack(side=tk.TOP)
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=100)
+        listBoxFrame.pack(side=tk.BOTTOM)
+
+        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
+        # show_b = tk.Button(tittleFrame, bg='#191970', text="Preview", fg="white", width=10,
+        #                    command=lambda: self.test())
+        # show_b.grid(column=0, row=1, padx=30)
+
+        scrolly = tk.Scrollbar(listBoxFrame)
+        scrolly.pack(side=tk.RIGHT, fill=tk.Y)
+
+        scrollx = tk.Scrollbar(listBoxFrame, orient=tk.HORIZONTAL)
+        scrollx.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.listBox = tk.Text(listBoxFrame, wrap='none')
+        self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
+        self.listBox.config(yscrollcommand=scrolly.set)
+        self.listBox.config(xscrollcommand=scrollx.set)
+        scrolly.config(command=self.listBox.yview)
+        scrollx.config(command=self.listBox.xview)
+
+        check_b = tk.Button(botFrame, bg='#191970', text="Download this report", fg="white", width=18,
+                            command=lambda: self.downSinFile())
+        check_b.pack(side=tk.RIGHT, padx=50)
+
+        cancel_b = tk.Button(botFrame, bg="#191970", text="Download all report", fg="white", width=18,
+                             command=lambda: self.downMuiFIle())
+        cancel_b.pack(side=tk.LEFT, padx=50)
+
+
+        self.listBox.bind('<KeyPress>', lambda e: 'break')
+
+
+        global filename
+        thisName = self.show_selected()
+        reportResult=MainPage.transferList(self=MainPage)
+        l=downloadFinal.download.trans(folderPath, names, thisName, reportResult)[0]
+        self.listBox.delete("1.0", "end")
+
+        for i in range (0,len(l)):
+            a = float(i+1)
+            self.listBox.tag_add('warning', a)
+            self.listBox.tag_configure('warning',
+                                       foreground='red')
+            self.listBox.tag_add('normal', a)
+            self.listBox.tag_configure('normal',
+                                       foreground='black')
+            if "#####" in l[i]:
+                self.listBox.insert(a, l[i], 'warning')
+            else:
+                self.listBox.insert(a, l[i], 'normal')
+
+    def downSinFile(self):
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
+        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)
+    def downMuiFIle(self):
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
+        downloadFinal.download.alluse(folderPath, names, reportResult)
 
 
 
