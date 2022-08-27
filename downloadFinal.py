@@ -145,8 +145,8 @@ class download:
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
-                    ReportFile = download.text_create(names[0][i])
-                    fileName = str(allFlie[i])
+                    ReportFile = download.text_create(needName)
+                    fileName = str(names[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
                     c1 = x[1][allFlie[i]]
@@ -166,7 +166,7 @@ class download:
             finalFile = list(download.dictGet_key(x[1]))
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
-                    ReportFile = download.text_create(names[0][i])
+                    ReportFile = download.text_create(names[i])
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
@@ -190,7 +190,7 @@ class download:
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
-                    ReportFile = download.text_create(names[0][i])
+                    ReportFile = download.text_create(names[i])
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]

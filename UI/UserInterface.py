@@ -342,6 +342,8 @@ class UserInterface(tk.Tk):
 class MainPage(tk.Frame):
     global names
     names = []
+    global trans
+    trans = []
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     global parentdir
     parentdir = os.path.dirname(currentdir)
@@ -461,6 +463,7 @@ class MainPage(tk.Frame):
 
     def updateListBox(self):
         global names
+        global trans
         self.listBox.delete(0, tk.END)
         names = similarity_algorithm.walk_dir(folderPath)
         print(names)
@@ -469,6 +472,7 @@ class MainPage(tk.Frame):
             for x in i:
                 if not x.startswith("."):
                     self.listBox.insert(tk.END, x)
+                    trans.append(x)
 
 
 
@@ -537,7 +541,7 @@ class ReportPage(tk.Frame):
 
     def test(self):
         reportResult=MainPage.transferList(self=MainPage)
-        l=downloadFinal.download.trans(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)[0]
+        l=downloadFinal.download.trans(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)[0]
 
         for i in range (0,len(l)):
             a = float(i+1)
@@ -555,11 +559,11 @@ class ReportPage(tk.Frame):
     def downSinFile(self):
         reportResult = MainPage.transferList(self=MainPage)
         messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
-        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)
+        downloadFinal.download.use(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)
     def downMuiFIle(self):
         reportResult = MainPage.transferList(self=MainPage)
         messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
-        downloadFinal.download.alluse(folderPath, names, reportResult)
+        downloadFinal.download.alluse(folderPath, trans, reportResult)
 
 
 
@@ -719,7 +723,7 @@ class ResultPage(tk.Frame):
         global filename
         thisName = self.show_selected()
         reportResult=MainPage.transferList(self=MainPage)
-        l=downloadFinal.download.trans(folderPath, names, thisName, reportResult)[0]
+        l=downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]
         self.listBox.delete("1.0", "end")
 
         for i in range (0,len(l)):
@@ -738,11 +742,11 @@ class ResultPage(tk.Frame):
     def downSinFile(self):
         reportResult = MainPage.transferList(self=MainPage)
         messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
-        downloadFinal.download.use(folderPath, names, ResultPage.wantFile(self=ResultPage), reportResult)
+        downloadFinal.download.use(folderPath, trans, ResultPage.show_selected(self), reportResult)
     def downMuiFIle(self):
         reportResult = MainPage.transferList(self=MainPage)
         messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
-        downloadFinal.download.alluse(folderPath, names, reportResult)
+        downloadFinal.download.alluse(folderPath, trans, reportResult)
 
 
 
