@@ -9,6 +9,7 @@ Created on Sat April  5 23:36:17 2022
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox, OptionMenu
+from tkmacosx import Button
 from PIL import Image, ImageTk
 import sys
 import os
@@ -24,8 +25,8 @@ class UserInterface(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("Plagiarism Checker")
-        self.geometry('600x600')
-        #self.resizable(False, False)
+        self.geometry('750x600')
+        self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", lambda: UserInterface.on_closing(self))
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -38,7 +39,7 @@ class UserInterface(tk.Tk):
         self.mainContainer.grid_columnconfigure(0, weight=1)
         self.sideBar()
         self.frames = {}
-        for F in (MainPage, ResultGraphPage, ReportPage, ResultPage):
+        for F in (MainPage, ResultGraphPage, ResultPage):
             page_name = F.__name__
             frame = F(parent=self.mainContainer)
             self.frames[page_name] = frame
@@ -133,31 +134,35 @@ class UserInterface(tk.Tk):
         Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
         self.update()  # For the width to get updated
-        sid_bar_frame = tk.Frame(self.sideBarContainer, bg="#191970", width=100, height=self.winfo_height())
+        sid_bar_frame = tk.Frame(self.sideBarContainer, bg="#191970", width=110, height=self.winfo_height())
         sid_bar_frame.pack(side=tk.LEFT)
 
         # Make the buttons with the icons to be shown
-        menu_b = tk.Button(sid_bar_frame,
+        menu_b = Button(sid_bar_frame,
             text="Welcome",
             bg="#191970",
+            bordercolor="#191970",
             fg="white",
-            width=12,
+            width=90,
+            bd=5,
             relief="flat",
                 )
 
-        home_b = tk.Button(sid_bar_frame,
+        home_b = Button(sid_bar_frame,
             text="Upload",
             bg="#191970",
             fg="white",
-            width=12,
+            width=90,
+            bd=4,
             relief="flat",
             command=lambda: self.show_frame("MainPage"))
 
-        result_b = tk.Button(sid_bar_frame,
+        result_b = Button(sid_bar_frame,
             text="Result\ngraph",
             bg="#191970",
             fg="white",
-            width=12,
+            width=90,
+            bd=4,
             relief="flat",
             command=lambda: self.show_frame("ResultGraphPage"))
 
@@ -170,30 +175,32 @@ class UserInterface(tk.Tk):
         #     command=lambda: self.show_frame("ReportPage"))
         #downloadFinal.download.use(folderPath, names)
 
-        info_b = tk.Button(sid_bar_frame,
+        info_b = Button(sid_bar_frame,
             text="Help",
             bg="#191970",
             fg="white",
-            width=12,
+            width=90,
+            bd=4,
             relief="flat",
             command=lambda: self.infoButtonFunc())
 
-        result_c = tk.Button(sid_bar_frame,
+        result_c = Button(sid_bar_frame,
                              text="Result",
                              bg="#191970",
                              fg="white",
-                             width=12,
+                             width=90,
+                             bd=4,
                              relief="flat",
                              command=lambda: self.show_frame("ResultPage"))
 
 
         # make label
-        menu_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-        home_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-        result_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-        download_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-        info_l = tk.Label(sid_bar_frame, text='', bg='#184089')
-        result_l2 = tk.Label(sid_bar_frame, text='', bg='#184089')
+        menu_l = tk.Label(sid_bar_frame, text='', bg='#191970')
+        home_l = tk.Label(sid_bar_frame, text='', bg='#191970')
+        result_l = tk.Label(sid_bar_frame, text='', bg='#191970')
+        download_l = tk.Label(sid_bar_frame, text='', bg='#191970')
+        info_l = tk.Label(sid_bar_frame, text='', bg='#191970')
+        result_l2 = tk.Label(sid_bar_frame, text='', bg='#191970')
 
         # Put them on the frame
         menu_b.grid(row=0, column=0, padx=1, pady=10)
@@ -360,10 +367,13 @@ class MainPage(tk.Frame):
         container.pack(side="right", fill="both", expand=True)
 
         topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                            height=(container.winfo_height() / 5 * 4))
+                            height=container.winfo_height() / 5 * 3)
         topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        middleFrame = tk.Frame(container,bg='#F5F5F5', width=container.winfo_width(),
+                               height=container.winfo_height() / 5 * 1)
+        middleFrame.pack(side=tk.TOP, expand=1)
         botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                            height=(container.winfo_height() / 5 * 1))
+                            height=container.winfo_height() / 5 * 2)
         botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
 
         # dropdown box
@@ -379,18 +389,18 @@ class MainPage(tk.Frame):
             elif num == 3:
                 messagebox.askyesno(title='Attention', message="Pleas upload C++ files")
 
-        dropDownFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+        dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
                                  height=5)
-        dropDownFrame.pack(side=tk.BOTTOM)
+        dropDownFrame.pack(side=tk.TOP)
         pyButton1 = tk.Radiobutton(dropDownFrame, text='Python', variable=stater, value=1,
                                    command=changeCode)
-        pyButton1.grid(column=0, row=0)
+        pyButton1.grid(column=0, row=4)
         pyButton2 = tk.Radiobutton(dropDownFrame, text='Java', variable=stater, value=2,
                                    command=changeCode)
-        pyButton2.grid(column=1, row=0)
+        pyButton2.grid(column=1, row=4)
         pyButton3 = tk.Radiobutton(dropDownFrame, text='C++', variable=stater, value=3,
                                    command=changeCode)
-        pyButton3.grid(column=2, row=0)
+        pyButton3.grid(column=2, row=4)
 
 
 
@@ -399,25 +409,25 @@ class MainPage(tk.Frame):
 
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
-        listBoxFrame.pack(side=tk.RIGHT)
-        studentWork_l = tk.Label(listBoxFrame, text='        Student Files:', bg='#F5F5F5', fg='black', font=(0, 20))
-        studentWork_l.grid(column=0, row=0, padx=20)
-        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=68)
-        self.listBox.grid(column=0, row=1, padx=10, columnspan=2)
-        selection_b = tk.Button(listBoxFrame, highlightbackground='#F5F5F5', text="Folder", width=8, bg='white',
+        listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
+        studentWork_l = tk.Label(topFrame, text='\n\nStudent Files:\n\n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork_l.grid(column=0, row=1, padx=10, columnspan=2)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
+        self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
+        selection_b = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
                                 command=lambda: self.openFile())
-        selection_b.grid(column=1, row=1)
+        selection_b.grid(column=1, row=0, rowspan=2)
 
 
 
 
 
         # button for start plagiarism check
-        check_b = tk.Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=15,
+        check_b = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
                             command=lambda: self.checkFile(stater.get()))
         check_b.pack(side=tk.RIGHT, padx=50)
 
-        cancel_b = tk.Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=15,
+        cancel_b = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                              command=lambda: self.cancelFile())
         cancel_b.pack(side=tk.LEFT, padx=50,)
 
@@ -476,94 +486,94 @@ class MainPage(tk.Frame):
 
 
 
-class ReportPage(tk.Frame):
-
-    def __init__(self, parent):
-
-        tk.Frame.__init__(self, parent)
-
-        container = tk.Frame(self, bg="#F5F5F5")
-        container.pack(side="right", fill="both", expand=True)
-
-        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                            height=(container.winfo_height() / 5 * 1))
-        topFrame.pack(side=tk.TOP, fill="both", expand=1)
-        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                            height=(container.winfo_height() / 5 * 1))
-        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
-
-
-
-        # listBox
-        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
-                                height=30)
-        tittleFrame.pack(side=tk.TOP)
-        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
-                                height=100)
-        listBoxFrame.pack(side=tk.LEFT)
-
-
-        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
-        studentWork_l.grid(column=0, row=0, padx=30)
-        show_b = tk.Button(tittleFrame, bg='#191970', text="Preview", fg="white", width=10,
-                            command=lambda: self.test())
-        show_b.grid(column=0, row=1,padx=30)
-
-        scrolly = tk.Scrollbar(listBoxFrame)
-        scrolly.pack(side=tk.RIGHT, fill=tk.Y)
-
-        scrollx = tk.Scrollbar(listBoxFrame, orient=tk.HORIZONTAL)
-        scrollx.pack(side=tk.BOTTOM, fill=tk.X)
-
-        self.listBox = tk.Text(listBoxFrame, wrap='none')
-        self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
-        self.listBox.config(yscrollcommand=scrolly.set)
-        self.listBox.config(xscrollcommand=scrollx.set)
-        scrolly.config(command=self.listBox.yview)
-        scrollx.config(command=self.listBox.xview)
-
-
-
-        check_b = tk.Button(botFrame, bg='#191970', text="Download this report", fg="white", width=18,
-                            command=lambda: self.downSinFile())
-        check_b.pack(side=tk.RIGHT, padx=50)
-
-        cancel_b = tk.Button(botFrame, bg="#191970", text="Download all report", fg="white", width=18,
-                             command=lambda: self.downMuiFIle())
-        cancel_b.pack(side=tk.LEFT, padx=50)
-
-        #scrollBary.config(command=listBox.yview)
-        #scrollBarx.config(command=listBox.xview)
-        self.listBox.bind('<KeyPress>',lambda e:'break')
-        # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
-
-
-
-    def test(self):
-        reportResult=MainPage.transferList(self=MainPage)
-        l=downloadFinal.download.trans(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)[0]
-
-        for i in range (0,len(l)):
-            a = float(i+1)
-            self.listBox.tag_add('warning', a)
-            self.listBox.tag_configure('warning',
-                                       foreground='red')
-            self.listBox.tag_add('normal', a)
-            self.listBox.tag_configure('normal',
-                                       foreground='black')
-            if "#####" in l[i]:
-                self.listBox.insert(a, l[i], 'warning')
-            else:
-                self.listBox.insert(a, l[i], 'normal')
-
-    def downSinFile(self):
-        reportResult = MainPage.transferList(self=MainPage)
-        messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
-        downloadFinal.download.use(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)
-    def downMuiFIle(self):
-        reportResult = MainPage.transferList(self=MainPage)
-        messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
-        downloadFinal.download.alluse(folderPath, trans, reportResult)
+# class ReportPage(tk.Frame):
+#
+#     def __init__(self, parent):
+#
+#         tk.Frame.__init__(self, parent)
+#
+#         container = tk.Frame(self, bg="#F5F5F5")
+#         container.pack(side="right", fill="both", expand=True)
+#
+#         topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+#                             height=(container.winfo_height() / 5 * 1))
+#         topFrame.pack(side=tk.TOP, fill="both", expand=1)
+#         botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+#                             height=(container.winfo_height() / 5 * 1))
+#         botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+#
+#
+#
+#         # listBox
+#         tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+#                                 height=30)
+#         tittleFrame.pack(side=tk.TOP)
+#         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+#                                 height=100)
+#         listBoxFrame.pack(side=tk.LEFT)
+#
+#
+#         studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+#         studentWork_l.grid(column=0, row=0, padx=30)
+#         show_b = tk.Button(tittleFrame, bg='#191970', text="Preview", fg="white", width=10,
+#                             command=lambda: self.test())
+#         show_b.grid(column=0, row=1,padx=30)
+#
+#         scrolly = tk.Scrollbar(listBoxFrame)
+#         scrolly.pack(side=tk.RIGHT, fill=tk.Y)
+#
+#         scrollx = tk.Scrollbar(listBoxFrame, orient=tk.HORIZONTAL)
+#         scrollx.pack(side=tk.BOTTOM, fill=tk.X)
+#
+#         self.listBox = tk.Text(listBoxFrame, wrap='none')
+#         self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
+#         self.listBox.config(yscrollcommand=scrolly.set)
+#         self.listBox.config(xscrollcommand=scrollx.set)
+#         scrolly.config(command=self.listBox.yview)
+#         scrollx.config(command=self.listBox.xview)
+#
+#
+#
+#         check_b = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=50,
+#                             command=lambda: self.downSinFile())
+#         check_b.pack(side=tk.RIGHT, padx=50)
+#
+#         cancel_b = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=50,
+#                              command=lambda: self.downMuiFIle())
+#         cancel_b.pack(side=tk.LEFT, padx=50)
+#
+#         #scrollBary.config(command=listBox.yview)
+#         #scrollBarx.config(command=listBox.xview)
+#         self.listBox.bind('<KeyPress>',lambda e:'break')
+#         # yscrollcommand=scrollBary.set, xscrollcommand=scrollBarx.set
+#
+#
+#
+#     def test(self):
+#         reportResult=MainPage.transferList(self=MainPage)
+#         l=downloadFinal.download.trans(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)[0]
+#
+#         for i in range (0,len(l)):
+#             a = float(i+1)
+#             self.listBox.tag_add('warning', a)
+#             self.listBox.tag_configure('warning',
+#                                        foreground='red')
+#             self.listBox.tag_add('normal', a)
+#             self.listBox.tag_configure('normal',
+#                                        foreground='black')
+#             if "#####" in l[i]:
+#                 self.listBox.insert(a, l[i], 'warning')
+#             else:
+#                 self.listBox.insert(a, l[i], 'normal')
+#
+#     def downSinFile(self):
+#         reportResult = MainPage.transferList(self=MainPage)
+#         messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
+#         downloadFinal.download.use(folderPath, trans, ResultPage.wantFile(self=ResultPage), reportResult)
+#     def downMuiFIle(self):
+#         reportResult = MainPage.transferList(self=MainPage)
+#         messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
+#         downloadFinal.download.alluse(folderPath, trans, reportResult)
 
 
 
@@ -615,10 +625,10 @@ class ResultPage(tk.Frame):
 
 
         # button for start plagiarism check
-        check_b = tk.Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=15,
-                            command=lambda: self.report())
+        check_b = Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=100,
+                            command=lambda: self.clickReport())
         check_b.pack(side=tk.RIGHT, padx=50)
-        result_b = tk.Button(botFrame, bg='#191970', text="Show result", fg="white", width=15,
+        result_b = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
                              command=lambda: self.updataResult())
         result_b.pack(side=tk.LEFT, padx=50)
 
@@ -662,6 +672,13 @@ class ResultPage(tk.Frame):
             item_text = self.resultListBox.item(item, "values")
             filename=item_text[0]
         return filename
+
+
+    def clickReport(self):
+        if self.show_selected() is None:
+            messagebox.showerror(title='Warning', message="Please a choice file.")
+        else:
+            self.report()
 
 
 
@@ -708,11 +725,11 @@ class ResultPage(tk.Frame):
         scrolly.config(command=self.listBox.yview)
         scrollx.config(command=self.listBox.xview)
 
-        check_b = tk.Button(botFrame, bg='#191970', text="Download this report", fg="white", width=18,
+        check_b = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=150,
                             command=lambda: self.downSinFile())
         check_b.pack(side=tk.RIGHT, padx=50)
 
-        cancel_b = tk.Button(botFrame, bg="#191970", text="Download all report", fg="white", width=18,
+        cancel_b = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=150,
                              command=lambda: self.downMuiFIle())
         cancel_b.pack(side=tk.LEFT, padx=50)
 
