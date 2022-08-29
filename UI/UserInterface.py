@@ -440,7 +440,7 @@ class MainPage(tk.Frame):
         else:
             messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
             if (stater == 1):
-                transferDicList = similarity_algorithm.check(folderPath)
+                transferDicList = similarity_algorithm.check_python(folderPath)
             elif (stater == 2):
                 transferDicList = similarity_algorithm.check_java(folderPath)
 
