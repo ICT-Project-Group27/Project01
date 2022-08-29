@@ -16,7 +16,7 @@ class download:
     def text_create(name):
         # Create final document
         rename = os.path.splitext(name)[0]
-        desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
+        desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/") ##report path
         full_path = desktop_path + rename + '_Report.txt'
         return full_path
 
