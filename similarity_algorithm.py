@@ -6,6 +6,8 @@ import javac_parser
 import sctokenizer
 import sqlparse
 
+
+resultListCount = []
 def getResultListCount():
     return resultListCount
 
@@ -193,83 +195,35 @@ def openfile_java(filepath, f_names):
 
             pos_list = []
             final_list = []
+            reservedWord = ['CLASS', 'PACKAGE', 'IMPORT', 'WHILE', 'FOR', 'SWITCH', 'CASE', 'TRY',
+                            'CATCH', 'FINALLY', 'IF', 'ELSE', 'RETURN', 'BREAK', 'CONTINUE', 'VOID',
+                            'LBRACE', 'RBRACE', 'EQ']
             for a in token_list:
-                if a[0] == 'CLASS':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'LBRACE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'RBRACE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'PACKAGE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'IMPORT':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'WHILE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'EQ':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'FOR':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'SWITCH':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'CASE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'TRY':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'CATCH':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'FINALLY':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'IF':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'ELSE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'BREAK':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'RETURN':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'CONTINUE':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'VOID':
-                    final_list.append(a[0])
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'INT':
-                    final_list.append('CreateVar')
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'BOOLEAN':
-                    final_list.append('CreateVar')
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'DOUBLE':
-                    final_list.append('CreateVar')
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'STRING':
-                    final_list.append('CreateVar')
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'CHARACTER':
-                    final_list.append('CreateVar')
-                    pos_list.append((a[2][0], a[2][1]))
-                elif a[0] == 'IDENTIFIER':
-                    if a[1] == 'System':
+                # print(a.start_pos)
+                for word in reservedWord:
+                    if a[0] == word:
                         final_list.append(a[0])
                         pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'INT':
+                        final_list.append('CreateVar')
+                        pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'BOOLEAN':
+                        final_list.append('CreateVar')
+                        pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'DOUBLE':
+                        final_list.append('CreateVar')
+                        pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'STRING':
+                        final_list.append('CreateVar')
+                        pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'CHARACTER':
+                        final_list.append('CreateVar')
+                        pos_list.append((a[2][0], a[2][1]))
+                    elif a[0] == 'IDENTIFIER':
+                        if a[1] == 'System':
+                            final_list.append(a[0])
+                            pos_list.append((a[2][0], a[2][1]))
+
 
             code_dict[f_names[0][i]] = final_list
             pos_dict[f_names[0][i]] = pos_list
