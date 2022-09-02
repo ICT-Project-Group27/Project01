@@ -13,11 +13,11 @@ class download:
     global transre
     transre = None
 
-    def text_create(name):
+    def text_create(name,flpaderpath):
         # Create final document
         rename = os.path.splitext(name)[0]
-        desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/") ##report path
-        full_path = desktop_path + rename + '_Report.txt'
+        desktop_path = flpaderpath ##report path
+        full_path = desktop_path + "//" + rename + '_Report.txt'
         return full_path
 
 
@@ -41,8 +41,8 @@ class download:
 
         row = len(matrixname) #Get the number of lines in the original file
 
-        rows = np.array(searchmatri).shape[0]
-        cols = np.array(searchmatri).shape[1]
+        rows = np.array(searchmatri, dtype="object").shape[0]
+        cols = np.array(searchmatri, dtype="object").shape[1]
 
         #Get the length of the longest line in the file
         mark = 0
@@ -94,25 +94,31 @@ class download:
                     colCR = newList[1][1]
                     space = " "
                     if rowsCL-1 == i and isWrite == 0: #Repeat first line
-                        x = 40
-                        f.write(x*space)
-                        f.write("##### The duplicate code is: ")
-                        for sj in range(colCL,col):
-                            endNum = str(Frame[sj])
-                            f.write(endNum)
+
+                        f.write("\n")
+                        f.write("#!# The above line is duplicated with: \"")
+                        # for sj in range(colCL,col):
+                        #     endNum = str(Frame[sj])
+                        #     f.write(endNum)
+                        for refile in newList[2]:
+                            f.write(refile)
+                        f.write("\"")
                         isWrite = 1 #This row has been marked
                     if (rowsCL-1 < i and i < rowsCR-1) and isWrite == 0 : #Repeat middle line
-                        x = 40
-                        f.write(x * space)
-                        f.write("##### Duplicate all lines ")
+
+                        f.write("\n")
+                        f.write("#!# The above line is duplicated with: \"")
+                        for refile in newList[2]:
+                            f.write(refile)
+                        f.write("\"")
                         isWrite = 1
                     if i == rowsCR-1 and isWrite == 0: #Repeat last line
-                        x = 40
-                        f.write(x * space)
-                        f.write("##### The duplicate code is: ")
-                        for sj in range(0,colCR):
-                            endNum = str(Frame[sj])
-                            f.write(endNum)
+
+                        f.write("\n")
+                        f.write("#!# The above line is duplicated with: \"")
+                        for refile in newList[2]:
+                            f.write(refile)
+                        f.write("\"")
                         isWrite = 1
                 f.write("\n")
             f.close
@@ -135,8 +141,9 @@ class download:
         return exm1.values()
 
 
-    def use(floader , names, needName, reportResult):
+    def use(floader , names, needName, reportResult, flpaderpath):
         #Call method
+        #download single files
         try:
             x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
@@ -145,7 +152,7 @@ class download:
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
-                    ReportFile = download.text_create(needName)
+                    ReportFile = download.text_create(needName,flpaderpath)
                     fileName = str(names[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
@@ -157,8 +164,9 @@ class download:
         except Exception as e:
             print(e)
 
-    def alluse(floader , names, reportResult):
+    def alluse(floader , names, reportResult, flpaderpath):
         #Call method
+        #download all files
         try:
             x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
@@ -166,7 +174,7 @@ class download:
             finalFile = list(download.dictGet_key(x[1]))
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
-                    ReportFile = download.text_create(names[i])
+                    ReportFile = download.text_create(names[i],flpaderpath)
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
@@ -179,10 +187,12 @@ class download:
             print(e)
 
     def trans (floader , names, needName, reportResult):
+        #shown on the UI
         global transList
         transList=[]
         global transre
         try:
+            transpath = desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
             x = reportResult
             allFlie = list(download.dictGet_key(x[0]))
             allRate = list(download.dictGet_value(x[0]))
@@ -190,7 +200,7 @@ class download:
             lines = list(download.dictGet_value(x[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
-                    ReportFile = download.text_create(names[i])
+                    ReportFile = download.text_create(names[i], transpath)
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = x[0][allFlie[i]]
