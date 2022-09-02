@@ -40,7 +40,7 @@ class UserInterface(tk.Tk):
         self.mainContainer.grid_columnconfigure(0, weight=1)
         self.sideBar()
         self.frames = {}
-        for F in (MainPage, ResultGraphPage, ResultPage):
+        for F in (MainPage, ResultPage):
             page_name = F.__name__
             frame = F(parent=self.mainContainer)
             self.frames[page_name] = frame
@@ -55,11 +55,6 @@ class UserInterface(tk.Tk):
     def show_frame(self, page_name):
         # Show a frame for the given page name
         frame = self.frames[page_name]
-        if page_name == 'ResultGraphPage':
-            resultListCount = similarity_algorithm.getResultListCount()
-            if len(resultListCount) > 1:
-                ResultGraphPage.refresh(self.mainContainer)
-                ResultGraphPage.update()
         frame.tkraise()
 
     def on_closing(self):
@@ -158,15 +153,6 @@ class UserInterface(tk.Tk):
             relief="flat",
             command=lambda: self.show_frame("MainPage"))
 
-        result_b = Button(sid_bar_frame,
-            text="Result\ngraph",
-            bg="#191970",
-            fg="white",
-            width=90,
-            bd=4,
-            relief="flat",
-            command=lambda: self.show_frame("ResultGraphPage"))
-
         # download_b = tk.Button(sid_bar_frame,
         #     text="Reprot",
         #     bg="#191970",
@@ -208,8 +194,6 @@ class UserInterface(tk.Tk):
         menu_l.grid(row=0, column=1)
         home_b.grid(row=1, column=0, padx=5, pady=30)
         home_l.grid(row=1, column=1, padx=5, pady=30)
-        result_b.grid(row=3, column=0, padx=5, pady=30)
-        result_l.grid(row=3, column=1, padx=5, pady=30)
         info_b.grid(row=4, column=0, padx=5, pady=30)
         info_l.grid(row=4, column=1, padx=5, pady=30)
         result_c.grid(row=2, column=0, padx=5, pady=30)
@@ -732,30 +716,6 @@ class ResultPage(tk.Frame):
 
 
 
-
-
-class ResultGraphPage(tk.Frame):
-    fig = Figure(figsize=(4, 4), dpi=100)
-
-    def __init__(self, parent):
-        tk.Frame.__init__(self, parent)
-
-        resultListCount = similarity_algorithm.getResultListCount()
-        ax = ResultGraphPage.fig.add_subplot(111)
-        if len(resultListCount) <= 0:
-            ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'], ['0'], color='lightsteelblue')
-            canvas = FigureCanvasTkAgg(ResultGraphPage.fig, self)
-            canvas.get_tk_widget().pack(side=tk.TOP, fill="both", expand=1)
-
-    def refresh(self):
-        resultListCount = similarity_algorithm.getResultListCount()
-        ResultGraphPage.fig.clear()
-        ax = ResultGraphPage.fig.add_subplot(111)
-        ax.set_ylim(ymin=0, ymax=(sum(resultListCount)))
-        ax.bar(['0~10%\nSimilarity', '10~20%\nSimilarity', '20~40\nSimilarity', 'More than 40%\nSimilarity'],
-               resultListCount, color='lightsteelblue')
-        canvas = FigureCanvasTkAgg(ResultGraphPage.fig, self)
-        canvas.get_tk_widget().grid(row=0, column=0)
 
 
 # main loop
