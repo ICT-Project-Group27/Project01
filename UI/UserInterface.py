@@ -130,6 +130,7 @@ class UserInterface(tk.Tk):
         Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
         self.update()  # For the width to get updated
+
         sid_bar_frame = tk.Frame(self.sideBarContainer, bg="#191970", width=110, height=self.winfo_height())
         sid_bar_frame.pack(side=tk.LEFT)
 
@@ -141,7 +142,7 @@ class UserInterface(tk.Tk):
             fg="white",
             width=90,
             bd=5,
-            relief="flat",
+
                 )
 
         home_b = Button(sid_bar_frame,
@@ -394,15 +395,15 @@ class MainPage(tk.Frame):
         pyButton3 = tk.Radiobutton(dropDownFrame, text='C++', variable=stater, value=3,
                                    command=changeCode)
         pyButton3.grid(column=2, row=4)
-        pyButton3 = tk.Radiobutton(dropDownFrame, text='PHP', variable=stater, value=4,
+        pyButton4 = tk.Radiobutton(dropDownFrame, text='PHP', variable=stater, value=4,
                                    command=changeCode)
-        pyButton3.grid(column=3, row=4)
-        pyButton3 = tk.Radiobutton(dropDownFrame, text='C', variable=stater, value=5,
+        pyButton4.grid(column=3, row=4)
+        pyButton5 = tk.Radiobutton(dropDownFrame, text='C', variable=stater, value=5,
                                    command=changeCode)
-        pyButton3.grid(column=4, row=4)
-        pyButton3 = tk.Radiobutton(dropDownFrame, text='SQL', variable=stater, value=6,
+        pyButton5.grid(column=4, row=4)
+        pyButton6 = tk.Radiobutton(dropDownFrame, text='SQL', variable=stater, value=6,
                                    command=changeCode)
-        pyButton3.grid(column=5, row=4)
+        pyButton6.grid(column=5, row=4)
 
 
 
@@ -478,7 +479,7 @@ class MainPage(tk.Frame):
     def cancelFile(self):
         #Cancel uploaded file
         global  folderPath
-        similarity_algorithm.deletFile()
+        #similarity_algorithm.deletFile()
         folderPath = None
         self.listBox.delete(0, tk.END)
 
@@ -563,7 +564,7 @@ class ResultPage(tk.Frame):
     def updataResult(self):
         thisDict = MainPage.transferList(self=MainPage) # get the result
         if thisDict is None:
-            messagebox.showerror(title='Warning', message="Please a folder / files.")
+            messagebox.showerror(title='Warning', message="No Result")
         else:
             messagebox.showinfo(title="Result Information", message="All information loaded")
             resultList = thisDict[0] #get the file and rate(dic)
