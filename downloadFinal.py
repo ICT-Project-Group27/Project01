@@ -145,18 +145,18 @@ class download:
         #Call method
         #download single files
         try:
-            x = reportResult
-            allFlie = list(download.dictGet_key(x[0]))
-            allRate = list(download.dictGet_value(x[0]))
-            finalFile = list(download.dictGet_key(x[1]))
-            lines = list(download.dictGet_value(x[1]))
+            reportResults = reportResult
+            allFlie = list(download.dictGet_key(reportResults[0]))
+            allRate = list(download.dictGet_value(reportResults[0]))
+            finalFile = list(download.dictGet_key(reportResults[1]))
+            lines = list(download.dictGet_value(reportResults[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
                     ReportFile = download.text_create(needName,flpaderpath)
                     fileName = str(names[i])
                     originalFile = download.data_matrix(floader, fileName)
-                    repetitionRate = x[0][allFlie[i]]
-                    c1 = x[1][allFlie[i]]
+                    repetitionRate = reportResults[0][allFlie[i]]
+                    c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
 
@@ -168,17 +168,17 @@ class download:
         #Call method
         #download all files
         try:
-            x = reportResult
-            allFlie = list(download.dictGet_key(x[0]))
-            allRate = list(download.dictGet_value(x[0]))
-            finalFile = list(download.dictGet_key(x[1]))
-            lines = list(download.dictGet_value(x[1]))
+            reportResults = reportResult
+            allFlie = list(download.dictGet_key(reportResults[0]))
+            allRate = list(download.dictGet_value(reportResults[0]))
+            finalFile = list(download.dictGet_key(reportResults[1]))
+            lines = list(download.dictGet_value(reportResults[1]))
             for i in range(0,len(allFlie)):
                     ReportFile = download.text_create(names[i],flpaderpath)
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
-                    repetitionRate = x[0][allFlie[i]]
-                    c1 = x[1][allFlie[i]]
+                    repetitionRate = reportResults[0][allFlie[i]]
+                    c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
 
@@ -193,19 +193,19 @@ class download:
         global transre
         try:
             transpath = desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
-            x = reportResult
-            allFlie = list(download.dictGet_key(x[0]))
-            allRate = list(download.dictGet_value(x[0]))
-            finalFile = list(download.dictGet_key(x[1]))
-            lines = list(download.dictGet_value(x[1]))
+            reportResults = reportResult
+            allFlie = list(download.dictGet_key(reportResults[0]))
+            allRate = list(download.dictGet_value(reportResults[0]))
+            finalFile = list(download.dictGet_key(reportResults[1]))
+            lines = list(download.dictGet_value(reportResults[1]))
             for i in range(0,len(allFlie)):
                 if allFlie[i]==needName:
-                    ReportFile = download.text_create(names[i], transpath)
-                    fileName = str(allFlie[i])
-                    originalFile = download.data_matrix(floader, fileName)
-                    repetitionRate = x[0][allFlie[i]]
-                    transre = x[1][allFlie[i]]
-                    repetitionLine = download.mChange(transre)
+                    ReportFile = download.text_create(names[i], transpath)#file path
+                    fileName = str(allFlie[i])#need file
+                    originalFile = download.data_matrix(floader, fileName)#Detach the contents of the original file
+                    repetitionRate = reportResults[0][allFlie[i]]#repeat rate
+                    transre = reportResults[1][allFlie[i]]#get repeat lines
+                    repetitionLine = download.mChange(transre)#repeat line
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
             with open(ReportFile, 'r') as f:
                 for line in f:

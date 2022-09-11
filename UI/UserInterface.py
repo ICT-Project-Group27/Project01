@@ -74,60 +74,6 @@ class UserInterface(tk.Tk):
         global expanded
         expanded = False  # Check if it is completely expanded
 
-        def expand():
-            global cur_width, expanded
-            cur_width += 10  # Increase the width by 10
-            rep = self.after(5, expand)  # Repeat this func every 5 ms
-            sid_bar_frame.config(width=cur_width)  # Change the width to new increase width
-            if cur_width >= max_w:  # If width is greater than maximum width
-                expanded = True  # Frame is expended
-                self.after_cancel(rep)  # Stop repeating the func
-                fill()
-
-        def contract():
-            global cur_width, expanded
-            cur_width -= 10  # Reduce the width by 10
-            rep = self.after(5, contract)  # Call this func every 5 ms
-            sid_bar_frame.config(width=cur_width)  # Change the width to new reduced width
-            if cur_width <= min_w:  # If it is back to normal width
-                expanded = False  # Frame is not expanded
-                self.after_cancel(rep)  # Stop repeating the func
-                fill()
-
-        def fill():
-            if expanded:  # If the frame is expanded
-                # Show a text
-                menu_l.config(text="Menu", font=(0, 12))
-                home_l.config(text='Home', font=(0, 12))
-                result_l.config(text='Result', font=(0, 12))
-                info_l.config(text='Info', font=(0, 12))
-                result_l2.config(text="Result", font=(0,12))
-            else:
-                # Bring the image back
-                menu_l.config(text="")
-                home_l.config(text="")
-                result_l.config(text="")
-                info_l.config(text='')
-
-        def switch():
-            global btnState
-            if btnState is True:
-
-                contract()
-                # turning button OFF:
-                btnState = False
-            else:
-
-                expand()
-                # turing button ON:
-                btnState = True
-
-        # define icon
-        navIcon = ImageTk.PhotoImage(Image.open('../resource/Menu.png').resize((20, 20)))
-        home = ImageTk.PhotoImage(Image.open('../resource/Home.png').resize((20, 20)))
-        result = ImageTk.PhotoImage(Image.open('../resource/Result.png').resize((20, 20)))
-        download = ImageTk.PhotoImage(Image.open('../resource/Download.png').resize((20, 20)))
-        Info = ImageTk.PhotoImage(Image.open('../resource/Info.png').resize((20, 20)))
 
         self.update()  # For the width to get updated
 
@@ -154,14 +100,6 @@ class UserInterface(tk.Tk):
             relief="flat",
             command=lambda: self.show_frame("MainPage"))
 
-        # download_b = tk.Button(sid_bar_frame,
-        #     text="Reprot",
-        #     bg="#191970",
-        #     fg="white",
-        #     width=12,
-        #     relief="flat",
-        #     command=lambda: self.show_frame("ReportPage"))
-        #downloadFinal.download.use(folderPath, names)
 
         info_b = Button(sid_bar_frame,
             text="Help",
@@ -182,23 +120,14 @@ class UserInterface(tk.Tk):
                              command=lambda: self.show_frame("ResultPage"))
 
 
-        # make label
-        menu_l = tk.Label(sid_bar_frame, text='', bg='#191970')
-        home_l = tk.Label(sid_bar_frame, text='', bg='#191970')
-        result_l = tk.Label(sid_bar_frame, text='', bg='#191970')
-        download_l = tk.Label(sid_bar_frame, text='', bg='#191970')
-        info_l = tk.Label(sid_bar_frame, text='', bg='#191970')
-        result_l2 = tk.Label(sid_bar_frame, text='', bg='#191970')
+
 
         # Put them on the frame
         menu_b.grid(row=0, column=0, padx=1, pady=10)
-        menu_l.grid(row=0, column=1)
         home_b.grid(row=1, column=0, padx=5, pady=30)
-        home_l.grid(row=1, column=1, padx=5, pady=30)
         info_b.grid(row=4, column=0, padx=5, pady=30)
-        info_l.grid(row=4, column=1, padx=5, pady=30)
         result_c.grid(row=2, column=0, padx=5, pady=30)
-        result_l2.grid(row=2, column=1, padx=5, pady=30)
+
 
         # So that it does not depend on the widgets inside the frame
         sid_bar_frame.grid_propagate(False)
@@ -386,24 +315,24 @@ class MainPage(tk.Frame):
         dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
                                  height=5)
         dropDownFrame.pack(side=tk.TOP)
-        pyButton1 = tk.Radiobutton(dropDownFrame, text='Python', variable=stater, value=1,
+        codeButton1 = tk.Radiobutton(dropDownFrame, text='Python', variable=stater, value=1,
                                    command=changeCode)
-        pyButton1.grid(column=0, row=4)
-        pyButton2 = tk.Radiobutton(dropDownFrame, text='Java', variable=stater, value=2,
+        codeButton1.grid(column=0, row=4)
+        codeButton2 = tk.Radiobutton(dropDownFrame, text='Java', variable=stater, value=2,
                                    command=changeCode)
-        pyButton2.grid(column=1, row=4)
-        pyButton3 = tk.Radiobutton(dropDownFrame, text='C++', variable=stater, value=3,
+        codeButton2.grid(column=1, row=4)
+        codeButton3 = tk.Radiobutton(dropDownFrame, text='C++', variable=stater, value=3,
                                    command=changeCode)
-        pyButton3.grid(column=2, row=4)
-        pyButton4 = tk.Radiobutton(dropDownFrame, text='PHP', variable=stater, value=4,
+        codeButton3.grid(column=2, row=4)
+        codeButton4 = tk.Radiobutton(dropDownFrame, text='PHP', variable=stater, value=4,
                                    command=changeCode)
-        pyButton4.grid(column=3, row=4)
-        pyButton5 = tk.Radiobutton(dropDownFrame, text='C', variable=stater, value=5,
+        codeButton4.grid(column=3, row=4)
+        codeButton5 = tk.Radiobutton(dropDownFrame, text='C', variable=stater, value=5,
                                    command=changeCode)
-        pyButton5.grid(column=4, row=4)
-        pyButton6 = tk.Radiobutton(dropDownFrame, text='SQL', variable=stater, value=6,
+        codeButton5.grid(column=4, row=4)
+        codeButton6 = tk.Radiobutton(dropDownFrame, text='SQL', variable=stater, value=6,
                                    command=changeCode)
-        pyButton6.grid(column=5, row=4)
+        codeButton6.grid(column=5, row=4)
 
 
 
@@ -413,26 +342,26 @@ class MainPage(tk.Frame):
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
         listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
-        studentWork_l = tk.Label(topFrame, text='\n\nStudent Files:\n\n', bg='#F5F5F5', fg='black', font=(0, 20))
-        studentWork_l.grid(column=0, row=1, padx=10, columnspan=2)
+        studentWork = tk.Label(topFrame, text='\n\nStudent Files:\n\n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork.grid(column=0, row=1, padx=10, columnspan=2)
         self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
-        selection_b = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
+        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
                                 command=lambda: self.openFile())
-        selection_b.grid(column=2, row=0, rowspan=2)
+        selection.grid(column=2, row=0, rowspan=2)
 
 
 
 
 
         # button for start\cancel plagiarism check
-        check_b = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
+        check = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
                             command=lambda: self.checkFile(stater.get()))
-        check_b.pack(side=tk.RIGHT, padx=50)
+        check.pack(side=tk.RIGHT, padx=50)
 
-        cancel_b = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
+        cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                              command=lambda: self.cancelFile())
-        cancel_b.pack(side=tk.LEFT, padx=50,)
+        cancel.pack(side=tk.LEFT, padx=50,)
 
 
     def checkFile(self, stater):
@@ -552,12 +481,12 @@ class ResultPage(tk.Frame):
 
 
         # button for show result and show report
-        check_b = Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=100,
+        check = Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=100,
                             command=lambda: self.clickReport())
-        check_b.pack(side=tk.RIGHT, padx=50)
-        result_b = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
+        check.pack(side=tk.RIGHT, padx=50)
+        result = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
                              command=lambda: self.updataResult())
-        result_b.pack(side=tk.LEFT, padx=50)
+        result.pack(side=tk.LEFT, padx=50)
 
 
 
@@ -580,8 +509,7 @@ class ResultPage(tk.Frame):
                 newvalue=str(newCalue3)+"%"
                 my_list.append((key, newvalue))# add file name and rate to the new list
             for value in my_list:
-                new = value
-                new1 = new[1].strip("%") #throw the %
+                new1 = value[1].strip("%") #throw the %
                 new2 = float(new1)
                 # Determine repetition rate and add color
                 if new2 <= 20:
@@ -655,13 +583,13 @@ class ResultPage(tk.Frame):
         scrolly.config(command=self.listBox.yview)
         scrollx.config(command=self.listBox.xview)
 
-        check_b = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=150,
+        singleReportButton = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=150,
                             command=lambda: self.creatPathSin())
-        check_b.pack(side=tk.RIGHT, padx=50)
+        singleReportButton.pack(side=tk.RIGHT, padx=50)
 
-        cancel_b = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=150,
+        mutiReport = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=150,
                              command=lambda: self.creatPathSMui())
-        cancel_b.pack(side=tk.LEFT, padx=50)
+        mutiReport.pack(side=tk.LEFT, padx=50)
 
 
         self.listBox.bind('<KeyPress>', lambda e: 'break')# Limit user input
