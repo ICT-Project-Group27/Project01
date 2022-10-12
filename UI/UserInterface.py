@@ -110,14 +110,6 @@ class UserInterface(tk.Tk):
             relief="flat",
             command=lambda: self.infoButtonFunc())
 
-        result_c = Button(sid_bar_frame,
-                             text="Result",
-                             bg="#191970",
-                             fg="white",
-                             width=90,
-                             bd=4,
-                             relief="flat",
-                             command=lambda: self.show_frame("ResultPage"))
 
 
 
@@ -126,7 +118,7 @@ class UserInterface(tk.Tk):
         menu_b.grid(row=0, column=0, padx=1, pady=10)
         home_b.grid(row=1, column=0, padx=5, pady=30)
         info_b.grid(row=4, column=0, padx=5, pady=30)
-        result_c.grid(row=2, column=0, padx=5, pady=30)
+
 
 
         # So that it does not depend on the widgets inside the frame
@@ -156,7 +148,7 @@ class UserInterface(tk.Tk):
         # button
         Description_and_introduction_b = tk.Button(
             top_side_frame,
-            text="Description and introduction",
+            text="Description and introduction    ",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -166,7 +158,7 @@ class UserInterface(tk.Tk):
 
         Function_is_introduced_b = tk.Button(
             top_side_frame,
-            text="Function and introduced",
+            text="Function and introduced  ",
             bg="#D7E4F0",
             fg="black",
             width=25,
@@ -383,6 +375,7 @@ class MainPage(tk.Frame):
                 transferDicList = similarity_algorithm.check_C(folderPath)
             elif (stater == 6):
                 transferDicList = similarity_algorithm.check_sql(folderPath)
+            self.repage()
 
 
 
@@ -428,6 +421,206 @@ class MainPage(tk.Frame):
                 if not x.startswith("."):
                     self.listBox.insert(tk.END, x)
                     trans.append(x)
+
+    def repage(self):
+        global filename
+        filename = None
+
+
+        # setting frame
+        Top = tk.Toplevel(self)
+        Top.resizable(False, False)
+        Top.geometry('700x600')
+
+        container = tk.Frame(Top, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 4))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                               height=30)
+        tittleFrame.pack(side=tk.TOP)
+        studentWork_l = tk.Label(tittleFrame, text='\nResult:\n\n', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
+
+        # setting treeview
+
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=80,
+                                height=60)
+        listBoxFrame.pack(side=tk.TOP)
+        colums = ['File Name', 'Rate']  # the treeview head setting
+        self.resultListBox = ttk.Treeview(listBoxFrame, columns=colums, show='headings', heigh=10)
+        self.resultListBox.grid(column=1, row=1, padx=20, columnspan=2)
+        self.resultListBox.heading('File Name', text='File Name', )
+        self.resultListBox.heading('Rate', text='Rate', )
+        self.resultListBox.column('File Name', width=250)
+        self.resultListBox.column('Rate', width=140)
+
+        # setting defferent rate to different color
+        self.resultListBox.tag_configure('tag_green',
+                                         foreground='green')
+        self.resultListBox.tag_configure('tag_origin',
+                                         foreground='orange')
+        self.resultListBox.tag_configure('tag_red',
+                                         foreground='red')
+
+        # button for show result and show report
+        check = Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=100,
+                       command=lambda: self.clickReport())
+        check.pack(side=tk.RIGHT, padx=50)
+        result = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
+                        command=lambda: self.creatPathSMui())
+        result.pack(side=tk.LEFT, padx=50)
+        self.path = tk.StringVar()  # store user want path
+
+
+
+        thisDict = MainPage.transferList(self=MainPage)  # get the result
+        if thisDict is None:
+            messagebox.showerror(title='Warning', message="No Result")
+        else:
+            resultList = thisDict[0]  # get the file and rate(dic)
+            i = 0
+            my_list = []
+            for row in self.resultListBox.get_children():
+                # initialization treeview
+                self.resultListBox.delete(row)
+            for key, val in resultList.items():
+                newCalue1 = float(resultList[key])  # get the result rate
+                newCalue2 = newCalue1 * 100
+                newCalue3 = float('%.2f' % newCalue2)
+                newvalue = str(newCalue3) + "%"
+                my_list.append((key, newvalue))  # add file name and rate to the new list
+            for value in my_list:
+                new1 = value[1].strip("%")  # throw the %
+                new2 = float(new1)
+                # Determine repetition rate and add color
+                if new2 <= 20:
+                    tag = 'tag_green'
+                elif new2 > 50:
+                    tag = 'tag_red'
+                else:
+                    tag = 'tag_origin'
+                self.resultListBox.insert(parent='', index=i, iid=i, values=value, tags=tag)
+                i += 1
+
+    def show_selected(self):
+        # get user selection
+        global filename
+        # messagebox.showinfo(title="Report Generation", message="Please click Preview on the Report page to view the report")
+        for item in self.resultListBox.selection():  # get selection
+            item_text = self.resultListBox.item(item, "values")  # get the filename and rate
+            filename = item_text[0]  # get the name
+        return filename
+
+    def clickReport(self):
+        if self.show_selected() is None:
+            messagebox.showerror(title='Warning', message="Please a choice file.")
+        else:
+            self.report()
+
+    def report(self):
+        # add a new window
+        Top = tk.Toplevel(self)
+        Top.resizable(False, False)
+        Top.geometry('700x600')
+
+        container = tk.Frame(Top, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+        botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 1))
+        botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
+
+        tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                               height=30)
+        tittleFrame.pack(side=tk.TOP)
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=100)
+        listBoxFrame.pack(side=tk.BOTTOM)
+
+        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l.grid(column=0, row=0, padx=30)
+
+        # set scrollbar
+        scrolly = tk.Scrollbar(listBoxFrame)
+        scrolly.pack(side=tk.RIGHT, fill=tk.Y)
+
+        scrollx = tk.Scrollbar(listBoxFrame, orient=tk.HORIZONTAL)
+        scrollx.pack(side=tk.BOTTOM, fill=tk.X)
+
+        # set textbox and link scrollbar
+        self.listBox = tk.Text(listBoxFrame, wrap='none')
+        self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
+        self.listBox.config(yscrollcommand=scrolly.set)
+        self.listBox.config(xscrollcommand=scrollx.set)
+        scrolly.config(command=self.listBox.yview)
+        scrollx.config(command=self.listBox.xview)
+
+        singleReportButton = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=150,
+                                    command=lambda: self.creatPathSin())
+        singleReportButton.pack(side=tk.RIGHT, padx=50)
+
+        mutiReport = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=150,
+                            command=lambda: self.creatPathSMui())
+        mutiReport.pack(side=tk.LEFT, padx=50)
+
+        self.listBox.bind('<KeyPress>', lambda e: 'break')  # Limit user input
+        self.path = tk.StringVar()  # store user want path
+
+        global filename
+        thisName = self.show_selected()  # get uesr selection
+        reportResult = MainPage.transferList(self=MainPage)  # get result
+        folderPath = MainPage.tansFloder(self=MainPage)
+        l = downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]  # get report content
+        self.listBox.delete("1.0", "end")  # clear textbox
+
+        for i in range(0, len(l)):
+            # set color
+            a = float(i + 1)
+            self.listBox.tag_add('warning', a)
+            self.listBox.tag_configure('warning',
+                                       foreground='red')
+            self.listBox.tag_add('normal', a)
+            self.listBox.tag_configure('normal',
+                                       foreground='black')
+
+            # mark the duplicate row
+            if "#!#" in l[i]:
+                self.listBox.insert(a, l[i], 'warning')
+            else:
+                self.listBox.insert(a, l[i], 'normal')
+
+    # choice report save path and save the report
+    def creatPathSin(self):
+        path_ = askdirectory()
+        self.path.set(path_)
+        self.downSinFile()
+
+    def creatPathSMui(self):
+        path_ = askdirectory()
+        self.path.set(path_)
+        self.downMuiFIle()
+
+    def downSinFile(self):
+        path = self.path.get()
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="This Plagiarism Result has been generated")
+        downloadFinal.download.use(folderPath, trans, ResultPage.show_selected(self), reportResult, path)
+
+    def downMuiFIle(self):
+        path = self.path.get()
+        reportResult = MainPage.transferList(self=MainPage)
+        messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
+        downloadFinal.download.alluse(folderPath, trans, reportResult, path)
 
 
 
@@ -487,8 +680,6 @@ class ResultPage(tk.Frame):
         result = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
                              command=lambda: self.updataResult())
         result.pack(side=tk.LEFT, padx=50)
-
-
 
     def updataResult(self):
         thisDict = MainPage.transferList(self=MainPage) # get the result

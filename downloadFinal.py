@@ -96,7 +96,7 @@ class download:
                     if rowsCL-1 == i and isWrite == 0: #Repeat first line
 
                         f.write("\n")
-                        f.write("#!# The above line is duplicated with: \"")
+                        f.write("#!# The next line is duplicated with: \"")
                         # for sj in range(colCL,col):
                         #     endNum = str(Frame[sj])
                         #     f.write(endNum)
@@ -106,8 +106,8 @@ class download:
                         isWrite = 1 #This row has been marked
                     if (rowsCL-1 < i and i < rowsCR-1) and isWrite == 0 : #Repeat middle line
 
-                        f.write("\n")
-                        f.write("#!# The above line is duplicated with: \"")
+                        # f.write("\n")
+                        # f.write("#!# The above line is duplicated with: \"")
                         for refile in newList[2]:
                             f.write(refile)
                         f.write("\"")
