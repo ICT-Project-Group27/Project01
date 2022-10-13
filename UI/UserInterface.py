@@ -473,7 +473,7 @@ class MainPage(tk.Frame):
         check = Button(botFrame, bg='#00FF7F', text="Show report", fg="black", width=100,
                        command=lambda: self.clickReport())
         check.pack(side=tk.RIGHT, padx=50)
-        result = Button(botFrame, bg='#191970', text="Show result", fg="white", width=100,
+        result = Button(botFrame, bg="#191970", text="Download all report", fg="white", width=150,
                         command=lambda: self.creatPathSMui())
         result.pack(side=tk.LEFT, padx=50)
         self.path = tk.StringVar()  # store user want path

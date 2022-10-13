@@ -2,7 +2,14 @@
 
 import os
 
+import re
+
 import numpy as np
+
+import docx
+
+from docx.shared import RGBColor
+from docx import Document
 
 import similarity_algorithm
 
@@ -35,6 +42,9 @@ class download:
         return l
 
     def text_write(filename, matrixname, searchmatri,ratio,filecheck):
+        writedL=[]
+        writedR=[]
+
         newRatio0 = float(ratio) #Keep two decimal places
         newRatio1 = newRatio0 * 100
         newRatio = float('%.2f'%newRatio1)
@@ -93,33 +103,54 @@ class download:
                     colCL = newList[0][1]
                     colCR = newList[1][1]
                     space = " "
-                    if rowsCL-1 == i and isWrite == 0: #Repeat first line
+                    if rowsCL-1 == i: #Repeat first line
+                        refile=""
+                        for name in newList[2]:
+                            refile+=name
 
-                        f.write("\n")
-                        f.write("#!# The next line is duplicated with: \"")
-                        # for sj in range(colCL,col):
-                        #     endNum = str(Frame[sj])
-                        #     f.write(endNum)
-                        for refile in newList[2]:
-                            f.write(refile)
-                        f.write("\"")
-                        isWrite = 1 #This row has been marked
+                        # f.font.color.rgb = RGBColor(255,0,0)
+                        if refile not in writedL:
+                            if isWrite==0:
+                                f.write("\n")
+                                f.write("#!# The next line is duplicated with: \"")
+                                # for sj in range(colCL,col):
+                                #     endNum = str(Frame[sj])
+                                #     f.write(endNum)
+                                f.write(refile)
+                                f.write("\"")
+                                isWrite = 1 #This row has been marked
+                            elif isWrite==1:
+                                f.write(" and \"")
+                                f.write(refile)
+                                f.write("\"")
+                            writedL.append(refile)
+
                     if (rowsCL-1 < i and i < rowsCR-1) and isWrite == 0 : #Repeat middle line
 
                         # f.write("\n")
                         # f.write("#!# The above line is duplicated with: \"")
-                        for refile in newList[2]:
-                            f.write(refile)
-                        f.write("\"")
+                        # for refile in newList[2]:
+                        #     f.write(refile)
+                        # f.write("\"")
+                        f.write("*!* Repeated")
                         isWrite = 1
-                    if i == rowsCR-1 and isWrite == 0: #Repeat last line
+                    if i == rowsCR-1: #Repeat last line
+                        refile = ""
+                        for name in newList[2]:
+                            refile += name
 
-                        f.write("\n")
-                        f.write("#!# The above line is duplicated with: \"")
-                        for refile in newList[2]:
-                            f.write(refile)
-                        f.write("\"")
-                        isWrite = 1
+                        if refile not in writedR:
+                            if isWrite==0:
+                                f.write("\n")
+                                f.write("#!# The above line is duplicated with: \"")
+                                f.write(refile)
+                                f.write("\"")
+                                isWrite = 1
+                            elif isWrite==1:
+                                f.write(" and \"")
+                                f.write(refile)
+                                f.write("\"")
+                            writedR.append(refile)
                 f.write("\n")
             f.close
 
@@ -140,6 +171,19 @@ class download:
     def dictGet_value(exm1):
         return exm1.values()
 
+    def changeDocx(textfile):
+        with open(textfile,'r') as f:
+            doc = Document()#new word
+            p = doc.add_paragraph('')#Create a new paragraph, put this sentence outside the loop to reduce blank lines
+            txtlines = f.readlines()
+
+
+            for line in txtlines:
+                if line.find("#!#")!=-1:
+                    pt="#!#"
+                    res = re.split(pt, line)#res[0] is character before keyword, res[1] is character after keyword
+
+
 
     def use(floader , names, needName, reportResult, flpaderpath):
         #Call method
@@ -159,6 +203,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    download.changeDocx(ReportFile)
 
 
         except Exception as e:
@@ -181,7 +226,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
-
+                    download.changeDocx(ReportFile)
 
         except Exception as e:
             print(e)
