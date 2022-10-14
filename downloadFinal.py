@@ -10,6 +10,7 @@ import docx
 
 from docx.shared import RGBColor
 from docx import Document
+from docx.shared import Pt
 
 import similarity_algorithm
 
@@ -132,7 +133,7 @@ class download:
                         # for refile in newList[2]:
                         #     f.write(refile)
                         # f.write("\"")
-                        f.write("*!* Repeated")
+                        f.write(" #@# Repeated mark")
                         isWrite = 1
                     if i == rowsCR-1: #Repeat last line
                         refile = ""
@@ -171,7 +172,7 @@ class download:
     def dictGet_value(exm1):
         return exm1.values()
 
-    def changeDocx(textfile):
+    def changeDocx(textfile,desktop_path):
         with open(textfile,'r') as f:
             doc = Document()#new word
             p = doc.add_paragraph('')#Create a new paragraph, put this sentence outside the loop to reduce blank lines
@@ -180,8 +181,42 @@ class download:
 
             for line in txtlines:
                 if line.find("#!#")!=-1:
-                    pt="#!#"
-                    res = re.split(pt, line)#res[0] is character before keyword, res[1] is character after keyword
+                    pt=r"(#!#)"#the split keywords and keep keywords
+                    res = re.split(pt, line)#res[0] is character before keyword, res[1] is keywords, res[2] is character after keyword
+                    run = p.add_run(res[1])
+                    run.font.name=u'Calibri'
+                    run.font.size = Pt(10)
+                    r = run._element
+                    run.font.color.rgb = RGBColor(250,0,0)
+
+                    run = p.add_run(res[2])
+                    run.font.name = u'Calibri'
+                    run.font.size = Pt(10)
+                    r = run._element
+                    run.font.color.rgb = RGBColor(250, 0, 0)
+                elif line.find("#@# Repeated mark")!=-1:
+                    pt = "#@# Repeated mark"
+                    res = re.split(pt, line)  # res[0] is character before keyword, res[1] is character after keyword
+                    run = p.add_run(res[0])
+                    run.font.name = u'Calibri'
+                    run.font.size = Pt(10)
+                    r = run._element
+                    run.font.color.rgb = RGBColor(255, 69, 0)
+
+                    run = p.add_run(res[1])
+                    run.font.name = u'Calibri'
+                    run.font.size = Pt(10)
+                    r = run._element
+                    run.font.color.rgb = RGBColor(255, 50, 0)
+                else:
+                    run = p.add_run(line)
+                    run.font.name=u'Calibri'
+                    run.font.size=Pt(10)
+                    r = run._element
+        rename = os.path.splitext(textfile)[0]
+        doc.save(rename + '.docx')
+        f.close()
+        os.remove(textfile)
 
 
 
@@ -203,7 +238,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
-                    download.changeDocx(ReportFile)
+                    download.changeDocx(ReportFile, flpaderpath)
 
 
         except Exception as e:
@@ -226,7 +261,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
-                    download.changeDocx(ReportFile)
+                    download.changeDocx(ReportFile,flpaderpath)
 
         except Exception as e:
             print(e)
