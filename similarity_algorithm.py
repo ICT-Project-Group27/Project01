@@ -30,22 +30,26 @@ def check_python(rep_path):
     code_dict = openfile(rep_path, names)[0]
     pos_dict = openfile(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 12)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
     # return f_names
@@ -109,7 +113,7 @@ def openfile(filepath, f_names):
 
 
 # Loop through all the files and calculate their similarity
-def greedy_tiling(code_dict, f_names):
+def greedy_tiling(code_dict, f_names, max):
     mark = {}
     duplicate = {}
     matches_list = []
@@ -127,8 +131,8 @@ def greedy_tiling(code_dict, f_names):
             if a != i:
 
                 mark[a] = ['0'] * len(mark[a])
-                maxMatch = 12
-                while maxMatch >= 12:
+                maxMatch = max
+                while maxMatch >= max:
                     matches = []
                     count = 0
 
@@ -159,7 +163,7 @@ def greedy_tiling(code_dict, f_names):
 
                     maxMatch = count
 
-                    if maxMatch > 12:
+                    if maxMatch > max:
 
                         for f in matches:
                             matches_list.append(f)
@@ -348,32 +352,34 @@ def open_sql(filepath, f_names):
 # Check the similarity of Java files in a given directory
 def check_java(rep_path):
     names = walk_dir(rep_path)
-    names = [names[0][0:]]
-
-    for i in names:
-        for x in i:
-            if x.startswith('.'):
-                i.remove(x)
+    try:
+        names[0].remove('.DS_Store')
+    except:
+        names[0] = names[0]
 
     code_dict = openfile_java(rep_path, names)[0]
     pos_dict = openfile_java(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 12)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
 
@@ -381,27 +387,34 @@ def check_java(rep_path):
 # Check the similarity of C++ files in a given directory
 def check_cpp(rep_path):
     names = walk_dir(rep_path)
-    names = [names[0][1:]]
+    try:
+        names[0].remove('.DS_Store')
+    except:
+        names[0] = names[0]
 
     code_dict = openfile_cpp(rep_path, names)[0]
     pos_dict = openfile_cpp(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 12)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
 
@@ -409,27 +422,34 @@ def check_cpp(rep_path):
 # Check the similarity of PHP files in a given directory
 def check_PHP(rep_path):
     names = walk_dir(rep_path)
-    names[0].remove('.DS_Store')
+    try:
+        names[0].remove('.DS_Store')
+    except:
+        names[0] = names[0]
 
     code_dict = open_PHP(rep_path, names)[0]
     pos_dict = open_PHP(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 12)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
 
@@ -437,27 +457,34 @@ def check_PHP(rep_path):
 # Check the similarity of C files in a given directory
 def check_C(rep_path):
     names = walk_dir(rep_path)
-    names[0].remove('.DS_Store')
+    try:
+        names[0].remove('.DS_Store')
+    except:
+        names[0] = names[0]
 
     code_dict = openfile_c(rep_path, names)[0]
     pos_dict = openfile_c(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 12)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
 
@@ -465,27 +492,34 @@ def check_C(rep_path):
 # Check the similarity of SQL files in a given directory
 def check_sql(rep_path):
     names = walk_dir(rep_path)
-    names[0].remove('.DS_Store')
+    try:
+        names[0].remove('.DS_Store')
+    except:
+        names[0] = names[0]
 
     code_dict = open_sql(rep_path, names)[0]
     pos_dict = open_sql(rep_path, names)[1]
 
-    mark, matches_list = greedy_tiling(code_dict, names)
+    mark, matches_list = greedy_tiling(code_dict, names, 5)
 
     mark_dict = mark
 
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                     pos_dict[i[4]][i[1] + i[2]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
+                                 pos_dict[i[4]][i[1] + i[2]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                     pos_dict[i[3]][i[0] + i[2]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
+                                 pos_dict[i[3]][i[0] + i[2]])]
 
     return mark_dict, match_dict
 
