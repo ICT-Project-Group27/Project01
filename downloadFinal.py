@@ -81,8 +81,8 @@ class download:
             f.write("\n")
             f.write("\n")
 
-
-            for i in range(0,row): #Loop through the number of lines in the original file
+            writtenLine = 0
+            for i in range(0,row+writtenLine): #Loop through the number of lines in the original file
                 Frame = matrixname[i] #Set row I as the new array
 
                 col = np.array(Frame).shape[0]  # Get new array length
@@ -90,8 +90,8 @@ class download:
                 for j in range(0,col): #Loop through new array
                     Num = str(Frame[j])
                     f.write(Num)
-                    n = j
-                    isWrite = 0
+
+                isWrite = 0
 
                 #Duplicate tag
                 for si in range(0,rows): # Get duplicate row range
@@ -101,9 +101,8 @@ class download:
                         newList.append(toList)
                     rowsCL = newList[0][0]
                     rowsCR = newList[1][0]
-                    colCL = newList[0][1]
-                    colCR = newList[1][1]
-                    space = " "
+
+                    # rowsCR+=writtenLine
                     if rowsCL-1 == i: #Repeat first line
                         refile=""
                         for name in newList[2]:
@@ -113,13 +112,14 @@ class download:
                         if refile not in writedL:
                             if isWrite==0:
                                 f.write("\n")
-                                f.write("#!# The next line is duplicated with: \"")
+                                f.write(" #!# The next line is duplicated with: \"")
                                 # for sj in range(colCL,col):
                                 #     endNum = str(Frame[sj])
                                 #     f.write(endNum)
                                 f.write(refile)
                                 f.write("\"")
                                 isWrite = 1 #This row has been marked
+                                writtenLine += 1
                             elif isWrite==1:
                                 f.write(" and \"")
                                 f.write(refile)
@@ -142,11 +142,13 @@ class download:
 
                         if refile not in writedR:
                             if isWrite==0:
+                                f.write(" #@# Repeated mark")
                                 f.write("\n")
                                 f.write("#!# The above line is duplicated with: \"")
                                 f.write(refile)
                                 f.write("\"")
                                 isWrite = 1
+                                writtenLine += 1
                             elif isWrite==1:
                                 f.write(" and \"")
                                 f.write(refile)
@@ -194,6 +196,7 @@ class download:
                     run.font.size = Pt(10)
                     r = run._element
                     run.font.color.rgb = RGBColor(250, 0, 0)
+
                 elif line.find("#@# Repeated mark")!=-1:
                     pt = "#@# Repeated mark"
                     res = re.split(pt, line)  # res[0] is character before keyword, res[1] is character after keyword
