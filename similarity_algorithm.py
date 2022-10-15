@@ -352,7 +352,7 @@ def check_java(rep_path):
 
     for i in names:
         for x in i:
-            if x.startswith('.'):
+            if not x.endswith('.java'):
                 i.remove(x)
 
     code_dict = openfile_java(rep_path, names)[0]
@@ -382,6 +382,11 @@ def check_java(rep_path):
 def check_cpp(rep_path):
     names = walk_dir(rep_path)
     names = [names[0][1:]]
+
+    for i in names:
+        for x in i:
+            if not x.endswith('.cpp'):
+                i.remove(x)
 
     code_dict = openfile_cpp(rep_path, names)[0]
     pos_dict = openfile_cpp(rep_path, names)[1]

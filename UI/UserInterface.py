@@ -291,17 +291,17 @@ class MainPage(tk.Frame):
             #change code message
             num = stater.get()
             if num == 1:
-                messagebox.askyesno(title='Attention', message="Please upload Python files")
+                messagebox.showwarning(title='Attention', message="Please only upload Python Files")
             elif num == 2:
-                messagebox.askyesno(title='Attention', message="Please upload Java files")
+                messagebox.showwarning(title='Attention', message="Please only upload Java Files")
             elif num == 3:
-                messagebox.askyesno(title='Attention', message="Pleas upload C++ files")
+                messagebox.showwarning(title='Attention', message="Please only upload C++ Files")
             elif num == 4:
-                messagebox.askyesno(title='Attention', message="Pleas upload PHP files")
+                messagebox.showwarning(title='Attention', message="Please only upload PHP Files")
             elif num == 5:
-                messagebox.askyesno(title='Attention', message="Pleas upload C files")
+                messagebox.showwarning(title='Attention', message="Please only upload C Files")
             elif num == 6:
-                messagebox.askyesno(title='Attention', message="Pleas upload SQL files")
+                messagebox.showwarning(title='Attention', message="Please only upload SQL Files")
 
         #code change button
         dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
@@ -363,17 +363,17 @@ class MainPage(tk.Frame):
             messagebox.showerror(title='Warning', message="Please a folder / files.")
         else:
             messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
-            if (stater == 1):
+            if stater == 1:
                 transferDicList = similarity_algorithm.check_python(folderPath)
-            elif (stater == 2):
+            elif stater == 2:
                 transferDicList = similarity_algorithm.check_java(folderPath)
-            elif (stater == 3):
+            elif stater == 3:
                 transferDicList = similarity_algorithm.check_cpp(folderPath)
-            elif (stater == 4):
+            elif stater == 4:
                 transferDicList = similarity_algorithm.check_PHP(folderPath)
-            elif (stater == 5):
+            elif stater == 5:
                 transferDicList = similarity_algorithm.check_C(folderPath)
-            elif (stater == 6):
+            elif stater == 6:
                 transferDicList = similarity_algorithm.check_sql(folderPath)
             self.repage()
 
