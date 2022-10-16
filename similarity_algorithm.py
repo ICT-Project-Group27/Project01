@@ -37,19 +37,15 @@ def check_python(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
     # return f_names
@@ -367,19 +363,15 @@ def check_java(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
 
@@ -402,19 +394,15 @@ def check_cpp(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
 
@@ -437,19 +425,15 @@ def check_PHP(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
 
@@ -472,19 +456,15 @@ def check_C(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
 
@@ -507,19 +487,15 @@ def check_sql(rep_path):
     match_dict = {}
     for i in matches_list:
         try:
-            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                     pos_dict[i[4]][i[1] + i[2]]))
+            match_dict[i[3]].append((pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]]))
         except:
-            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]],
-                                 pos_dict[i[4]][i[1] + i[2]])]
+            match_dict[i[3]] = [(pos_dict[i[3]][i[0]], pos_dict[i[3]][i[0] + i[2]], i[4], pos_dict[i[4]][i[1]])]
 
         try:
-            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                     pos_dict[i[3]][i[0] + i[2]]))
+            match_dict[i[4]].append((pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]]))
 
         except:
-            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]],
-                                 pos_dict[i[3]][i[0] + i[2]])]
+            match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
 
