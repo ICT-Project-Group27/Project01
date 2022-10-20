@@ -334,7 +334,7 @@ class MainPage(tk.Frame):
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
         listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
-        studentWork = tk.Label(topFrame, text='\n\nStudent Files:\n\n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork = tk.Label(topFrame, text='\n\nStudent Files \n\n', bg='#F5F5F5', fg='black', font=(0, 20))
         studentWork.grid(column=0, row=1, padx=10, columnspan=2)
         self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
@@ -445,7 +445,7 @@ class MainPage(tk.Frame):
         tittleFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                height=30)
         tittleFrame.pack(side=tk.TOP)
-        studentWork_l = tk.Label(tittleFrame, text='\nResult:\n\n', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l = tk.Label(tittleFrame, text='\nResult \n\n', bg='#F5F5F5', fg='black', font=(0, 30))
         studentWork_l.grid(column=0, row=0, padx=30)
 
         # setting treeview
@@ -547,7 +547,7 @@ class MainPage(tk.Frame):
                                 height=100)
         listBoxFrame.pack(side=tk.BOTTOM)
 
-        studentWork_l = tk.Label(tittleFrame, text='\nReport:', bg='#F5F5F5', fg='black', font=(0, 30))
+        studentWork_l = tk.Label(tittleFrame, text='\nReport ', bg='#F5F5F5', fg='black', font=(0, 30))
         studentWork_l.grid(column=0, row=0, padx=30)
 
         # set scrollbar
@@ -594,7 +594,7 @@ class MainPage(tk.Frame):
                                        foreground='black')
             self.listBox.tag_add('repeat', a)
             self.listBox.tag_configure('repeat',
-                                       foreground='orange')
+                                       foreground='blue')
 
             # mark the duplicate row
             if "#!#" in l[i]:

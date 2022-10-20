@@ -12,6 +12,8 @@ from docx.shared import RGBColor
 from docx import Document
 from docx.shared import Pt
 
+from docx2pdf import convert
+
 import similarity_algorithm
 
 import UI.UserInterface
@@ -204,7 +206,7 @@ class download:
                     run.font.name = u'Calibri'
                     run.font.size = Pt(10)
                     r = run._element
-                    run.font.color.rgb = RGBColor(255, 69, 0)
+                    run.font.color.rgb = RGBColor(69, 139, 0)
 
                     run = p.add_run(res[1])
                     run.font.name = u'Calibri'
@@ -218,8 +220,14 @@ class download:
                     r = run._element
         rename = os.path.splitext(textfile)[0]
         doc.save(rename + '.docx')
+        tail = os.path.basename(rename)
+        oldword = tail+'.docx'
+        newpdf = tail+'.pdf'
+        convert(oldword,newpdf)
         f.close()
         os.remove(textfile)
+
+
 
 
 
