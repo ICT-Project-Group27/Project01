@@ -17,6 +17,7 @@ import os
 import inspect
 import similarity_algorithm
 import downloadFinal
+import tkinterdnd2
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -287,26 +288,139 @@ class MainPage(tk.Frame):
         stater = tk.IntVar()
         stater.set(0)
 
-        def changeCode():
-            #change code message
-            num = stater.get()
-            if num == 1:
-                messagebox.showwarning(title='Attention', message="Please only upload Python Files")
-            elif num == 2:
-                messagebox.showwarning(title='Attention', message="Please only upload Java Files")
-            elif num == 3:
-                messagebox.showwarning(title='Attention', message="Please only upload C++ Files")
-            elif num == 4:
-                messagebox.showwarning(title='Attention', message="Please only upload PHP Files")
-            elif num == 5:
-                messagebox.showwarning(title='Attention', message="Please only upload C Files")
-            elif num == 6:
-                messagebox.showwarning(title='Attention', message="Please only upload SQL Files")
 
-        #code change button
+        # #code change button
         dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
                                  height=5)
         dropDownFrame.pack(side=tk.TOP)
+
+
+
+
+
+        # listBox and upload button
+
+        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                height=60)
+        listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
+        studentWork = tk.Label(topFrame, text='\n\nStudent Files \n\n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork.grid(column=0, row=1, padx=10, columnspan=2)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
+        self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
+        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
+                                command=lambda: self.openFile())
+        selection.grid(column=2, row=0, rowspan=2)
+
+
+
+
+        # button for start\cancel plagiarism check
+        check = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
+                            command=lambda: self.checkFile())
+        check.pack(side=tk.RIGHT, padx=50)
+
+        cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
+                             command=lambda: self.cancelFile())
+        cancel.pack(side=tk.LEFT, padx=50,)
+
+
+    def checkFile(self,):
+        global folderPath
+        global transferDicList
+        global trans
+        if folderPath is None:
+            messagebox.showerror(title='Warning', message="Please upload a folder / files.")
+        else:
+            textmark = len(trans)
+            txtmany = 0 #how many text file
+            for item in trans:
+                if os.path.splitext(item)[-1][1:] == "py":
+                    transferDicList = similarity_algorithm.check_python(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "java":
+                    transferDicList = similarity_algorithm.check_java(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "cpp":
+                    transferDicList = similarity_algorithm.check_cpp(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "php":
+                    transferDicList = similarity_algorithm.check_PHP(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "c":
+                    transferDicList = similarity_algorithm.check_C(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "sql":
+                    transferDicList = similarity_algorithm.check_sql(folderPath)
+                    self.repage()
+                    break
+                elif os.path.splitext(item)[-1][1:] == "txt":
+                    txtmany+=1
+                else:
+                    messagebox.showerror(title='Warning', message="Please choose to upload the following types of files:"
+                                                                  ".py"
+                                                                  ".java"
+                                                                  ".cpp"
+                                                                  ".php"
+                                                                  ".c"
+                                                                  ".sql"
+                                                                  ".txt")
+            if txtmany == textmark:
+                messagebox.showinfo(title="Language Selection", message="Please select the language you want")
+                self.lanChoice()
+
+    def lanChoice(self):
+
+        Top = tk.Toplevel(self)
+        Top.resizable(False, False)
+        Top.geometry('400x150')
+
+        container = tk.Frame(Top, bg="#F5F5F5")
+        container.pack(side="right", fill="both", expand=True)
+
+        topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
+                            height=(container.winfo_height() / 5 * 4))
+        topFrame.pack(side=tk.TOP, fill="both", expand=1)
+
+        studentWork_l = tk.Label(topFrame, text='\nlanguage selection \n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork_l.grid(column=0, row=0, padx=30)
+
+        # dropdown box
+        stater = tk.IntVar()
+        stater.set(0)
+
+        def changeCode():
+            global transferDicList
+            #change code message
+            num = stater.get()
+            if num == 1:
+                transferDicList = similarity_algorithm.check_python(folderPath)
+                self.repage()
+            elif num == 2:
+                transferDicList = similarity_algorithm.check_java(folderPath)
+                self.repage()
+            elif num == 3:
+                transferDicList = similarity_algorithm.check_cpp(folderPath)
+                self.repage()
+            elif num == 4:
+                transferDicList = similarity_algorithm.check_PHP(folderPath)
+                self.repage()
+            elif num == 5:
+                transferDicList = similarity_algorithm.check_C(folderPath)
+                self.repage()
+            elif num == 6:
+                transferDicList = similarity_algorithm.check_sql(folderPath)
+                self.repage()
+            Top.destroy()
+
+        #code change button
+        dropDownFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
+                                 height=5)
+        dropDownFrame.grid(column=0, row=1, padx=30)
         codeButton1 = tk.Radiobutton(dropDownFrame, text='Python', variable=stater, value=1,
                                    command=changeCode)
         codeButton1.grid(column=0, row=4)
@@ -328,57 +442,6 @@ class MainPage(tk.Frame):
 
 
 
-
-        # listBox and upload button
-
-        listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
-                                height=60)
-        listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
-        studentWork = tk.Label(topFrame, text='\n\nStudent Files \n\n', bg='#F5F5F5', fg='black', font=(0, 20))
-        studentWork.grid(column=0, row=1, padx=10, columnspan=2)
-        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
-        self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
-        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
-                                command=lambda: self.openFile())
-        selection.grid(column=2, row=0, rowspan=2)
-
-
-
-
-
-        # button for start\cancel plagiarism check
-        check = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
-                            command=lambda: self.checkFile(stater.get()))
-        check.pack(side=tk.RIGHT, padx=50)
-
-        cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
-                             command=lambda: self.cancelFile())
-        cancel.pack(side=tk.LEFT, padx=50,)
-
-
-    def checkFile(self, stater):
-        global folderPath
-        global transferDicList
-        if folderPath is None:
-            messagebox.showerror(title='Warning', message="Please a folder / files.")
-        else:
-            messagebox.showinfo(title="Report Generation", message="Plagiarism Result has been generated")
-            if stater == 1:
-                transferDicList = similarity_algorithm.check_python(folderPath)
-            elif stater == 2:
-                transferDicList = similarity_algorithm.check_java(folderPath)
-            elif stater == 3:
-                transferDicList = similarity_algorithm.check_cpp(folderPath)
-            elif stater == 4:
-                transferDicList = similarity_algorithm.check_PHP(folderPath)
-            elif stater == 5:
-                transferDicList = similarity_algorithm.check_C(folderPath)
-            elif stater == 6:
-                transferDicList = similarity_algorithm.check_sql(folderPath)
-            self.repage()
-
-
-
     def transferList(self):
         #Declare global variables and pass parameters to result
         global transferDicList
@@ -397,6 +460,10 @@ class MainPage(tk.Frame):
 
         folderPath = fd.askdirectory() + '/'
         self.updateListBox()
+
+    def dragfile(self,files):
+        global folderPath
+        msg = '\n'.join((item.decode('gbk') for item in files))
 
     def cancelFile(self):
         #Cancel uploaded file
@@ -421,6 +488,7 @@ class MainPage(tk.Frame):
                 if not x.startswith("."):
                     self.listBox.insert(tk.END, x)
                     trans.append(x)
+        return trans
 
     def repage(self):
         global filename
