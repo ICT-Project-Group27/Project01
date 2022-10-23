@@ -14,6 +14,8 @@ from docx.shared import Pt
 
 from docx2pdf import convert
 
+from fpdf import FPDF
+
 import similarity_algorithm
 
 import UI.UserInterface
@@ -220,12 +222,45 @@ class download:
                     r = run._element
         rename = os.path.splitext(textfile)[0]
         doc.save(rename + '.docx')
-        tail = os.path.basename(rename)
-        oldword = tail+'.docx'
-        newpdf = tail+'.pdf'
-        convert(oldword,newpdf)
         f.close()
         os.remove(textfile)
+
+    def changePdf(textfile):
+        pdf = FPDF()
+        pdf.add_page()
+        with open(textfile,'r') as f:
+            textlines = f.readlines()
+
+            for line in textlines:
+                if line.find("#!#") != -1:
+                    pt = r"(#!#)"  # the split keywords and keep keywords
+                    res = re.split(pt,line)  # res[0] is character before keyword, res[1] is keywords, res[2] is character after keyword
+
+                    pdf.set_text_color(250,0,0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500,5,res[2])
+                    pdf.multi_cell(200, 5, "\n")
+
+                elif line.find("#@# Repeated mark")!=-1:
+                    pt = "#@# Repeated mark"
+                    res = re.split(pt, line)  # res[0] is character before keyword, res[1] is character after keyword
+
+                    pdf.set_text_color(69, 139, 0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500, 5, res[0])
+
+                    pdf.set_text_color(250, 0, 0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500, 5, res[1])
+                else:
+                    pdf.set_text_color(0, 0, 0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500, 5, line)
+                    pdf.multi_cell(200, 5, "\n")
+            rename = os.path.splitext(textfile)[0]
+            pdf.output(rename + ".pdf")
+            f.close()
+            os.remove(textfile)
 
 
 
@@ -249,7 +284,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
-                    download.changeDocx(ReportFile, flpaderpath)
+                    download.changePdf(ReportFile)
 
 
         except Exception as e:
@@ -272,7 +307,7 @@ class download:
                     c1 = reportResults[1][allFlie[i]]
                     repetitionLine = download.mChange(c1)
                     download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
-                    download.changeDocx(ReportFile,flpaderpath)
+                    download.changePdf(ReportFile)
 
         except Exception as e:
             print(e)

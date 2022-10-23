@@ -9,23 +9,25 @@ Created on Sat April  5 23:36:17 2022
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox, OptionMenu
+from tkinter import filedialog as fd
 from tkmacosx import Button
 from tkinter.filedialog import askdirectory
 from PIL import Image, ImageTk
 import sys
-import os
+import os,re
 import inspect
 import similarity_algorithm
 import downloadFinal
-import tkinterdnd2
+from tkinterdnd2 import DND_FILES, TkinterDnD
+
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 
-class UserInterface(tk.Tk):
+class UserInterface(TkinterDnD.Tk):
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
+        TkinterDnD.Tk.__init__(self, *args, **kwargs)
         self.title("Plagiarism Checker")
         self.geometry('750x600')
         self.resizable(False, False)
@@ -259,14 +261,19 @@ class MainPage(tk.Frame):
     names = []
     global trans
     trans = []
+    global allfloderpath # mark all upload file path, avoid repetition
+    allfloderpath = []
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     global parentdir
     parentdir = os.path.dirname(currentdir)
     sys.path.insert(0, parentdir)
     global folderPath
-    folderPath = None
+    folderPath = ""
     global transferDicList
     transferDicList = None
+    global isButtonFile
+    isButtonFile = False
+
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
@@ -305,13 +312,14 @@ class MainPage(tk.Frame):
         listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
         studentWork = tk.Label(topFrame, text='\n\nStudent Files \n\n', bg='#F5F5F5', fg='black', font=(0, 20))
         studentWork.grid(column=0, row=1, padx=10, columnspan=2)
-        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66)
+        self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66, selectmode=tk.SINGLE)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
-        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Folder", width=60, bg='white',
+        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Upload Folder", width=160, bg='white',
                                 command=lambda: self.openFile())
         selection.grid(column=2, row=0, rowspan=2)
 
-
+        self.listBox.drop_target_register(DND_FILES)
+        self.listBox.dnd_bind('<<Drop>>', lambda e: self.dropdata(e.data))
 
 
         # button for start\cancel plagiarism check
@@ -322,6 +330,8 @@ class MainPage(tk.Frame):
         cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                              command=lambda: self.cancelFile())
         cancel.pack(side=tk.LEFT, padx=50,)
+
+
 
 
     def checkFile(self,):
@@ -452,24 +462,30 @@ class MainPage(tk.Frame):
 
     def openFile(self):
         global folderPath
-        from tkinter import filedialog as fd
+        global isButtonFile
         filetypes = (
             ('text files', '*.txt'),
             ('All files', '*.*')
         )
 
-        folderPath = fd.askdirectory() + '/'
-        self.updateListBox()
+        folderPath = fd.askdirectory()
+        if folderPath != "":
+            isButtonFile = True
+            folderPath = folderPath + '/'
+            self.updateListBox()
 
-    def dragfile(self,files):
-        global folderPath
-        msg = '\n'.join((item.decode('gbk') for item in files))
+
+
+
+
 
     def cancelFile(self):
         #Cancel uploaded file
         global  folderPath
+        global names
         #similarity_algorithm.deletFile()
-        folderPath = None
+        folderPath = ""
+        names = []
         self.listBox.delete(0, tk.END)
 
     def tansFloder(self):
@@ -479,16 +495,48 @@ class MainPage(tk.Frame):
     def updateListBox(self):
         global names
         global trans #Global variables store uploaded files (Prevent redundant parameter input)
+        global folderPath
+        global isButtonFile
+
+        if folderPath != "" and isButtonFile == True:
+            print(similarity_algorithm.walk_dir(folderPath))
+            for i in similarity_algorithm.walk_dir(folderPath)[0]:
+                if i not in names:#Prevent duplicate uploads
+                    names.append(i)
         self.listBox.delete(0, tk.END)
-        names = similarity_algorithm.walk_dir(folderPath)
-        print(names)
-        names = [names[0][0:]]
         for i in names:
-            for x in i:
-                if not x.startswith("."):
-                    self.listBox.insert(tk.END, x)
-                    trans.append(x)
+            if not i.startswith("."):#dlete wrong files
+                self.listBox.insert(tk.END, i)
+                trans.append(i)
         return trans
+
+
+
+   # drop upload file
+    def dropdata(self, data):
+        global names
+        global folderPath
+        global isButtonFile
+
+        filelist = []
+        res = data.split()
+        for i in res:#mutilple file uploat
+            path, file = os.path.split(i)
+            if "." not in file:#Determine if it is a folder
+                folderPath = data + "/"
+            else:
+                folderPath = path + "/"
+                filelist.append(file)
+        if filelist != []:
+            for j in range(len(filelist)):
+                if filelist[j] not in names:
+                    names.append(filelist[j])
+            isButtonFile = False
+        else:
+            isButtonFile = True
+        self.updateListBox()
+
+
 
     def repage(self):
         global filename
@@ -695,6 +743,8 @@ class MainPage(tk.Frame):
         reportResult = MainPage.transferList(self=MainPage)
         messagebox.showinfo(title="Report Generation", message="All Plagiarism Result has been generated")
         downloadFinal.download.alluse(folderPath, trans, reportResult, path)
+
+
 
 
 
