@@ -271,8 +271,6 @@ class MainPage(tk.Frame):
     folderPath = ""
     global transferDicList
     transferDicList = None
-    global isButtonFile
-    isButtonFile = False
 
 
     def __init__(self, parent):
@@ -343,6 +341,7 @@ class MainPage(tk.Frame):
         else:
             textmark = len(trans)
             txtmany = 0 #how many text file
+            print(folderPath)
             for item in trans:
                 if os.path.splitext(item)[-1][1:] == "py":
                     transferDicList = similarity_algorithm.check_python(folderPath)
@@ -350,6 +349,7 @@ class MainPage(tk.Frame):
                     break
                 elif os.path.splitext(item)[-1][1:] == "java":
                     transferDicList = similarity_algorithm.check_java(folderPath)
+                    print(transferDicList)
                     self.repage()
                     break
                 elif os.path.splitext(item)[-1][1:] == "cpp":
@@ -462,7 +462,6 @@ class MainPage(tk.Frame):
 
     def openFile(self):
         global folderPath
-        global isButtonFile
         filetypes = (
             ('text files', '*.txt'),
             ('All files', '*.*')
@@ -470,7 +469,6 @@ class MainPage(tk.Frame):
 
         folderPath = fd.askdirectory()
         if folderPath != "":
-            isButtonFile = True
             folderPath = folderPath + '/'
             self.updateListBox()
 
@@ -496,9 +494,8 @@ class MainPage(tk.Frame):
         global names
         global trans #Global variables store uploaded files (Prevent redundant parameter input)
         global folderPath
-        global isButtonFile
 
-        if folderPath != "" and isButtonFile == True:
+        if folderPath != "":
             print(similarity_algorithm.walk_dir(folderPath))
             for i in similarity_algorithm.walk_dir(folderPath)[0]:
                 if i not in names:#Prevent duplicate uploads
@@ -516,24 +513,25 @@ class MainPage(tk.Frame):
     def dropdata(self, data):
         global names
         global folderPath
-        global isButtonFile
 
         filelist = []
-        res = data.split()
-        for i in res:#mutilple file uploat
-            path, file = os.path.split(i)
-            if "." not in file:#Determine if it is a folder
-                folderPath = data + "/"
-            else:
-                folderPath = path + "/"
-                filelist.append(file)
-        if filelist != []:
-            for j in range(len(filelist)):
-                if filelist[j] not in names:
-                    names.append(filelist[j])
-            isButtonFile = False
+        if "{" in data:
+            resLeft = data.split("{")
+            resRight = resLeft[1].split("}")
+            data = resRight[0]
+        path, file = os.path.split(data)
+        if "." not in file:#Determine if it is a folder
+            folderPath = data + "/"
+            print(folderPath)
         else:
-            isButtonFile = True
+            messagebox.showerror(title='Warning', message="Please upload folder")
+        #     folderPath = path + "/"
+        #     filelist.append(file)
+        # if filelist != []:
+        #     for j in range(len(filelist)):
+        #         if filelist[j] not in names:
+        #             names.append(filelist[j])
+
         self.updateListBox()
 
 
