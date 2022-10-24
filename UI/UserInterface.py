@@ -12,17 +12,15 @@ from tkinter import messagebox, OptionMenu
 from tkinter import filedialog as fd
 from tkmacosx import Button
 from tkinter.filedialog import askdirectory
-from PIL import Image, ImageTk
 import sys
 import os,re
 import inspect
 import similarity_algorithm
 import downloadFinal
 from tkinterdnd2 import DND_FILES, TkinterDnD
+from tkinter import Text as txt
+from tkinter import Scrollbar as scroll
 
-import numpy as np
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
 
 
 class UserInterface(TkinterDnD.Tk):
@@ -66,18 +64,6 @@ class UserInterface(TkinterDnD.Tk):
             self.quit()
 
     def sideBar(self):
-        global btnState
-        btnState = False
-        global min_w
-        min_w = 45  # Minimum width of the frame
-        global max_w
-        max_w = 120  # Maximum width of the frame
-        global cur_width
-        cur_width = min_w  # Increasing width of the frame
-        global expanded
-        expanded = False  # Check if it is completely expanded
-
-
         self.update()  # For the width to get updated
 
         sid_bar_frame = tk.Frame(self.sideBarContainer, bg="#191970", width=110, height=self.winfo_height())
@@ -128,8 +114,6 @@ class UserInterface(TkinterDnD.Tk):
         sid_bar_frame.grid_propagate(False)
 
     def infoButtonFunc(self):
-        from tkinter import Text as txt
-        from tkinter import Scrollbar as scroll
 
         top = tk.Toplevel(
             master=self,
@@ -479,7 +463,7 @@ class MainPage(tk.Frame):
 
     def cancelFile(self):
         #Cancel uploaded file
-        global  folderPath
+        global folderPath
         global names
         global trans
         self.listBox.delete("0", tk.END)
