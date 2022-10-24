@@ -482,11 +482,12 @@ class MainPage(tk.Frame):
         global  folderPath
         global names
         global trans
+        self.listBox.delete("0", tk.END)
         #similarity_algorithm.deletFile()
         folderPath = ""
         names = []
         trans = []
-        self.listBox.delete(0, tk.END)
+
 
     def tansFloder(self):
         global folderPath
@@ -671,12 +672,12 @@ class MainPage(tk.Frame):
         scrollx.pack(side=tk.BOTTOM, fill=tk.X)
 
         # set textbox and link scrollbar
-        self.listBox = tk.Text(listBoxFrame, wrap='none')
-        self.listBox.pack(fill=tk.BOTH, expand=tk.YES)
-        self.listBox.config(yscrollcommand=scrolly.set)
-        self.listBox.config(xscrollcommand=scrollx.set)
-        scrolly.config(command=self.listBox.yview)
-        scrollx.config(command=self.listBox.xview)
+        self.reportListBox = tk.Text(listBoxFrame, wrap='none')
+        self.reportListBox.pack(fill=tk.BOTH, expand=tk.YES)
+        self.reportListBox.config(yscrollcommand=scrolly.set)
+        self.reportListBox.config(xscrollcommand=scrollx.set)
+        scrolly.config(command=self.reportListBox.yview)
+        scrollx.config(command=self.reportListBox.xview)
 
         singleReportButton = Button(botFrame, bg='#191970', text="Download this report", fg="white", width=150,
                                     command=lambda: self.creatPathSin())
@@ -686,7 +687,7 @@ class MainPage(tk.Frame):
                             command=lambda: self.creatPathSMui())
         mutiReport.pack(side=tk.LEFT, padx=50)
 
-        self.listBox.bind('<KeyPress>', lambda e: 'break')  # Limit user input
+        self.reportListBox.bind('<KeyPress>', lambda e: 'break')  # Limit user input
         self.path = tk.StringVar()  # store user want path
 
         global filename
@@ -694,29 +695,29 @@ class MainPage(tk.Frame):
         reportResult = MainPage.transferList(self=MainPage)  # get result
         folderPath = MainPage.tansFloder(self=MainPage)
         l = downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]  # get report content
-        self.listBox.delete("1.0", "end")  # clear textbox
+        self.reportListBox.delete("1.0", "end")  # clear textbox
 
         for i in range(0, len(l)):
             # set color
             a = float(i+1)
-            self.listBox.tag_add('warning', a)
-            self.listBox.tag_configure('warning',
+            self.reportListBox.tag_add('warning', a)
+            self.reportListBox.tag_configure('warning',
                                        foreground='red')
-            self.listBox.tag_add('normal', a)
-            self.listBox.tag_configure('normal',
+            self.reportListBox.tag_add('normal', a)
+            self.reportListBox.tag_configure('normal',
                                        foreground='black')
-            self.listBox.tag_add('repeat', a)
-            self.listBox.tag_configure('repeat',
+            self.reportListBox.tag_add('repeat', a)
+            self.reportListBox.tag_configure('repeat',
                                        foreground='blue')
 
             # mark the duplicate row
             if "#!#" in l[i]:
-                self.listBox.insert(a, l[i], 'warning')
+                self.reportListBox.insert(a, l[i], 'warning')
             elif "#@# Repeated mark" in l[i]:
                 res = l[i].split("#@# Repeated mark",1)
-                self.listBox.insert(a, res[0]+"\n", 'repeat')
+                self.reportListBox.insert(a, res[0]+"\n", 'repeat')
             else:
-                self.listBox.insert(a, l[i], 'normal')
+                self.reportListBox.insert(a, l[i], 'normal')
 
     # choice report save path and save the report
     def creatPathSin(self):
