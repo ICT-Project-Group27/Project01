@@ -481,9 +481,11 @@ class MainPage(tk.Frame):
         #Cancel uploaded file
         global  folderPath
         global names
+        global trans
         #similarity_algorithm.deletFile()
         folderPath = ""
         names = []
+        trans = []
         self.listBox.delete(0, tk.END)
 
     def tansFloder(self):
@@ -511,11 +513,8 @@ class MainPage(tk.Frame):
 
    # drop upload file
     def dropdata(self, data):
-        global names
         global folderPath
-
-        filelist = []
-        if "{" in data:
+        if "{" in data:#if folder name have ""
             resLeft = data.split("{")
             resRight = resLeft[1].split("}")
             data = resRight[0]
@@ -523,6 +522,7 @@ class MainPage(tk.Frame):
         if "." not in file:#Determine if it is a folder
             folderPath = data + "/"
             print(folderPath)
+            self.updateListBox()
         else:
             messagebox.showerror(title='Warning', message="Please upload folder")
         #     folderPath = path + "/"
@@ -532,7 +532,6 @@ class MainPage(tk.Frame):
         #         if filelist[j] not in names:
         #             names.append(filelist[j])
 
-        self.updateListBox()
 
 
 
