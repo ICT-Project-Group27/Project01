@@ -6,10 +6,12 @@ import javac_parser
 import sctokenizer
 import sqlparse
 
-
 resultListCount = []
+
+
 def getResultListCount():
     return resultListCount
+
 
 # Walk the given directory and store the names of all the files in it.
 def walk_dir(start_directory):
@@ -197,33 +199,34 @@ def openfile_java(filepath, f_names):
             final_list = []
             reservedWord = ['CLASS', 'PACKAGE', 'IMPORT', 'WHILE', 'FOR', 'SWITCH', 'CASE', 'TRY',
                             'CATCH', 'FINALLY', 'IF', 'ELSE', 'RETURN', 'BREAK', 'CONTINUE', 'VOID',
-                            'LBRACE', 'RBRACE', 'EQ']
+                            'LBRACE', 'RBRACE', 'EQ', 'INT', 'BOOLEAN', 'DOUBLE', 'STRING', 'CHARACTER', 'IDENTIFIER',
+                            'System']
             for a in token_list:
                 # print(a.start_pos)
                 for word in reservedWord:
                     if a[0] == word:
-                        final_list.append(a[0])
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'INT':
-                        final_list.append('CreateVar')
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'BOOLEAN':
-                        final_list.append('CreateVar')
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'DOUBLE':
-                        final_list.append('CreateVar')
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'STRING':
-                        final_list.append('CreateVar')
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'CHARACTER':
-                        final_list.append('CreateVar')
-                        pos_list.append((a[2][0], a[2][1]))
-                    elif a[0] == 'IDENTIFIER':
-                        if a[1] == 'System':
+                        if word == 'INT':
+                            final_list.append('CreateVar')
+                            pos_list.append((a[2][0], a[2][1]))
+                        elif word == 'BOOLEAN':
+                            final_list.append('CreateVar')
+                            pos_list.append((a[2][0], a[2][1]))
+                        elif word == 'DOUBLE':
+                            final_list.append('CreateVar')
+                            pos_list.append((a[2][0], a[2][1]))
+                        elif word == 'STRING':
+                            final_list.append('CreateVar')
+                            pos_list.append((a[2][0], a[2][1]))
+                        elif word == 'CHARACTER':
+                            final_list.append('CreateVar')
+                            pos_list.append((a[2][0], a[2][1]))
+                        elif word == 'IDENTIFIER':
+                            if a[1] == 'System':
+                                final_list.append(a[0])
+                                pos_list.append((a[2][0], a[2][1]))
+                        else:
                             final_list.append(a[0])
                             pos_list.append((a[2][0], a[2][1]))
-
 
             code_dict[f_names[0][i]] = final_list
             pos_dict[f_names[0][i]] = pos_list
@@ -498,7 +501,6 @@ def check_sql(rep_path):
             match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
-
 
 # print(check_java('/Users/kiko/Documents/IT project2/cal/'))
 # print(check_cpp('/Users/kiko/Documents/IT project2/cpp_test/'))
