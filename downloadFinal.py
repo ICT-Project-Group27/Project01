@@ -172,6 +172,25 @@ class download:
             i+=1
         return NewList
 
+    def zeroWrite(ReportFile, originalFile,fileName):
+        with open(ReportFile, "w") as f:
+            f.write("-------------------------------------------------------------------")
+            f.write("\n")
+            f.write("There is no duplication in ")
+            f.write(fileName)
+            f.write(" document.")
+            f.write("\n")
+            f.write("-------------------------------------------------------------------")
+            f.write("\n")
+            f.write("\n")
+
+            for row in originalFile:
+                for col in row:
+                    f.write(col)
+                f.write("\n")
+
+            f.close()
+
     def dictGet_key(exm1):
         return exm1.keys()
 
@@ -281,9 +300,12 @@ class download:
                     fileName = str(names[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = reportResults[0][allFlie[i]]
-                    c1 = reportResults[1][allFlie[i]]
-                    repetitionLine = download.mChange(c1)
-                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    if float(repetitionRate) > 0:
+                        transre = reportResults[1][allFlie[i]]
+                        repetitionLine = download.mChange(transre)
+                        download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    else:
+                        download.zeroWrite(ReportFile, originalFile, fileName)
                     download.changePdf(ReportFile)
 
 
@@ -304,9 +326,12 @@ class download:
                     fileName = str(allFlie[i])
                     originalFile = download.data_matrix(floader, fileName)
                     repetitionRate = reportResults[0][allFlie[i]]
-                    c1 = reportResults[1][allFlie[i]]
-                    repetitionLine = download.mChange(c1)
-                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    if float(repetitionRate) > 0:
+                        transre = reportResults[1][allFlie[i]]
+                        repetitionLine = download.mChange(transre)
+                        download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    else:
+                        download.zeroWrite(ReportFile, originalFile, fileName)
                     download.changePdf(ReportFile)
 
         except Exception as e:
@@ -319,7 +344,7 @@ class download:
         global transre
         try:
             transpath = desktop_path = os.path.join(os.path.expanduser('~'), "Desktop/")
-            reportResults = reportResult
+            reportResults = reportResult#the dictionary about file name and rate
             allFlie = list(download.dictGet_key(reportResults[0]))
             allRate = list(download.dictGet_value(reportResults[0]))
             finalFile = list(download.dictGet_key(reportResults[1]))
@@ -330,9 +355,12 @@ class download:
                     fileName = str(allFlie[i])#need file
                     originalFile = download.data_matrix(floader, fileName)#Detach the contents of the original file
                     repetitionRate = reportResults[0][allFlie[i]]#repeat rate
-                    transre = reportResults[1][allFlie[i]]#get repeat lines
-                    repetitionLine = download.mChange(transre)#repeat line
-                    download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    if float(repetitionRate) > 0:
+                        transre = reportResults[1][allFlie[i]]#get repeat lines
+                        repetitionLine = download.mChange(transre)#repeat line
+                        download.text_write(ReportFile, originalFile, repetitionLine, repetitionRate, fileName)
+                    else:
+                        download.zeroWrite(ReportFile, originalFile, fileName)
             with open(ReportFile, 'r') as f:
                 for line in f:
                     line = line.strip('\n')
