@@ -502,9 +502,4 @@ def check_sql(rep_path):
 
     return mark_dict, match_dict
 
-# print(check_java('/Users/kiko/Documents/IT project2/cal/'))
-# print(check_cpp('/Users/kiko/Documents/IT project2/cpp_test/'))
-# print(check_sql('/Users/kiko/Documents/IT project2/sql_test/'))
-# print(check_C('/Users/kiko/Documents/IT project2/c_test/'))
-# print(check_PHP('/Users/kiko/Documents/IT project2/php_test/'))
-# print(check_python('/Users/kiko/Documents/IT project2/python_test/'))
+
