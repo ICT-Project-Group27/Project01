@@ -570,7 +570,7 @@ class MainPage(tk.Frame):
         scrollx_p1 = tk.Scrollbar(rightFrame, orient=tk.HORIZONTAL)
         scrollx_p1.pack(side=tk.BOTTOM, fill=tk.X)
         # set textbox and link scrollbar
-        self.reportListBox1 = tk.Text(rightFrame, state='disable', wrap='none')
+        self.reportListBox1 = tk.Text(rightFrame, wrap='none')
         self.reportListBox1.pack(fill=tk.BOTH, expand=tk.YES)
         self.reportListBox1.config(yscrollcommand=scrolly_p1.set)
         self.reportListBox1.config(xscrollcommand=scrollx_p1.set)
@@ -586,21 +586,24 @@ class MainPage(tk.Frame):
         scrollx_p2.pack(side=tk.BOTTOM, fill=tk.X)
 
         # set textbox and link scrollbar
-        self.reportListBox = tk.Text(leftFrame, state='disable', wrap='none')
+        self.reportListBox = tk.Text(leftFrame, wrap='none')
         self.reportListBox.pack(fill=tk.BOTH, expand=tk.YES)
         self.reportListBox.config(yscrollcommand=scrolly_p2.set)
         self.reportListBox.config(xscrollcommand=scrollx_p2.set)
         scrolly_p2.config(command=self.reportListBox.yview)
         scrollx_p2.config(command=self.reportListBox.xview)
 
+        self.reportListBox.bind('<KeyPress>', lambda e: 'break')
+        self.reportListBox1.bind('<KeyPress>', lambda e: 'break')# Limit user input
+
 
 
 
         # button for show result and show report
         showRep_b1 = Button(listBoxButtonFrame, text="Show\nreport 1",bg='white', fg="#191970", width=60,
-                       command=lambda: self.showOnText1(Top))
+                       command=lambda: self.clickReport1())
         showRep_b2 = Button(listBoxButtonFrame, text="Show\nreport 2",bg='white', fg="#191970", width=60,
-                       command=lambda: self.clickReport())
+                       command=lambda: self.clickReport2())
         showRep_b1.pack(side=tk.LEFT, padx=10, pady=50)
         showRep_b2.pack(side=tk.RIGHT, padx=10, pady=50)
 
@@ -646,14 +649,14 @@ class MainPage(tk.Frame):
             filename = item_text[0]  # get the name
         return filename
 
-    def clickReport(self):
+    def clickReport1(self):
         if self.show_selected() is None:
             messagebox.showerror(title='Warning', message="Please select a file.")
         else:
-            self.report()
+            self.showOnText1()
 
     def showOnText1(self):
-        self.reportListBox.bind('<KeyPress>', lambda e: 'break')  # Limit user input
+
         self.path = tk.StringVar()  # store user want path
 
         global filename
@@ -684,6 +687,45 @@ class MainPage(tk.Frame):
                 self.reportListBox.insert(a, res[0] + "\n", 'repeat')
             else:
                 self.reportListBox.insert(a, l[i], 'normal')
+
+    def clickReport2(self):
+        if self.show_selected() is None:
+            messagebox.showerror(title='Warning', message="Please select a file.")
+        else:
+            self.showOnText2()
+
+    def showOnText2(self):
+
+        self.path = tk.StringVar()  # store user want path
+
+        global filename
+        thisName = self.show_selected()  # get user selection
+        reportResult = MainPage.transferList(self=MainPage)  # get result
+        folderPath = MainPage.tansFloder(self=MainPage)
+        l = downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]  # get report content
+        self.reportListBox1.delete("1.0", "end")  # clear textbox
+
+        for i in range(0, len(l)):
+            # set color
+            a = float(i + 1)
+            self.reportListBox1.tag_add('warning', a)
+            self.reportListBox1.tag_configure('warning',
+                                             foreground='red')
+            self.reportListBox1.tag_add('normal', a)
+            self.reportListBox1.tag_configure('normal',
+                                             foreground='black')
+            self.reportListBox1.tag_add('repeat', a)
+            self.reportListBox1.tag_configure('repeat',
+                                             foreground='blue')
+
+            # mark the duplicate row
+            if "#!#" in l[i]:
+                self.reportListBox1.insert(a, l[i], 'warning')
+            elif "#@# Repeated mark" in l[i]:
+                res = l[i].split("#@# Repeated mark", 1)
+                self.reportListBox1.insert(a, res[0] + "\n", 'repeat')
+            else:
+                self.reportListBox1.insert(a, l[i], 'normal')
     # choice report save path and save the report
     def creatPathSin(self):
         path_ = askdirectory()
