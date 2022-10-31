@@ -161,7 +161,7 @@ def greedy_tiling(code_dict, f_names, max):
 
                     maxMatch = count
 
-                    if maxMatch > max:
+                    if maxMatch >= max:
 
                         for f in matches:
                             matches_list.append(f)
