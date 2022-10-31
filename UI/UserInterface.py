@@ -533,12 +533,12 @@ class MainPage(tk.Frame):
         resultButtonFrame.pack(side=tk.BOTTOM, fill='both', expand=True)
 
         #where the result shown
-        leftFrame = tk.Frame(resultTextFrame, bg='#191970', width=((resultTextFrame.winfo_width()) / 2),
+        leftFrame = tk.Frame(resultTextFrame, bg='#F5F5F5', width=((resultTextFrame.winfo_width()) / 2),
                              height=(resultTextFrame.winfo_height()/5*4))
-        leftFrame.pack(side=tk.LEFT, fill='both', padx = 10)
-        rightFrame = tk.Frame(resultTextFrame, bg='black', width=((resultTextFrame.winfo_width()) / 2),
+        leftFrame.pack(side=tk.LEFT, fill='both', padx = 10, pady=5)
+        rightFrame = tk.Frame(resultTextFrame, bg='#F5F5F5', width=((resultTextFrame.winfo_width()) / 2),
                              height=(resultTextFrame.winfo_height()/5*4))
-        rightFrame.pack(side=tk.RIGHT, fill='both',padx=10)
+        rightFrame.pack(side=tk.RIGHT, fill='both',padx=10, pady=5)
 
 
         singleReportButton = Button(resultButtonFrame, text="Download selected report", fg="black", width=180,
@@ -549,9 +549,9 @@ class MainPage(tk.Frame):
         result.pack(side=tk.LEFT, padx=50)
 
         #label
-        studentFileName_l_p1 = tk.Label(leftFrame, text='Report1 ', bg='#F5F5F5', fg='black', font=(0, 15))
+        studentFileName_l_p1 = tk.Label(leftFrame, text='Report 1 ', bg='#F5F5F5', fg='black', font=(0, 15))
         studentFileName_l_p1.pack(side=tk.TOP, pady=10, padx=10)
-        studentFileName_l_p2 = tk.Label(rightFrame, text='Report2 ', bg='#F5F5F5', fg='black', font=(0, 15))
+        studentFileName_l_p2 = tk.Label(rightFrame, text='Report 2 ', bg='#F5F5F5', fg='black', font=(0, 15))
         studentFileName_l_p2.pack(side=tk.TOP, pady=10, padx=10)
         # right textbox
         scrolly_p1 = tk.Scrollbar(rightFrame)
@@ -590,9 +590,9 @@ class MainPage(tk.Frame):
 
 
         # button for show result and show report
-        showRep_b1 = Button(listBoxButtonFrame, text="Show\nreport 1",bg='white', fg="#191970", width=60,
+        showRep_b1 = Button(listBoxButtonFrame, text="Show on\nreport 1",bg='white', fg="#191970", width=60,
                        command=lambda: self.clickReport1())
-        showRep_b2 = Button(listBoxButtonFrame, text="Show\nreport 2",bg='white', fg="#191970", width=60,
+        showRep_b2 = Button(listBoxButtonFrame, text="Show on\nreport 2",bg='white', fg="#191970", width=60,
                        command=lambda: self.clickReport2())
         showRep_b1.pack(side=tk.LEFT, padx=10, pady=50)
         showRep_b2.pack(side=tk.RIGHT, padx=10, pady=50)
@@ -647,9 +647,9 @@ class MainPage(tk.Frame):
 
     def showOnText1(self):
 
-        self.path = tk.StringVar()  # store user want path
-
         global filename
+
+        self.path = tk.StringVar()  # store user want path
         thisName = self.show_selected()  # get user selection
         reportResult = MainPage.transferList(self=MainPage)  # get result
         folderPath = MainPage.tansFloder(self=MainPage)
@@ -678,6 +678,8 @@ class MainPage(tk.Frame):
             else:
                 self.reportListBox.insert(a, l[i], 'normal')
 
+
+
     def clickReport2(self):
         if self.show_selected() is None:
             messagebox.showerror(title='Warning', message="Please select a file.")
@@ -685,10 +687,9 @@ class MainPage(tk.Frame):
             self.showOnText2()
 
     def showOnText2(self):
+        global filename
 
         self.path = tk.StringVar()  # store user want path
-
-        global filename
         thisName = self.show_selected()  # get user selection
         reportResult = MainPage.transferList(self=MainPage)  # get result
         folderPath = MainPage.tansFloder(self=MainPage)
