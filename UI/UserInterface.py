@@ -268,11 +268,9 @@ class MainPage(tk.Frame):
 
         # #code change button
         dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
-                                 height=5)
+                               height=5)
         dropDownFrame.pack(side=tk.TOP)
-
         # listBox and upload button
-
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
         listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
@@ -349,7 +347,6 @@ class MainPage(tk.Frame):
                 self.lanChoice()
 
     def lanChoice(self):
-
         Top = tk.Toplevel(self)
         Top.resizable(False, False)
         Top.geometry('400x150')
@@ -438,7 +435,6 @@ class MainPage(tk.Frame):
         global names
         global trans
         self.listBox.delete("0", tk.END)
-        # similarity_algorithm.deletFile()
         folderPath = ""
         names = []
         trans = []
@@ -459,7 +455,7 @@ class MainPage(tk.Frame):
                     names.append(i)
         self.listBox.delete(0, tk.END)
         for i in names:
-            if not i.startswith("."):  # dlete wrong files
+            if not i.startswith("."):  # delete wrong files
                 self.listBox.insert(tk.END, i)
                 trans.append(i)
         return trans
@@ -478,12 +474,6 @@ class MainPage(tk.Frame):
             self.updateListBox()
         else:
             messagebox.showerror(title='Warning', message="Please upload folder")
-        #     folderPath = path + "/"
-        #     filelist.append(file)
-        # if filelist != []:
-        #     for j in range(len(filelist)):
-        #         if filelist[j] not in names:
-        #             names.append(filelist[j])
 
     def repage(self):
         global filename

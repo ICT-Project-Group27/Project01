@@ -50,7 +50,7 @@ def check_python(rep_path):
             match_dict[i[4]] = [(pos_dict[i[4]][i[1]], pos_dict[i[4]][i[1] + i[2]], i[3], pos_dict[i[3]][i[0]])]
 
     return mark_dict, match_dict
-    # return f_names
+
 
 
 # Open a python file and tokenize it
@@ -168,7 +168,7 @@ def greedy_tiling(code_dict, f_names, max):
                         for m in matches:
                             for c in range(0, m[2]):
                                 mark[i][m[0] + c] = a
-                                # mark[a][m[1] + c] = i
+
 
         count = 0
         for n in mark[i]:

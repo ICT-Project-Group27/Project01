@@ -117,9 +117,6 @@ class download:
                             if isWrite==0:
                                 f.write("\n")
                                 f.write(" #!# The next line is duplicated with: \"")
-                                # for sj in range(colCL,col):
-                                #     endNum = str(Frame[sj])
-                                #     f.write(endNum)
                                 f.write(refile)
                                 f.write("\"")
                                 isWrite = 1 #This row has been marked
@@ -132,11 +129,6 @@ class download:
 
                     if (rowsCL-1 < i and i < rowsCR-1) and isWrite == 0 : #Repeat middle line
 
-                        # f.write("\n")
-                        # f.write("#!# The above line is duplicated with: \"")
-                        # for refile in newList[2]:
-                        #     f.write(refile)
-                        # f.write("\"")
                         f.write(" #@# Repeated mark")
                         isWrite = 1
                     if i == rowsCR-1: #Repeat last line
@@ -373,7 +365,3 @@ class download:
 
         except Exception as e:
             print(e)
-
-
-
-
