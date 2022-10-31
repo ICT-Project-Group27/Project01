@@ -276,13 +276,13 @@ class MainPage(tk.Frame):
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
         listBoxFrame.grid(column=0, row=3, padx=10, columnspan=2)
-        studentWork = tk.Label(topFrame, text='\n\nStudent Files \n\n', bg='#F5F5F5', fg='black', font=(0, 20))
+        studentWork = tk.Label(topFrame, text='\nStudent Files \n', bg='#F5F5F5', fg='black', font=(0, 20))
         studentWork.grid(column=0, row=1, padx=10, columnspan=2)
         self.listBox = tk.Listbox(listBoxFrame, bg='white', fg='black', width=66, selectmode=tk.SINGLE)
         self.listBox.grid(column=0, row=1, padx=10, columnspan=2, rowspan=2)
-        selection = Button(dropDownFrame, highlightbackground='#F5F5F5', text="Upload Folder", width=160, bg='white',
+        selection = Button(botFrame, highlightbackground='#F5F5F5', text="Upload Folder", width=160, bg='white',
                            command=lambda: self.openFile())
-        selection.grid(column=2, row=0, rowspan=2)
+        selection.grid(column=12, row=0, rowspan=2, columnspan=10, padx=70)
 
         self.listBox.drop_target_register(DND_FILES)
         self.listBox.dnd_bind('<<Drop>>', lambda e: self.dropdata(e.data))
@@ -290,11 +290,11 @@ class MainPage(tk.Frame):
         # button for start\cancel plagiarism check
         check = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
                        command=lambda: self.checkFile())
-        check.pack(side=tk.RIGHT, padx=50)
+        check.grid(column=1, row=0, rowspan=2, columnspan=10, padx=40)
 
         cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                         command=lambda: self.cancelFile())
-        cancel.pack(side=tk.LEFT, padx=50, )
+        cancel.grid(column=23, row=0, rowspan=2, columnspan=10, padx=20)
 
     def checkFile(self, ):
         global folderPath
@@ -492,7 +492,7 @@ class MainPage(tk.Frame):
         # setting frame
         Top = tk.Toplevel(self)
         Top.resizable(True, True)
-        Top.geometry('1200x700')
+        Top.geometry('1400x700')
 
         container = tk.Frame(Top, bg="#F5F5F5")
         container.pack(side="right", fill="both", expand=True)
