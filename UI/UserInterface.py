@@ -288,11 +288,11 @@ class MainPage(tk.Frame):
         # button for start\cancel plagiarism check
         check = Button(botFrame, bg='#00FF7F', text="Confirm", fg="black", width=90,
                        command=lambda: self.checkFile())
-        check.grid(column=1, row=0, rowspan=2, columnspan=10, padx=40)
+        check.grid(column=23, row=0, rowspan=2, columnspan=10, padx=40)
 
         cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                         command=lambda: self.cancelFile())
-        cancel.grid(column=23, row=0, rowspan=2, columnspan=10, padx=20)
+        cancel.grid(column=1, row=0, rowspan=2, columnspan=10, padx=20)
 
     def checkFile(self, ):
         global folderPath
