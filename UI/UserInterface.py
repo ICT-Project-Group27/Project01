@@ -491,7 +491,7 @@ class MainPage(tk.Frame):
 
         # setting frame
         Top = tk.Toplevel(self)
-        Top.resizable(True, True)
+        Top.resizable(False, False)
         Top.geometry('1400x700')
 
         container = tk.Frame(Top, bg="#F5F5F5")
