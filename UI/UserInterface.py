@@ -656,9 +656,10 @@ class MainPage(tk.Frame):
         l = downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]  # get report content
         self.reportListBox.delete("1.0", "end")  # clear textbox
 
+        a=1.0
         for i in range(0, len(l)):
             # set color
-            a = float(i + 1)
+            a+=1.0
             self.reportListBox.tag_add('warning', a)
             self.reportListBox.tag_configure('warning',
                                              foreground='red')
@@ -671,7 +672,10 @@ class MainPage(tk.Frame):
 
             # mark the duplicate row
             if "#!#" in l[i]:
-                self.reportListBox.insert(a, l[i], 'warning')
+                res = l[i].split("#!#", 1)
+                self.reportListBox.insert(a, res[0], 'repeat')
+                a+=1.0
+                self.reportListBox.insert(a, res[1], 'warning')
             elif "#@# Repeated mark" in l[i]:
                 res = l[i].split("#@# Repeated mark", 1)
                 self.reportListBox.insert(a, res[0] + "\n", 'repeat')
@@ -696,9 +700,10 @@ class MainPage(tk.Frame):
         l = downloadFinal.download.trans(folderPath, trans, thisName, reportResult)[0]  # get report content
         self.reportListBox1.delete("1.0", "end")  # clear textbox
 
+        a=1.0
         for i in range(0, len(l)):
             # set color
-            a = float(i + 1)
+            a+=1.0
             self.reportListBox1.tag_add('warning', a)
             self.reportListBox1.tag_configure('warning',
                                              foreground='red')
@@ -711,13 +716,16 @@ class MainPage(tk.Frame):
 
             # mark the duplicate row
             if "#!#" in l[i]:
-                self.reportListBox1.insert(a, l[i], 'warning')
+                res = l[i].split("#!#", 1)
+                self.reportListBox1.insert(a, res[0], 'repeat')
+                a+=1.0
+                self.reportListBox1.insert(a, res[1], 'warning')
             elif "#@# Repeated mark" in l[i]:
                 res = l[i].split("#@# Repeated mark", 1)
                 self.reportListBox1.insert(a, res[0] + "\n", 'repeat')
             else:
                 self.reportListBox1.insert(a, l[i], 'normal')
-    # choice report save path and save the report
+# choice report save path and save the report
     def creatPathSin(self):
         path_ = askdirectory()
         self.path.set(path_)
