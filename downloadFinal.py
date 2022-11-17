@@ -103,17 +103,17 @@ class download:
                     for sj in range(0,cols):
                         toList = list(searchmatri[si][sj])
                         newList.append(toList)
-                    rowsCL = newList[0][0]
+                    rowsCL = newList[0][0]# first line
                     rowsCR = newList[1][0]
 
                     # rowsCR+=writtenLine
                     if rowsCL-1 == i: #Repeat first line
                         refile=""
                         for name in newList[2]:
-                            refile+=name
+                            refile+=name# all repeat files
 
                         # f.font.color.rgb = RGBColor(255,0,0)
-                        if refile not in writedL:
+                        if refile not in writedL:#the file have marked on the report
                             if isWrite==0:
                                 f.write("\n")
                                 f.write(" #!# The next line is duplicated with: \"")
@@ -189,53 +189,6 @@ class download:
     def dictGet_value(exm1):
         return exm1.values()
 
-    def changeDocx(textfile,desktop_path):
-        with open(textfile,'r') as f:
-            doc = Document()#new word
-            p = doc.add_paragraph('')#Create a new paragraph, put this sentence outside the loop to reduce blank lines
-            txtlines = f.readlines()
-
-
-            for line in txtlines:
-                if line.find("#!#")!=-1:
-                    pt=r"(#!#)"#the split keywords and keep keywords
-                    res = re.split(pt, line)#res[0] is character before keyword, res[1] is keywords, res[2] is character after keyword
-                    run = p.add_run(res[1])
-                    run.font.name=u'Calibri'
-                    run.font.size = Pt(10)
-                    r = run._element
-                    run.font.color.rgb = RGBColor(250,0,0)
-
-                    run = p.add_run(res[2])
-                    run.font.name = u'Calibri'
-                    run.font.size = Pt(10)
-                    r = run._element
-                    run.font.color.rgb = RGBColor(250, 0, 0)
-
-                elif line.find("#@# Repeated mark")!=-1:
-                    pt = "#@# Repeated mark"
-                    res = re.split(pt, line)  # res[0] is character before keyword, res[1] is character after keyword
-                    run = p.add_run(res[0])
-                    run.font.name = u'Calibri'
-                    run.font.size = Pt(10)
-                    r = run._element
-                    run.font.color.rgb = RGBColor(69, 139, 0)
-
-                    run = p.add_run(res[1])
-                    run.font.name = u'Calibri'
-                    run.font.size = Pt(10)
-                    r = run._element
-                    run.font.color.rgb = RGBColor(255, 50, 0)
-                else:
-                    run = p.add_run(line)
-                    run.font.name=u'Calibri'
-                    run.font.size=Pt(10)
-                    r = run._element
-        rename = os.path.splitext(textfile)[0]
-        doc.save(rename + '.docx')
-        f.close()
-        os.remove(textfile)
-
     def changePdf(textfile):
         pdf = FPDF()
         pdf.add_page()
@@ -243,14 +196,31 @@ class download:
             textlines = f.readlines()
 
             for line in textlines:
-                if line.find("#!#") != -1:
-                    pt = r"(#!#)"  # the split keywords and keep keywords
+                if line.find("#!#") != -1 and line.find("next") != -1:# Make sure it's the first line of the duplicate marker
+                    pt = "(#!#)"  # the split keywords and keep keywords
                     res = re.split(pt,line)  # res[0] is character before keyword, res[1] is keywords, res[2] is character after keyword
+
+                    pdf.set_text_color(250,0,0) # show mark first
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500,5,res[2])
+
+                    pdf.set_text_color(69, 139, 0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500, 5, res[0])
+
+                if line.find("#!#") != -1 and line.find("above") != -1:
+                    pt = "(#!#)"  # the split keywords and keep keywords
+                    res = re.split(pt,line)  # res[0] is character before keyword, res[1] is keywords, res[2] is character after keyword
+
+                    pdf.set_text_color(69, 139, 0)
+                    pdf.set_font("Arial", size=15)
+                    pdf.multi_cell(500, 5, res[0])
 
                     pdf.set_text_color(250,0,0)
                     pdf.set_font("Arial", size=15)
                     pdf.multi_cell(500,5,res[2])
-                    pdf.multi_cell(200, 5, "\n")
+
+
 
                 elif line.find("#@# Repeated mark")!=-1:
                     pt = "#@# Repeated mark"
@@ -263,7 +233,7 @@ class download:
                     pdf.set_text_color(250, 0, 0)
                     pdf.set_font("Arial", size=15)
                     pdf.multi_cell(500, 5, res[1])
-                else:
+                elif line.find("#!#") == -1:
                     pdf.set_text_color(0, 0, 0)
                     pdf.set_font("Arial", size=15)
                     pdf.multi_cell(500, 5, line)
