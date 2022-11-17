@@ -40,11 +40,11 @@ class download:
         row = file.readlines()
         l = []
         for line in row:
-            str = list(line.rstrip())
+            str = list(line.rstrip())#Separate character
             l.append(str)
         return l
 
-    def text_write(filename, matrixname, searchmatri,ratio,filecheck):
+    def text_write(filename, matrixname, searchmatri,ratio,filecheck):#File path, character form of the file, repeat line, repeat rate, repeat file
         writedL=[]
         writedR=[]
 
@@ -54,8 +54,8 @@ class download:
 
         row = len(matrixname) #Get the number of lines in the original file
 
-        rows = np.array(searchmatri, dtype="object").shape[0]
-        cols = np.array(searchmatri, dtype="object").shape[1]
+        rows = np.array(searchmatri, dtype="object").shape[0]#How many items are in the duplicate line dictionary
+        cols = np.array(searchmatri, dtype="object").shape[1]#How many parameters does each items have
 
         #Get the length of the longest line in the file
         mark = 0
@@ -83,7 +83,7 @@ class download:
             f.write("\n")
             f.write("\n")
 
-            writtenLine = 0
+            writtenLine = 0#Repeated marked occupied rows
             for i in range(0,row+writtenLine): #Loop through the number of lines in the original file
                 Frame = matrixname[i] #Set row I as the new array
 
@@ -297,7 +297,7 @@ class download:
         except Exception as e:
             print(e)
 
-    def trans (floader , names, needName, reportResult):
+    def trans (floader , names, needName, reportResult):#Folder path, all file names, selected files, final result
         #shown on the UI
         global transList
         transList=[]
