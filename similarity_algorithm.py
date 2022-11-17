@@ -205,7 +205,6 @@ def openfile_java(filepath, f_names):
                             'LBRACE', 'RBRACE', 'EQ', 'INT', 'BOOLEAN', 'DOUBLE', 'STRING', 'CHARACTER', 'IDENTIFIER',
                             'System']
             for a in token_list:
-                # print(a.start_pos)
                 for word in reservedWord:
                     if a[0] == word:
                         if word == 'INT':

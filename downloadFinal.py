@@ -38,12 +38,10 @@ class download:
         # Open test file
         file = open(fileroad+'/'+filename,"r")
         row = file.readlines()
-        print(row)
         l = []
         for line in row:
             str = list(line.rstrip())
             l.append(str)
-        print(l)
         return l
 
     def text_write(filename, matrixname, searchmatri,ratio,filecheck):

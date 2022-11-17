@@ -303,7 +303,6 @@ class MainPage(tk.Frame):
         else:
             textmark = len(trans)
             txtmany = 0  # how many text file
-            print(folderPath)
             for item in trans:
                 if os.path.splitext(item)[-1][1:] == "py":
                     transferDicList = similarity_algorithm.check_python(folderPath)
@@ -311,7 +310,6 @@ class MainPage(tk.Frame):
                     break
                 elif os.path.splitext(item)[-1][1:] == "java":
                     transferDicList = similarity_algorithm.check_java(folderPath)
-                    print(transferDicList)
                     self.repage()
                     break
                 elif os.path.splitext(item)[-1][1:] == "cpp":
@@ -449,7 +447,6 @@ class MainPage(tk.Frame):
         global folderPath
 
         if folderPath != "":
-            print(similarity_algorithm.walk_dir(folderPath))
             for i in similarity_algorithm.walk_dir(folderPath)[0]:
                 if i not in names:  # Prevent duplicate uploads
                     names.append(i)
@@ -470,7 +467,6 @@ class MainPage(tk.Frame):
         path, file = os.path.split(data)
         if "." not in file:  # Determine if it is a folder
             folderPath = data + "/"
-            print(folderPath)
             self.updateListBox()
         else:
             messagebox.showerror(title='Warning', message="Please upload folder")
