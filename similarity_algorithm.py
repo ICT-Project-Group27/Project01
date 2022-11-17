@@ -25,7 +25,10 @@ def walk_dir(start_directory):
 def check_python(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                        i.remove(x)
     except:
         names[0] = names[0]
 
@@ -352,7 +355,11 @@ def open_sql(filepath, f_names):
 def check_java(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
+
     except:
         names[0] = names[0]
 
@@ -383,7 +390,10 @@ def check_java(rep_path):
 def check_cpp(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
     except:
         names[0] = names[0]
 
@@ -414,7 +424,10 @@ def check_cpp(rep_path):
 def check_PHP(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
     except:
         names[0] = names[0]
 
@@ -445,7 +458,10 @@ def check_PHP(rep_path):
 def check_C(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
     except:
         names[0] = names[0]
 
@@ -476,7 +492,10 @@ def check_C(rep_path):
 def check_sql(rep_path):
     names = walk_dir(rep_path)
     try:
-        names[0].remove('.DS_Store')
+        for i in names:
+            for x in i:
+                if x.startswith('.'):
+                    i.remove(x)
     except:
         names[0] = names[0]
 
