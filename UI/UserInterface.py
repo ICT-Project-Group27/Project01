@@ -194,6 +194,13 @@ class UserInterface(TkinterDnD.Tk):
             height=(self.winfo_height()),
         )
 
+        s1 = scroll(top_main)
+        show_data_area = txt(
+            master=top_main,
+            height=30,
+            font=("Helvetica", 12),
+            yscrollcommand=s1.set,
+        )
         def switch_text(file):
             show_data_area.delete(1.0, "end")
             with open(file, "r", encoding="utf-8") as read_p:
@@ -206,14 +213,9 @@ class UserInterface(TkinterDnD.Tk):
             txt.insert(tk.END, result + "\n")
             txt.update()
 
-        s1 = scroll(top_main)
 
-        show_data_area = txt(
-            master=top_main,
-            height=30,
-            font=("Helvetica", 12),
-            yscrollcommand=s1.set,
-        )
+
+
 
         s1.config(command=show_data_area.yview)
         s1.pack(side=tk.RIGHT, fill=tk.Y, pady=(15, 15))
@@ -235,12 +237,9 @@ class MainPage(tk.Frame):
     names = []
     global trans
     trans = []
-    global allfloderpath  # mark all upload file path, avoid repetition
+    global allfloderpath  # store all upload file path, avoid repetition
     allfloderpath = []
-    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    global parentdir
-    parentdir = os.path.dirname(currentdir)
-    sys.path.insert(0, parentdir)
+
     global folderPath
     folderPath = ""
     global transferDicList
@@ -255,21 +254,13 @@ class MainPage(tk.Frame):
         topFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
                             height=container.winfo_height() / 5 * 3)
         topFrame.pack(side=tk.TOP, fill="both", expand=1)
-        middleFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
-                               height=container.winfo_height() / 5 * 1)
-        middleFrame.pack(side=tk.TOP, expand=1)
+
         botFrame = tk.Frame(container, bg='#F5F5F5', width=container.winfo_width(),
                             height=container.winfo_height() / 5 * 2)
         botFrame.pack(side=tk.BOTTOM, fill="x", expand=1)
 
-        # dropdown box
-        stater = tk.IntVar()
-        stater.set(0)
 
-        # #code change button
-        dropDownFrame = tk.Frame(middleFrame, bg='#F5F5F5', width=100,
-                               height=5)
-        dropDownFrame.pack(side=tk.TOP)
+
         # listBox and upload button
         listBoxFrame = tk.Frame(topFrame, bg='#F5F5F5', width=100,
                                 height=60)
@@ -292,7 +283,7 @@ class MainPage(tk.Frame):
 
         cancel = Button(botFrame, bg="#FF0000", text="Cancel", fg="black", width=90,
                         command=lambda: self.cancelFile())
-        cancel.grid(column=1, row=0, rowspan=2, columnspan=10, padx=20)
+        cancel.grid(column=1, row=0, rowspan=2, columnspan=10, padx=30)
 
     def checkFile(self, ):
         global folderPath
@@ -359,7 +350,7 @@ class MainPage(tk.Frame):
         studentWork_l = tk.Label(topFrame, text='\nlanguage selection \n', bg='#F5F5F5', fg='black', font=(0, 20))
         studentWork_l.grid(column=0, row=0, padx=30)
 
-        # dropdown box
+
         stater = tk.IntVar()
         stater.set(0)
 
@@ -417,10 +408,7 @@ class MainPage(tk.Frame):
 
     def openFile(self):
         global folderPath
-        filetypes = (
-            ('text files', '*.txt'),
-            ('All files', '*.*')
-        )
+
 
         folderPath = fd.askdirectory()
         if folderPath != "":
@@ -593,7 +581,6 @@ class MainPage(tk.Frame):
         showRep_b1.pack(side=tk.LEFT, padx=10, pady=50)
         showRep_b2.pack(side=tk.RIGHT, padx=10, pady=50)
 
-        self.path = tk.StringVar()  # store user want path
 
         thisDict = MainPage.transferList(self=MainPage)  # get the result
         if thisDict is None:
