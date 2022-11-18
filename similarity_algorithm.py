@@ -6,12 +6,6 @@ import javac_parser
 import sctokenizer
 import sqlparse
 
-resultListCount = []
-
-
-def getResultListCount():
-    return resultListCount
-
 
 # Walk the given directory and store the names of all the files in it.
 def walk_dir(start_directory):
